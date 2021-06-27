@@ -14,6 +14,37 @@ It will help me make more items for defold.
 <img src="https://github.com/d954mas/defold-box2d/blob/master/files/screenshot.png">
 demo:https://d954mas.github.io/defold-box2d/
 
+
+
+# Table of content
+- [Box2D for Defold](#box2d-for-defold)
+  * [Installation](#installation)
+  * [Box2d](#box2d)
+  * [Limitations](#limitations)
+  * [API](#api)
+    + [Extension](#extension)
+    + [World](#world)
+    + [DebugDraw](#debugdraw)
+    + [Shape](#shape)
+    + [FixtureDef](#fixturedef)
+    + [Fixture](#fixture)
+    + [BodyDef](#bodydef)
+    + [Body](#body)
+    + [Joint](#joint)
+    + [RevoluteJoint](#revolutejoint)
+    + [PrismaticJoint](#prismaticjoint)
+    + [DistanceJoint](#distancejoint)
+    + [PulleyJoint](#pulleyjoint)
+    + [MouseJoint](#mousejoint)
+    + [GearJoint](#gearjoint)
+    + [WheelJoint](#wheeljoint)
+    + [WeldJoint](#weldjoint)
+    + [FrictionJoint](#frictionjoint)
+    + [MotorJoint](#motorjoint)
+    + [Box2dProfile](#box2dprofile)
+    + [Box2dMassData](#box2dmassdata)
+
+
 ## Installation
 
 1)Add defold-box2d in your own project as a Defold library dependency. Open your game.project file and in the dependencies field under project add:
