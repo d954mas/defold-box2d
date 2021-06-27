@@ -1,0 +1,26 @@
+[bootstrap]
+main_collection = /main/main.collectionc
+render = /rendercam/rendercam.renderc
+
+[script]
+shared_state = 1
+
+[display]
+width = 960
+height = 540
+fullscreen = 0
+
+[android]
+input_method = HiddenInputField
+
+[project]
+title = box2d
+dependencies#0 = https://github.com/rgrams/rendercam/archive/refs/tags/1.0.3.zip
+dependencies#1 = https://github.com/britzl/monarch/archive/refs/tags/3.4.0.zip
+
+[native_extension]
+app_manifest = /box2d/manifest.appmanifest
+
+[library]
+include_dirs = box2d
+

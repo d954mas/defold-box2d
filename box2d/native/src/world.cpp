@@ -1,0 +1,551 @@
+#include "world.h"
+#include "utils.h"
+#include "body_def.h"
+#include "joint_def.h"
+#include "body.h"
+#include "joint.h"
+#include "draw.h"
+
+#include <map>
+
+#define META_NAME "Box2d::WorldClass"
+#define USERDATA_NAME "__userdata_world"
+
+
+
+std::map<b2World*, World*> WORLD_BY_POINTER; //to get world from body:GetWorld().
+
+World::World(b2Vec2 gravity) :
+	world(NULL) {
+	world = new b2World(gravity);
+    WORLD_BY_POINTER[world] = this;
+    table_ref = LUA_REFNIL;
+    draw = NULL;
+}
+
+
+World::~World() {
+	if (world != NULL) {
+	    WORLD_BY_POINTER.erase(world);
+		delete world;
+		world = NULL;
+	}
+}
+
+World* World_get_userdata(lua_State *L, int index) {
+    int top = lua_gettop(L);
+
+	World *lua_world = NULL;
+	lua_getfield(L, index, USERDATA_NAME);
+	if (lua_islightuserdata(L, -1)) {
+		lua_world = (World *)lua_touserdata(L, -1);
+	}
+	lua_pop(L, 1);
+
+    assert(top == lua_gettop(L));
+	return lua_world;
+}
+
+World* World_get_userdata_safe(lua_State *L, int index) {
+    World *lua_world = World_get_userdata(L, index);
+    if (lua_world == NULL) {
+        //printf("lua_world NULL");
+        utils::error(L,"World already destroyed");
+    }
+	return lua_world;
+}
+
+World* World_find_by_pointer(b2World* world){
+    return WORLD_BY_POINTER.at(world);
+}
+
+//region box2d API
+  //void 	SetDestructionListener (b2DestructionListener *listener) NOT IMPL
+    //const b2ContactManager &GetContactManager () const NOT IMPL
+
+static int GetProfile(lua_State *L){//const b2Profile &GetProfile () const
+    DM_LUA_STACK_CHECK(L, 1);
+
+    utils::check_arg_count(L, 1);
+
+    World *lua_world = World_get_userdata_safe(L, 1);
+    const b2Profile profile = lua_world->world->GetProfile();
+
+    lua_newtable(L);
+    lua_pushnumber(L, profile.step);
+    lua_setfield(L, -2, "step");
+    lua_pushnumber(L, profile.collide);
+    lua_setfield(L, -2, "collide");
+    lua_pushnumber(L, profile.solve);
+    lua_setfield(L, -2, "solve");
+    lua_pushnumber(L, profile.solveInit);
+    lua_setfield(L, -2, "solveInit");
+    lua_pushnumber(L, profile.solveVelocity);
+    lua_setfield(L, -2, "solveVelocity");
+    lua_pushnumber(L, profile.solvePosition);
+    lua_setfield(L, -2, "solvePosition");
+    lua_pushnumber(L, profile.broadphase);
+    lua_setfield(L, -2, "broadphase");
+    lua_pushnumber(L, profile.solveTOI);
+    lua_setfield(L, -2, "solveTOI");
+
+    return 1;
+}
+//  static int SetContactFilter(lua_State *L); // void SetContactFilter(b2ContactFilter *filter)
+//  static int SetContactListener(lua_State *L); // void SetContactListener (b2ContactListener *listener)
+static int SetDebugDraw(lua_State *L){//void SetDebugDraw (b2Draw *debugDraw)
+    utils::check_arg_count(L, 2);
+    World *world = World_get_userdata_safe(L, 1);
+    if (lua_isnil(L, 2)) {
+        world->world->SetDebugDraw(NULL);
+        world->draw = NULL;
+    }else{
+        Draw *draw = Draw_get_userdata_safe(L, 2);
+        world->world->SetDebugDraw(draw);
+        world->draw = draw;
+    }
+    return 0;
+}
+static int CreateBody(lua_State *L){ //b2Body * CreateBody (const b2BodyDef *def)
+    utils::check_arg_count(L, 1,2);
+    World *world = World_get_userdata_safe(L, 1);
+    b2BodyDef bodyDef;
+    if (lua_gettop(L) == 1 || lua_isnil(L, 2)) {
+        //use default
+    }else if (lua_istable(L, 2)) {
+        bodyDef = b2BodyDef_from_table(L,2);
+    }else{
+        utils::error(L,"bodyDef should be a table or nil");
+    }
+
+    b2Body* body = world->world->CreateBody(&bodyDef);
+
+    Body* lua_body = new Body(body);
+    //Set user data
+    if(bodyDef.userData.pointer != NULL){
+        lua_rawgeti(L,LUA_REGISTRYINDEX,bodyDef.userData.pointer);
+        int ref = luaL_ref(L,LUA_REGISTRYINDEX);
+        utils::unref(L, bodyDef.userData.pointer);
+        lua_body->user_data_ref = ref;
+    }
+
+    lua_body->Push(L);
+    return 1;
+};
+static int DestroyBody(lua_State *L){ //void DestroyBody (b2Body *body)
+    utils::check_arg_count(L, 2);
+
+    World *lua_world = World_get_userdata_safe(L, 1);
+    Body *body = Body_get_userdata_safe(L, 2);
+
+    body->DestroyJoints(L);
+    body->DestroyFixtures(L);
+    lua_world->world->DestroyBody(body->body);
+    body->Destroy(L);
+
+    return 0;
+}
+
+static int CreateJoint(lua_State *L){//static int CreateJoint(lua_State *L);//b2Joint * CreateJoint (const b2JointDef *def)
+    utils::check_arg_count(L, 2);
+    World *world = World_get_userdata_safe(L, 1);
+
+    b2JointDef* def = b2JointDef_from_table(L,2);
+
+    b2Joint* joint = world->world->CreateJoint(def);
+    Joint* lua_joint = new Joint(joint);
+    delete def;
+
+    lua_joint->Push(L);
+
+    return 1;
+}
+
+static int DestroyJoint(lua_State *L){//void DestroyJoint (b2Joint *joint)
+    utils::check_arg_count(L, 2);
+    World *world = World_get_userdata_safe(L, 1);
+    Joint *joint = Joint_get_userdata_safe(L, 2);
+    world->world->DestroyJoint(joint->joint);
+    joint->Destroy(L);
+    return 0;
+}
+static int Step(lua_State *L){;//void Step (float timeStep, int32 velocityIterations, int32 positionIterations)
+    utils::check_arg_count(L, 4);
+
+    World *lua_world = World_get_userdata_safe(L, 1);
+
+    double time_step = lua_tonumber(L, 2);
+    double velocity_iterations = lua_tonumber(L, 3);
+    double position_iterations = lua_tonumber(L, 4);
+
+    lua_world->world->Step((float)time_step, (int)velocity_iterations, (int)position_iterations);
+    //lua_world->dispatch_collision_events(L);
+
+    return 0;
+}
+
+static int ClearForces(lua_State *L){//void ClearForces ()
+    utils::check_arg_count(L, 1);
+    World *lua_world = World_get_userdata_safe(L, 1);
+    lua_world->world->ClearForces();
+    return 0;
+};
+
+static int DebugDraw(lua_State *L){//void DebugDraw ()
+    utils::check_arg_count(L, 1);
+    World *lua_world = World_get_userdata_safe(L, 1);
+    if(lua_world->draw != NULL){
+        lua_world->draw->L = L;
+    }
+      //set script instance
+    if(lua_world->draw != NULL && lua_world->draw->defold_script_instance != LUA_REFNIL){
+        //save current instance in stack
+        dmScript::GetInstance(L);
+        lua_rawgeti(L, LUA_REGISTRYINDEX, lua_world->draw->defold_script_instance);
+         if (!dmScript::IsInstanceValid(L)){utils::error(L,"DebugDraw script instance in not valid"); }
+         dmScript::SetInstance(L);
+    }
+
+    lua_world->world->DebugDraw();
+
+    //remove script instance??
+    if(lua_world->draw != NULL && lua_world->draw->defold_script_instance != LUA_REFNIL){
+        //return prev instance
+        dmScript::SetInstance(L);
+    }
+
+    return 0;
+};
+//  static int QueryAABB(lua_State *L);//void QueryAABB (b2QueryCallback *callback, const b2AABB &aabb) const
+
+// static int RayCast(lua_State *L);//void RayCast (b2RayCastCallback *callback, const b2Vec2 &point1, const b2Vec2 &point2) const
+
+
+static int GetBodyList(lua_State *L){//const b2Body * GetBodyList () const Returns the head of the world body list.
+    utils::check_arg_count(L, 1);
+    World *lua_world = World_get_userdata_safe(L, 1);
+    b2Body* body_top = lua_world->world->GetBodyList();
+    if(body_top == NULL){
+        lua_pushnil(L);
+    }else{
+        Body* lua_body_new = (Body *)body_top->GetUserData().pointer;
+        lua_body_new->Push(L);
+    }
+    return 1;
+}
+
+static int GetJointList(lua_State *L){ //const b2Joint * GetJointList() const
+    utils::check_arg_count(L, 1);
+    World *lua_world = World_get_userdata_safe(L, 1);
+    b2Joint* joint_top = lua_world->world->GetJointList();
+    if(joint_top == NULL){
+      lua_pushnil(L);
+    }else{
+      Joint* lua_joint_new = (Joint *)joint_top->GetUserData().pointer;
+      lua_joint_new->Push(L);
+    }
+    return 1;
+
+}
+// static int GetContactList(lua_State *L);//const b2Contact * GetContactList () const
+
+static int SetAllowSleeping(lua_State *L){//void SetAllowSleeping (bool flag)
+    utils::check_arg_count(L, 2);
+    World *lua_world = World_get_userdata_safe(L, 1);
+    lua_world->world->SetAllowSleeping(lua_toboolean(L, -1));
+    return 0;
+};
+
+static int GetAllowSleeping(lua_State *L){ //bool GetAllowSleeping () const
+    utils::check_arg_count(L, 1);
+    World *lua_world = World_get_userdata_safe(L, 1);
+    lua_pushboolean(L,lua_world->world->GetAllowSleeping());
+    return 1;
+};
+
+static int SetWarmStarting(lua_State *L){//void SetWarmStarting (bool flag) Enable/disable warm starting. For testing.
+    utils::check_arg_count(L, 2);
+    World *lua_world = World_get_userdata_safe(L, 1);
+    lua_world->world->SetWarmStarting(lua_toboolean(L, -1));
+    return 0;
+};
+
+static int GetWarmStarting(lua_State *L){//bool GetWarmStarting () const
+    utils::check_arg_count(L, 1);
+    World *lua_world = World_get_userdata_safe(L, 1);
+    lua_pushboolean(L,lua_world->world->GetWarmStarting());
+    return 1;
+};
+
+static int SetContinuousPhysics(lua_State *L){//void SetContinuousPhysics (bool flag)Enable/disable continuous physics. For testing.
+    utils::check_arg_count(L, 2);
+    World *lua_world = World_get_userdata_safe(L, 1);
+    lua_world->world->SetContinuousPhysics(lua_toboolean(L, -1));
+    return 0;
+};
+
+static int GetContinuousPhysics(lua_State *L){//bool GetContinuousPhysics () const
+    utils::check_arg_count(L, 1);
+    World *lua_world = World_get_userdata_safe(L, 1);
+    lua_pushboolean(L,lua_world->world->GetContinuousPhysics());
+    return 1;
+};
+
+static int SetSubStepping(lua_State *L){//void SetSubStepping (bool flag)Enable/disable single stepped continuous physics. For testing.
+    utils::check_arg_count(L, 2);
+    World *lua_world = World_get_userdata_safe(L, 1);
+    lua_world->world->SetSubStepping(lua_toboolean(L, -1));
+    return 0;
+};
+
+static int GetSubStepping(lua_State *L){//bool GetSubStepping () const
+    utils::check_arg_count(L, 1);
+    World *lua_world = World_get_userdata_safe(L, 1);
+    lua_pushboolean(L,lua_world->world->GetSubStepping());
+    return 1;
+};
+
+static int GetProxyCount(lua_State *L){//int32 GetProxyCount () const Get the number of broad-phase proxies.
+    utils::check_arg_count(L, 1);
+    World *lua_world = World_get_userdata_safe(L, 1);
+    lua_pushnumber(L,lua_world->world->GetProxyCount());
+    return 1;
+};
+
+static int GetBodyCount(lua_State *L){//int32 GetBodyCount () const Get the number of bodies.
+    utils::check_arg_count(L, 1);
+    World *lua_world = World_get_userdata_safe(L, 1);
+    lua_pushnumber(L,lua_world->world->GetBodyCount());
+    return 1;
+};
+
+static int GetJointCount(lua_State *L){//int32 GetJointCount () const Get the number of joints.
+    utils::check_arg_count(L, 1);
+    World *lua_world = World_get_userdata_safe(L, 1);
+    lua_pushnumber(L,lua_world->world->GetJointCount());
+    return 1;
+};
+
+static int GetContactCount(lua_State *L){//int32 GetContactCount () const Get the number of contacts (each may have 0 or more contact points).
+    utils::check_arg_count(L, 1);
+    World *lua_world = World_get_userdata_safe(L, 1);
+    lua_pushnumber(L,lua_world->world->GetContactCount());
+    return 1;
+};
+
+static int GetTreeHeight(lua_State *L){//int32 GetTreeHeight () const Get the height of the dynamic tree.
+    utils::check_arg_count(L, 1);
+    World *lua_world = World_get_userdata_safe(L, 1);
+    lua_pushnumber(L,lua_world->world->GetTreeHeight());
+    return 1;
+};
+
+static int GetTreeBalance(lua_State *L){//int32 GetTreeBalance () const Get the balance of the dynamic tree.
+    utils::check_arg_count(L, 1);
+    World *lua_world = World_get_userdata_safe(L, 1);
+    lua_pushnumber(L,lua_world->world->GetTreeBalance());
+    return 1;
+};
+
+
+static int GetTreeQuality(lua_State *L){ //float GetTreeQuality () const
+    utils::check_arg_count(L, 1);
+    World *lua_world = World_get_userdata_safe(L, 1);
+    lua_pushnumber(L,lua_world->world->GetTreeQuality());
+    return 1;
+};
+
+static int SetGravity(lua_State *L){//void SetGravity (const b2Vec2 &gravity) Change the global gravity vector.
+    utils::check_arg_count(L, 2);
+
+    World *lua_world = World_get_userdata_safe(L, 1);
+    b2Vec2 gravity = extra_utils::get_b2vec_safe(L,2,"gravity not vector3");
+
+    lua_world->world->SetGravity(gravity);
+    return 0;
+};
+
+static int GetGravity(lua_State *L){//b2Vec2 GetGravity () const Get the global gravity vector.
+    utils::check_arg_count(L, 1);
+
+    World *lua_world = World_get_userdata_safe(L, 1);
+
+    b2Vec2 gravity = lua_world->world->GetGravity();
+    utils::push_vector(L, gravity.x, gravity.y, 0);
+    return 1;
+};
+
+static int IsLocked(lua_State *L){//bool IsLocked () const Is the world locked (in the middle of a time step).
+    utils::check_arg_count(L, 1);
+    World *lua_world = World_get_userdata_safe(L, 1);
+    lua_pushboolean(L,lua_world->world->IsLocked());
+    return 1;
+};
+
+static int SetAutoClearForces(lua_State *L){ //void SetAutoClearForces (bool flag) Set flag to control automatic clearing of forces after each time step.
+    utils::check_arg_count(L, 2);
+    World *lua_world = World_get_userdata_safe(L, 1);
+    lua_world->world->SetAutoClearForces(lua_toboolean(L, -1));
+    return 0;
+};
+
+static int GetAutoClearForces(lua_State *L){ //bool GetAutoClearForces () const Get the flag that controls automatic clearing of forces after each time step.
+    utils::check_arg_count(L, 1);
+    World *lua_world = World_get_userdata_safe(L, 1);
+    lua_pushboolean(L,lua_world->world->GetAutoClearForces());
+    return 1;
+};
+
+static int ShiftOrigin(lua_State *L){//void ShiftOrigin (const b2Vec2 &newOrigin)
+    utils::check_arg_count(L, 2);
+    World *lua_world = World_get_userdata_safe(L, 1);
+    b2Vec2 newOrigin = extra_utils::get_b2vec_safe(L,-1,"newOrigin not vector3");
+    lua_world->world->ShiftOrigin(newOrigin);
+    return 0;
+};
+
+
+static int Dump(lua_State *L){//void Dump()
+    utils::check_arg_count(L, 1);
+
+    World *lua_world = World_get_userdata_safe(L, 1);
+    lua_world->world->Dump();
+    return 0;
+}
+
+int Destroy(lua_State *L) {
+	utils::check_arg_count(L, 1);
+
+	World *lua_world = World_get_userdata_safe(L, 1);
+
+
+
+	for (b2Body *body = lua_world->world->GetBodyList(); body; body = body->GetNext()) {
+		Body *lua_body = (Body *)body->GetUserData().pointer;
+        lua_body->DestroyJoints(L);
+        lua_body->DestroyFixtures(L);
+        lua_body->Destroy(L);
+	}
+    lua_world->Destroy(L);
+	delete lua_world;
+    lua_pushnil(L);
+	lua_setfield(L, -2, USERDATA_NAME);
+
+	return 0;
+}
+
+static int ToString(lua_State *L){
+    utils::check_arg_count(L, 1);
+
+    World *lua_world = World_get_userdata_safe(L, 1);
+    lua_pushfstring( L, "b2World[%p]",(void *) lua_world->world);
+	return 1;
+}
+
+static int NewIndex(lua_State *L){
+    utils::error(L,"world can't set new fields");
+	return 0;
+}
+
+void WorldInitMetaTable(lua_State *L){
+    int top = lua_gettop(L);
+
+    luaL_Reg functions[] = {
+        {"GetProfile",GetProfile},
+        {"SetDebugDraw",SetDebugDraw},
+        {"CreateBody",CreateBody},
+        {"DestroyBody",DestroyBody},
+        {"CreateJoint",CreateJoint},
+        {"DestroyJoint",DestroyJoint},
+        {"Step",Step},
+        {"ClearForces",ClearForces},
+        {"DebugDraw",DebugDraw},
+        {"GetBodyList",GetBodyList},
+        {"GetJointList",GetJointList},
+        {"SetAllowSleeping",SetAllowSleeping},
+        {"GetAllowSleeping",GetAllowSleeping},
+        {"SetWarmStarting",SetWarmStarting},
+        {"GetWarmStarting",GetWarmStarting},
+        {"SetContinuousPhysics",SetContinuousPhysics},
+        {"GetContinuousPhysics",GetContinuousPhysics},
+        {"SetSubStepping",SetSubStepping},
+        {"GetSubStepping",GetSubStepping},
+
+        {"GetProxyCount",GetProxyCount},
+        {"GetBodyCount",GetBodyCount},
+        {"GetJointCount",GetJointCount},
+        {"GetContactCount",GetContactCount},
+        {"GetTreeHeight",GetTreeHeight},
+        {"GetTreeBalance",GetTreeBalance},
+        {"GetTreeQuality",GetTreeQuality},
+
+        {"SetGravity",SetGravity},
+        {"GetGravity",GetGravity},
+
+        {"IsLocked",IsLocked},
+        {"SetAutoClearForces",SetAutoClearForces},
+        {"GetAutoClearForces",GetAutoClearForces},
+
+        {"ShiftOrigin",ShiftOrigin},
+        {"Dump",Dump},
+
+        {"Destroy",Destroy},
+        {"__tostring",ToString},
+        {"__newindex",NewIndex},
+        { 0, 0 }
+    };
+    luaL_newmetatable(L, META_NAME);
+    luaL_register (L, NULL,functions);
+    lua_pushvalue(L, -1);
+    lua_setfield(L, -1, "__index");
+    lua_pop(L, 1);
+
+    assert(top == lua_gettop(L));
+}
+
+void World::Destroy(lua_State *L){
+    utils::unref(L, table_ref);
+    table_ref = LUA_REFNIL;
+}
+
+void World::Push(lua_State *L) {
+     DM_LUA_STACK_CHECK(L, 1);
+    if(table_ref == LUA_REFNIL){
+        // world
+        lua_createtable(L, 0, 1);
+        // world.__userdata
+        lua_pushlightuserdata(L, this);
+        lua_setfield(L, -2, USERDATA_NAME);
+
+        luaL_getmetatable(L, META_NAME);
+        lua_setmetatable(L, -2);
+
+        lua_pushvalue(L, -1);
+        table_ref = luaL_ref(L,LUA_REGISTRYINDEX);
+    }else{
+        lua_rawgeti(L,LUA_REGISTRYINDEX,table_ref);
+    }
+
+}
+
+
+// b2ContactListener
+void World::BeginContact(b2Contact *contact) {
+	//on_enter_collision(contact, true);
+	//on_enter_collision(contact, false);
+}
+
+void World::EndContact(b2Contact *contact) {
+	//on_exit_collision(contact, true);
+	//on_exit_collision(contact, false);
+}
+
+void World::PreSolve(b2Contact *contact, const b2Manifold *old_manifold) {
+	//on_before_collision(contact, true);
+	//on_before_collision(contact, false);
+}
+
+void World::PostSolve(b2Contact* contact, const b2ContactImpulse *impulse) {
+	//on_after_collision(contact, true);
+	//on_after_collision(contact, false);
+}
