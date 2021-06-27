@@ -11,6 +11,7 @@ It will help me make more items for defold.
 
 [![](https://c5.patreon.com/external/logo/become_a_patron_button.png)](https://www.patreon.com/d954mas)
 
+<img src="https://github.com/d954mas/defold-box2d/blob/master/files/screenshot.png">
 demo:https://d954mas.github.io/defold-box2d/
 
 ## Installation
