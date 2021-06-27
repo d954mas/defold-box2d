@@ -16,7 +16,7 @@ demo:
 ## Installation
 
 1)Add defold-box2d in your own project as a Defold library dependency. Open your game.project file and in the dependencies field under project add:
-https://github.com/d954mas/defold-box2d/archive/refs/tags/1.0.0.zip
+https://github.com/d954mas/defold-box2d/archive/refs/tags/0.8.zip
 
 2)Remove defold engine box2d. If not remove there will be conflict between this box2d and engine box2d.
 use manifest.appmanifest.  Open your game.project file and in the App Manifest field under Native Extension add manifest.
