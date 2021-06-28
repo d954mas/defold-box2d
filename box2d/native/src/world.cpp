@@ -409,7 +409,11 @@ static int Dump(lua_State *L){//void Dump()
     utils::check_arg_count(L, 1);
 
     World *lua_world = World_get_userdata_safe(L, 1);
-    lua_world->world->Dump();
+    #if !defined(DM_PLATFORM_ANDROID) && !defined(DM_PLATFORM_IOS)
+        lua_world->world->Dump();
+    #else
+        dmLogWarning("Dump not supported on mobiles");
+    #endif
     return 0;
 }
 
