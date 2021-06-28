@@ -1,4 +1,4 @@
-local BOX2D_UTILS = require "main.box2d_scenes.utils"
+local BOX2D_SCENE_UTILS = require "main.box2d_scenes.utils"
 
 ---@class SelfDominosScene
 
@@ -228,7 +228,7 @@ end
 ---@param self SelfDominosScene
 function init(self)
     self.world = box2d.NewWorld(vmath.vector3(0,-10,0));
-    self.world:SetDebugDraw(assert(BOX2D_UTILS.debug_draw))
+    self.world:SetDebugDraw(assert(BOX2D_SCENE_UTILS.get_debug_draw()))
     create_physics(self)
 end
 

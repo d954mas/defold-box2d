@@ -1,15 +1,10 @@
 local TESTS = require "tests.tests"
-local BOX2D_SCENE_UTILS = require "main.box2d_scenes.utils"
-local BOX2D_UTILS = require "box2d.utils"
 
 local monarch = require "monarch.monarch"
 
 function init(self)
     TESTS.run()
-    BOX2D_SCENE_UTILS.debug_draw = BOX2D_UTILS.create_debug_draw(0.04)
-    BOX2D_SCENE_UTILS.debug_draw:SetFlags(bit.bor(box2d.b2Draw.e_shapeBit,box2d.b2Draw.e_jointBit))
-
-    timer.delay(2,false,function ()
+    timer.delay(2, false, function()
         monarch.show(hash("dominos"))
     end)
 
