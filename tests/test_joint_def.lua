@@ -31,7 +31,7 @@ local default_values = {
     groundAnchorB = vmath.vector3(0),
     lengthA = 0,
     lengthB = 0,
-    ratio = 0,
+    ratio = 0.2,
     target = vmath.vector3(0),
     maxForce = 0,
     maxTorque = 0,
@@ -51,13 +51,11 @@ local function testJoint(w, config)
     default_values.bodyB = w:CreateBody({position = vmath.vector3(1,1,0), type = box2d.b2BodyType.b2_dynamicBody})
     default_values.joint1 = w:CreateJoint({    type = box2d.b2JointType.e_revoluteJoint,
                                                    bodyA = default_values.bodyA,
-                                                   bodyB = default_values.bodyB,
-                                                   anchor = vmath.vector3(1, 0, 0)})
+                                                   bodyB = default_values.bodyB})
 
     default_values.joint2 = w:CreateJoint({    type = box2d.b2JointType.e_revoluteJoint,
                                                bodyA = default_values.bodyA,
-                                               bodyB = default_values.bodyB,
-                                               anchor = vmath.vector3(1, 0, 0)})
+                                               bodyB = default_values.bodyB})
 
     for k, v in pairs(config.needed_values) do
         joint_def[k] = v == "default" and default_values[k] or v
@@ -126,8 +124,6 @@ local function testJoint(w, config)
             --  end
         end
     end
-    return joint
-
 end
 
 return function()
@@ -153,7 +149,6 @@ return function()
                 needed_values = {
                     bodyA = "default",
                     bodyB = "default",
-                    anchor = vmath.vector3(1, 0, 0),
                 },
                 optional_values = {
                     collideConnected = "default",
@@ -181,8 +176,6 @@ return function()
                 needed_values = {
                     bodyA = "default",
                     bodyB = "default",
-                    anchor = vmath.vector3(1, 0, 0),
-                    axis = vmath.vector3(1, 0, 0)
                 },
                 optional_values = {
                     collideConnected = "default",
@@ -211,8 +204,6 @@ return function()
                 needed_values = {
                     bodyA = "default",
                     bodyB = "default",
-                    anchorA = vmath.vector3(0, 0, 0),
-                    anchorB = vmath.vector3(0, 0, 0),
                 },
                 optional_values = {
                     collideConnected = "default",
@@ -238,11 +229,6 @@ return function()
                 needed_values = {
                     bodyA = "default",
                     bodyB = "default",
-                    groundAnchorA = vmath.vector3(0, 0, 0),
-                    groundAnchorB = vmath.vector3(0, 0, 0),
-                    anchorA = vmath.vector3(0, 0, 0),
-                    anchorB = vmath.vector3(0, 0, 0),
-                    ratio = 1
                 },
                 optional_values = {
                     collideConnected = "default",
@@ -251,6 +237,9 @@ return function()
                     localAnchorB ="default",
                     lengthA = "default",
                     lengthB = "default",
+                    ratio = "default",
+                    groundAnchorA = "default",
+                    groundAnchorB = "default",
                 }
             })
             w:Destroy()
@@ -305,8 +294,6 @@ return function()
                 needed_values = {
                     bodyA = "default",
                     bodyB = "default",
-                    anchor = "default",
-                    axis = "default",
                 },
                 optional_values = {
                     collideConnected = "default",
@@ -335,7 +322,6 @@ return function()
                 needed_values = {
                     bodyA = "default",
                     bodyB = "default",
-                    anchor = "default",
                 },
                 optional_values = {
                     collideConnected = "default",
@@ -358,7 +344,6 @@ return function()
                 needed_values = {
                     bodyA = "default",
                     bodyB = "default",
-                    anchor = "default",
                 },
                 optional_values = {
                     collideConnected = "default",
@@ -399,6 +384,7 @@ return function()
             local status, value = pcall(w.CreateJoint,w,{type = box2d.b2JointType.e_ropeJoint})
             assert_false(status);
             assert_equal(value,"e_ropeJoint not supported")
+            w:Destroy()
         end)
 
         test("Create bad type", function()
@@ -406,6 +392,143 @@ return function()
             local status, value = pcall(w.CreateJoint,w,{type = 128})
             assert_false(status);
             assert_equal(value,"bad joint type")
+            w:Destroy()
+        end)
+
+        test("Initialize e_revoluteJoint", function()
+            local w = box2d.NewWorld()
+            local bodyA = w:CreateBody({position = vmath.vector3(0,0,0), type = box2d.b2BodyType.b2_dynamicBody})
+            local bodyB = w:CreateBody({position = vmath.vector3(1,1,0), type = box2d.b2BodyType.b2_dynamicBody})
+            local def = box2d.InitializeRevoluteJointDef(bodyA,bodyB,vmath.vector3(1,0,0));
+            assert_not_nil(def)
+
+            local status, value = pcall(w.CreateJoint,w,def)
+            assert_true(status)
+            assert_equal(value:GetType(),box2d.b2JointType.e_revoluteJoint)
+            w:Destroy()
+        end)
+
+        test("Initialize e_prismaticJoint", function()
+            local w = box2d.NewWorld()
+            local bodyA = w:CreateBody({position = vmath.vector3(0,0,0), type = box2d.b2BodyType.b2_dynamicBody})
+            local bodyB = w:CreateBody({position = vmath.vector3(1,1,0), type = box2d.b2BodyType.b2_dynamicBody})
+            local def = box2d.InitializePrismaticJointDef(bodyA,bodyB,vmath.vector3(1,0,0),vmath.vector3(1,0,0));
+            assert_not_nil(def)
+
+            local status, value = pcall(w.CreateJoint,w,def)
+            assert_true(status)
+            assert_equal(value:GetType(),box2d.b2JointType.e_prismaticJoint)
+            w:Destroy()
+        end)
+
+        test("Initialize e_distanceJoint", function()
+            local w = box2d.NewWorld()
+            local bodyA = w:CreateBody({position = vmath.vector3(0,0,0), type = box2d.b2BodyType.b2_dynamicBody})
+            local bodyB = w:CreateBody({position = vmath.vector3(1,1,0), type = box2d.b2BodyType.b2_dynamicBody})
+            local def = box2d.InitializeDistanceJointDef(bodyA,bodyB,vmath.vector3(1,0,0),vmath.vector3(0,0,0));
+            assert_not_nil(def)
+
+            local status, value = pcall(w.CreateJoint,w,def)
+            assert_true(status)
+            assert_equal(value:GetType(),box2d.b2JointType.e_distanceJoint)
+            w:Destroy()
+        end)
+
+        test("Initialize e_pulleyJoint", function()
+            local w = box2d.NewWorld()
+            local bodyA = w:CreateBody({position = vmath.vector3(0,0,0), type = box2d.b2BodyType.b2_dynamicBody})
+            local bodyB = w:CreateBody({position = vmath.vector3(1,1,0), type = box2d.b2BodyType.b2_dynamicBody})
+            local def = box2d.InitializePulleyJointDef(bodyA,bodyB,vmath.vector3(0,0,0),vmath.vector3(0,0,0),vmath.vector3(0,0,0),vmath.vector3(0,0,0),0.2);
+            assert_not_nil(def)
+
+            local status, value = pcall(w.CreateJoint,w,def)
+            assert_true(status)
+            assert_equal(value:GetType(),box2d.b2JointType.e_pulleyJoint)
+            w:Destroy()
+        end)
+        test("Initialize e_mouseJoint", function()
+            local w = box2d.NewWorld()
+            local bodyA = w:CreateBody({position = vmath.vector3(0,0,0), type = box2d.b2BodyType.b2_dynamicBody})
+            local bodyB = w:CreateBody({position = vmath.vector3(1,1,0), type = box2d.b2BodyType.b2_dynamicBody})
+            local def = box2d.InitializeMouseJointDef(bodyA,bodyB);
+            assert_not_nil(def)
+
+            local status, value = pcall(w.CreateJoint,w,def)
+            assert_true(status)
+            assert_equal(value:GetType(),box2d.b2JointType.e_mouseJoint)
+            w:Destroy()
+        end)
+
+        test("Initialize e_gearJoint", function()
+            local w = box2d.NewWorld()
+            local bodyA = w:CreateBody({position = vmath.vector3(0,0,0), type = box2d.b2BodyType.b2_dynamicBody})
+            local bodyB = w:CreateBody({position = vmath.vector3(1,1,0), type = box2d.b2BodyType.b2_dynamicBody})
+            local joint1 = w:CreateJoint({    type = box2d.b2JointType.e_revoluteJoint,
+                                                      bodyA = bodyA,
+                                                      bodyB = bodyB})
+
+            local joint2 = w:CreateJoint({    type = box2d.b2JointType.e_revoluteJoint,
+                                                       bodyA = bodyA,
+                                                       bodyB = bodyB})
+            local def = box2d.InitializeGearJointDef(bodyA,bodyB, joint1, joint2);
+            assert_not_nil(def)
+
+            local status, value = pcall(w.CreateJoint,w,def)
+            assert_true(status)
+            assert_equal(value:GetType(),box2d.b2JointType.e_gearJoint)
+            w:Destroy()
+        end)
+
+        test("Initialize e_wheelJoint", function()
+            local w = box2d.NewWorld()
+            local bodyA = w:CreateBody({position = vmath.vector3(0,0,0), type = box2d.b2BodyType.b2_dynamicBody})
+            local bodyB = w:CreateBody({position = vmath.vector3(1,1,0), type = box2d.b2BodyType.b2_dynamicBody})
+            local def = box2d.InitializeWheelJointDef(bodyA,bodyB,vmath.vector3(0),vmath.vector3(1,0,0));
+            assert_not_nil(def)
+
+            local status, value = pcall(w.CreateJoint,w,def)
+            assert_true(status)
+            assert_equal(value:GetType(),box2d.b2JointType.e_wheelJoint)
+            w:Destroy()
+        end)
+
+        test("Initialize e_weldJoint", function()
+            local w = box2d.NewWorld()
+            local bodyA = w:CreateBody({position = vmath.vector3(0,0,0), type = box2d.b2BodyType.b2_dynamicBody})
+            local bodyB = w:CreateBody({position = vmath.vector3(1,1,0), type = box2d.b2BodyType.b2_dynamicBody})
+            local def = box2d.InitializeWeldJointDef(bodyA,bodyB,vmath.vector3(0));
+            assert_not_nil(def)
+
+            local status, value = pcall(w.CreateJoint,w,def)
+            assert_true(status)
+            assert_equal(value:GetType(),box2d.b2JointType.e_weldJoint)
+            w:Destroy()
+        end)
+
+        test("Initialize e_frictionJoint", function()
+            local w = box2d.NewWorld()
+            local bodyA = w:CreateBody({position = vmath.vector3(0,0,0), type = box2d.b2BodyType.b2_dynamicBody})
+            local bodyB = w:CreateBody({position = vmath.vector3(1,1,0), type = box2d.b2BodyType.b2_dynamicBody})
+            local def = box2d.InitializeFrictionJointDef(bodyA,bodyB,vmath.vector3(0));
+            assert_not_nil(def)
+
+            local status, value = pcall(w.CreateJoint,w,def)
+            assert_true(status)
+            assert_equal(value:GetType(),box2d.b2JointType.e_frictionJoint)
+            w:Destroy()
+        end)
+
+        test("Initialize e_MotorJoint", function()
+            local w = box2d.NewWorld()
+            local bodyA = w:CreateBody({position = vmath.vector3(0,0,0), type = box2d.b2BodyType.b2_dynamicBody})
+            local bodyB = w:CreateBody({position = vmath.vector3(1,1,0), type = box2d.b2BodyType.b2_dynamicBody})
+            local def = box2d.InitializeMotorJointDef(bodyA,bodyB);
+            assert_not_nil(def)
+
+            local status, value = pcall(w.CreateJoint,w,def)
+            assert_true(status)
+            assert_equal(value:GetType(),box2d.b2JointType.e_motorJoint)
+            w:Destroy()
         end)
     end)
 end

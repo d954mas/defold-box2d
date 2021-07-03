@@ -88,13 +88,7 @@ local function create_physics(self)
     b3:CreateFixture(shape, 10.0)
 
     ---@type Box2dRevoluteJointDef
-    local jd = {}
-    jd.type = box2d.b2JointType.e_revoluteJoint
-    local anchor = vmath.vector3(-2,1,0)
-
-    jd.bodyA = b1
-    jd.bodyB = b3
-    jd.anchor = anchor
+    local jd = box2d.InitializeRevoluteJointDef(b1,b3, vmath.vector3(-2,1,0))
     jd.collideConnected = true
     self.world:CreateJoint(jd)
 
@@ -113,9 +107,8 @@ local function create_physics(self)
     b4:CreateFixture(shape, 10.0);
 
 
-    jd.anchor = vmath.vector3(-7.0, 15.0,0);
-    jd.bodyA = b2
-    jd.bodyB = b4
+    jd = box2d.InitializeRevoluteJointDef(b2,b4,vmath.vector3(-7.0, 15.0,0))
+    jd.collideConnected = true
     self.world:CreateJoint(jd);
 
 
@@ -149,9 +142,9 @@ local function create_physics(self)
     shape.box_center = vmath.vector3(0.9,0,0)
     b5:CreateFixture(fd);
 
-    jd.anchor = vmath.vector3(6.0, 2.0,0);
-    jd.bodyA = b1
-    jd.bodyB = b5
+    jd = box2d.InitializeRevoluteJointDef(b1,b5,vmath.vector3(6.0, 2.0,0))
+    jd.collideConnected = true
+
     self.world:CreateJoint(jd);
 
 
@@ -169,10 +162,12 @@ local function create_physics(self)
 
     local  b6 = self.world:CreateBody(bd);
     b6:CreateFixture(shape, 30.0);
-    
-    jd.anchor = vmath.vector3(7.5, 4.0,0);
+
     jd.bodyA = b5
     jd.bodyB = b6
+
+    jd = box2d.InitializeRevoluteJointDef(b5,b6,vmath.vector3(7.5, 4.0,0))
+    jd.collideConnected = true
     self.world:CreateJoint(jd);
 
 
@@ -191,20 +186,15 @@ local function create_physics(self)
     b7:CreateFixture(shape, 10.0);
 
     ---@type Box2dDistanceJointDef
-    local djd = {}
+    local djd = {}--box2d.InitializeDistanceJointDef(b3,b7,)
     djd.type = box2d.b2JointType.e_distanceJoint
     djd.bodyA = b3;
     djd.bodyB = b7;
     djd.localAnchorA = vmath.vector3(6.0, 0.0,0);
     djd.localAnchorB = vmath.vector3(0, -1,0);
 
-    djd.anchorA = djd.bodyA:GetWorldPoint(djd.localAnchorA);
-    djd.anchorB = djd.bodyB:GetWorldPoint(djd.localAnchorB);
-
     local d = djd.bodyB:GetWorldPoint(djd.localAnchorB) - djd.bodyA:GetWorldPoint(djd.localAnchorA);
     djd.length = vmath.length(d);
-    djd.minLength = vmath.length(d);
-    djd.maxLength = vmath.length(d);
 
     djd.stiffness, djd.damping = box2d.b2LinearStiffness(1.0, 1.0, djd.bodyA, djd.bodyB);
     self.world:CreateJoint(djd);

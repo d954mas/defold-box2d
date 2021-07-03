@@ -53,6 +53,88 @@ function box2d.b2LinearStiffness(frequencyHertz, dampingRatio, bodyA, bodyB) end
 ---@return number damping
 function box2d.b2AngularStiffness(frequencyHertz, dampingRatio, bodyA, bodyB) end
 
+--- Use InitializeJoint methods to create b2JointDef and call b2JointDef::Initialize(...) if
+--- joint have such method
+
+--- Initialize the bodies, anchors, and reference angle using a world
+--- anchor point.
+---@param bodyA Box2dBody
+---@param bodyB Box2dBody
+---@param anchor vector3
+---@return Box2dRevoluteJointDef
+function box2d.InitializeRevoluteJointDef(bodyA, bodyB, anchor) end
+
+--- Initialize the bodies, anchors, axis, and reference angle using the world
+--- anchor and unit world axis.
+---@param bodyA Box2dBody
+---@param bodyB Box2dBody
+---@param anchor vector3
+---@param axis vector3
+---@return Box2dPrismaticJointDef
+function box2d.InitializePrismaticJointDef(bodyA, bodyB, anchor, axis) end
+
+--- Initialize the bodies, anchors, and rest length using world space anchors.
+--- The minimum and maximum lengths are set to the rest length.
+---@param bodyA Box2dBody
+---@param bodyB Box2dBody
+---@param anchorA vector3
+---@param anchorB vector3
+---@return Box2dDistanceJointDef
+function box2d.InitializeDistanceJointDef(bodyA, bodyB, anchorA, anchorB) end
+
+--- Initialize the bodies, anchors, lengths, max lengths, and ratio using the world anchors.
+---@param bodyA Box2dBody
+---@param bodyB Box2dBody
+---@param groundAnchorA vector3
+---@param groundAnchorB vector3
+---@param anchorA vector3
+---@param anchorB vector3
+---@param ratio number
+---@return Box2dPulleyJointDef
+function box2d.InitializePulleyJointDef(bodyA, bodyB, groundAnchorA, groundAnchorB, anchorA, anchorB, ratio) end
+
+---@param bodyA Box2dBody
+---@param bodyB Box2dBody
+---@return Box2dMouseJointDef
+function box2d.InitializeMouseJointDef(bodyA, bodyB) end
+
+---@param bodyA Box2dBody
+---@param bodyB Box2dBody
+---@param joint1 Box2dJoint
+---@param joint2 Box2dBody
+---@return Box2dGearJoint
+function box2d.InitializeGearJointDef(bodyA, bodyB, joint1, joint2) end
+
+--- Initialize the bodies, anchors, axis, and reference angle using the world
+--- anchor and world axis.
+---@param bodyA Box2dBody
+---@param bodyB Box2dBody
+---@param anchor vector3
+---@param axis vector3
+---@return Box2dWheelJointDef
+function box2d.InitializeWheelJointDef(bodyA, bodyB, anchor, axis) end
+
+--- Initialize the bodies, anchors, reference angle, stiffness, and damping.
+---@param bodyA Box2dBody
+---@param bodyB Box2dBody
+---@param anchor vector3
+---@return Box2dWeldJointDef
+function box2d.InitializeWeldJointDef(bodyA, bodyB, anchor) end
+
+--- Initialize the bodies, anchors, axis, and reference angle using the world
+--- anchor and world axis.
+---@param bodyA Box2dBody
+---@param bodyB Box2dBody
+---@param anchor vector3
+---@return Box2FrictionJointDef
+function box2d.InitializeFrictionJointDef(bodyA, bodyB, anchor) end
+
+--- Initialize the bodies and offsets using the current transforms.
+---@param bodyA Box2dBody
+---@param bodyB Box2dBody
+---@return Box2dMotorJointDef
+function box2d.InitializeMotorJointDef(bodyA, bodyB) end
+
 --endregion
 
 --region Box2dFixture
@@ -1433,7 +1515,7 @@ function Box2dWheelJoint:GetDamping() end
 --- Weld joint definition. You need to specify local anchor points
 --- where they are attached and the relative body angle. The position
 --- of the anchor points is important for computing the reaction torque.
----@class Box2WeldJointDef:Box2dJointDef
+---@class Box2dWeldJointDef:Box2dJointDef
 local Box2WeldJointDef = {
     -- Initialize the bodies, anchors, reference angle, stiffness, and damping.
     -- @param bodyA the first body connected by this joint
@@ -1510,10 +1592,10 @@ local Box2FrictionJointDef = {
     --region JointOptional
     --- The local anchor point relative to bodyA's origin.
     localAnchorA = vmath.vector3(0, 0, 0),
-    
+
     --- The local anchor point relative to bodyB's origin.
-    localAnchorB = vmath.vector3(0, 0, 0), 
-    
+    localAnchorB = vmath.vector3(0, 0, 0),
+
     --- The maximum friction force in N.
     maxForce = 0,
 
