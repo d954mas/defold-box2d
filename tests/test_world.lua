@@ -191,6 +191,68 @@ return function()
             w:Destroy()
         end)
 
+        test("QueryAABB()", function()
+            local w = box2d.NewWorld()
+
+            local body_1 = w:CreateBody({ position = vmath.vector3(5, 0, 0) })
+            local body_2 = w:CreateBody({ position = vmath.vector3(10, 0, 0) })
+            local body_3 = w:CreateBody({ position = vmath.vector3(15, 0, 0) })
+
+            body_1:CreateFixture({ shape = box2d.b2Shape.e_polygon, box = true, box_hy = 1, box_hx = 1 }, 1)
+            body_2:CreateFixture({ shape = box2d.b2Shape.e_polygon, box = true, box_hy = 1, box_hx = 1 }, 1)
+            body_3:CreateFixture({ shape = box2d.b2Shape.e_polygon, box = true, box_hy = 1, box_hx = 1 }, 1)
+
+            local cb_results = {}
+            local cb_all = function(fixture)
+                table.insert(cb_results,{fixture = fixture})
+                return true;
+            end
+
+            local cb_one = function(fixture)
+                table.insert(cb_results,{fixture = fixture})
+                return false;
+            end
+
+
+            local aabb_no = {lowerBound = vmath.vector3(-10,0,0),upperBound = vmath.vector3(-0.6,0.1,0)}
+            local aabb_one = {lowerBound = vmath.vector3(0,0,0),upperBound = vmath.vector3(5,0.5,0)}
+            local aabb_all = {lowerBound = vmath.vector3(0,0,0),upperBound = vmath.vector3(15,0.5,0)}
+
+            --*** NO ***
+            w:QueryAABB(cb_all, aabb_no)
+            assert_equal(#cb_results, 0)
+            w:QueryAABB(cb_one,aabb_no)
+            assert_equal(#cb_results, 0)
+
+            --*** ONE ***
+            w:QueryAABB(cb_all, aabb_one)
+            assert_equal(#cb_results, 1)
+            assert_equal(cb_results[1].fixture:GetBody(),body_1)
+            cb_results = {}
+            w:QueryAABB(cb_one,aabb_one)
+            assert_equal(#cb_results, 1)
+            assert_equal(cb_results[1].fixture:GetBody(),body_1)
+            cb_results = {}
+
+
+            --*** ALL ***
+            w:QueryAABB(cb_all, aabb_all)
+            assert_equal(#cb_results, 3)
+            cb_results = {}
+            w:QueryAABB(cb_one,aabb_all)
+            assert_equal(#cb_results, 1)
+            cb_results = {}
+
+
+            local cb_error = function() error("error happened") end
+            local status, error = pcall(w.QueryAABB,w,cb_error,aabb_all)
+            assert_false(status)
+            --remove line number
+            assert_equal(string.sub(error,28),"error happened")
+
+            w:Destroy()
+        end)
+
         test("GetBodyList()", function()
             local w = box2d.NewWorld()
             assert_nil(w:GetBodyList())

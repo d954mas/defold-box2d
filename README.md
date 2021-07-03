@@ -74,7 +74,6 @@ Box2d version: 2.4.1
 	void SetDestructionListener(b2DestructionListener* listener);
 	void SetContactFilter(b2ContactFilter* filter);
 	void SetContactListener(b2ContactListener* listener);
-	void QueryAABB(b2QueryCallback* callback, const b2AABB& aabb) const;
 	b2Contact* GetContactList();
 	const b2ContactManager& GetContactManager() const;
 

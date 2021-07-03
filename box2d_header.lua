@@ -703,6 +703,12 @@ function Box2dWorld:GetBodyList() end
 --- @param point2 vector3 ray ending point
 function Box2dWorld:RayCast(callback, point1, point2) end
 
+--- Query the world for all fixtures that potentially overlap the
+--- provided AABB.
+---@param callback function(Box2dFixture fixture)
+---@param aabb table the query box. {lowerBound = vmath.vector3(0), upperBound = vmath.vector3(0)}
+function Box2dWorld:QueryAABB(callback, aabb) end
+
 ---Get the world joint list. With the returned joint, use b2Joint:GetNext() to get the next joint in the world list.
 ---A nil joint indicates the end of the list.
 ---@return Box2dJoint|nil the head of the world joint list.

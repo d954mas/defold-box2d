@@ -217,9 +217,71 @@ static int DebugDraw(lua_State *L){//void DebugDraw ()
 
     return 0;
 };
-//  static int QueryAABB(lua_State *L);//void QueryAABB (b2QueryCallback *callback, const b2AABB &aabb) const
+
+class LuaQueryCallback : public b2QueryCallback {
+    public:
+        lua_State *L;
+        bool error;
+
+        LuaQueryCallback(lua_State *L){  // This is the constructor
+            this->L = L;
+            error = false;
+        }
+
+        bool ReportFixture(b2Fixture* fixture) {
+            lua_pushvalue(L,-1);
+
+            Fixture* lua_fixture = (Fixture *)fixture->GetUserData().pointer;
+            lua_fixture->Push(L);
 
 
+            if (lua_pcall(L, 1, 1, 0) == 0){
+                bool result = lua_toboolean(L,-1);
+                lua_pop(L,1);
+                return result;
+            }else{
+                error = true;
+                return false;
+            }
+        }
+};
+
+//void QueryAABB (b2QueryCallback *callback, const b2AABB &aabb) const
+static int QueryAABB(lua_State *L){
+    utils::check_arg_count(L, 3);
+    World *world = World_get_userdata_safe(L, 1);
+
+    b2AABB aabb;
+
+    if (not lua_isfunction(L, 2)){
+        utils::error(L,"callback is not function");
+        return 0;
+    }
+
+    if (not lua_istable(L, 3)){
+        utils::error(L,"aabb is not table");
+        return 0;
+    }
+
+    aabb.lowerBound = extra_utils::table_get_b2vec_safe(L,"lowerBound","lowerBound not vector3");
+    aabb.upperBound = extra_utils::table_get_b2vec_safe(L,"upperBound","upperBound not vector3");
+
+    //cb function on top
+    lua_pushvalue(L,2);
+
+    LuaQueryCallback* cb = new LuaQueryCallback(L);
+    world->world->QueryAABB(cb, aabb);
+
+    if(cb->error){
+        delete cb;
+        lua_error(L);
+    }else{
+         delete cb;
+    }
+
+    lua_pop(L,1);
+    return 0;
+};
 
 
 
@@ -529,6 +591,7 @@ void WorldInitMetaTable(lua_State *L){
         {"ClearForces",ClearForces},
         {"DebugDraw",DebugDraw},
         {"RayCast",RayCast},
+        {"QueryAABB",QueryAABB},
         {"GetBodyList",GetBodyList},
         {"GetJointList",GetJointList},
         {"SetAllowSleeping",SetAllowSleeping},
