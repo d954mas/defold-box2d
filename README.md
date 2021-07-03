@@ -295,6 +295,14 @@ function Box2dWorld:DebugDraw() end
 ---@return Box2dBody|nil the head of the world body list.
 function Box2dWorld:GetBodyList() end
 
+--- Ray-cast the world for all fixtures in the path of the ray. Your callback
+--- controls whether you get the closest point, any point, or n-points.
+--- The ray-cast ignores shapes that contain the starting point.
+--- @param callback function(Box2dFixture fixture, vector3 point, vector3 normal, float fraction)
+--- @param point1 vector3 ray starting point
+--- @param point2 vector3 ray ending point
+function Box2dWorld:RayCast(callback, point1, point2) end
+
 ---Get the world joint list. With the returned joint, use b2Joint:GetNext() to get the next joint in the world list.
 ---A nil joint indicates the end of the list.
 ---@return Box2dJoint|nil the head of the world joint list.

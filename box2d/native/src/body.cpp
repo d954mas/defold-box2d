@@ -585,7 +585,7 @@ static int ToString(lua_State *L){
     utils::check_arg_count(L, 1);
 
     Body *lua_body = Body_get_userdata_safe(L, 1);
-    lua_pushfstring( L, "b2FBody[%p]",(void *) lua_body->body);
+    lua_pushfstring( L, "b2Body[%p]",(void *) lua_body->body);
 	return 1;
 }
 

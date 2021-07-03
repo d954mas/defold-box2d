@@ -5,6 +5,7 @@
 #include "body.h"
 #include "joint.h"
 #include "draw.h"
+#include "fixture.h"
 
 #include <map>
 
@@ -218,7 +219,70 @@ static int DebugDraw(lua_State *L){//void DebugDraw ()
 };
 //  static int QueryAABB(lua_State *L);//void QueryAABB (b2QueryCallback *callback, const b2AABB &aabb) const
 
-// static int RayCast(lua_State *L);//void RayCast (b2RayCastCallback *callback, const b2Vec2 &point1, const b2Vec2 &point2) const
+
+
+
+
+class LuaRayCastCallback : public b2RayCastCallback {
+    public:
+        lua_State *L;
+        bool error;
+
+        LuaRayCastCallback(lua_State *L){  // This is the constructor
+            this->L = L;
+            error = false;
+        }
+    
+        float ReportFixture(b2Fixture* fixture, const b2Vec2& point,const b2Vec2& normal, float fraction) {
+            lua_pushvalue(L,-1);
+
+            Fixture* lua_fixture = (Fixture *)fixture->GetUserData().pointer;
+            lua_fixture->Push(L);
+
+            utils::push_vector(L, point.x, point.y, 0);
+            utils::push_vector(L, normal.x, normal.y, 0);
+            lua_pushnumber(L,fraction);
+            if (lua_pcall(L, 4, 1, 0) == 0){
+                float result = lua_tonumber(L,-1);
+                lua_pop(L,1);
+                return result;
+            }else{
+                error = true;
+                return 0;
+            }
+        }
+};
+//https://www.iforce2d.net/b2dtut/world-querying
+//void RayCast (b2RayCastCallback *callback, const b2Vec2 &point1, const b2Vec2 &point2) const
+static int RayCast(lua_State *L){
+    utils::check_arg_count(L, 4);
+    World *world = World_get_userdata_safe(L, 1);
+    if (not lua_isfunction(L, 2)){
+        utils::error(L,"callback is not function");
+        return 0;
+    }
+    b2Vec2 point1 = extra_utils::get_b2vec_safe(L,3,"point1 not vector3");
+    b2Vec2 point2 = extra_utils::get_b2vec_safe(L,4,"point2 not vector3");
+
+    //cb function on top
+    lua_pushvalue(L,2);
+
+    LuaRayCastCallback* cb = new LuaRayCastCallback(L);
+
+    world->world->RayCast(cb, point1, point2);
+
+    if(cb->error){
+        delete cb;
+        lua_error(L);
+    }else{
+         delete cb;
+    }
+
+
+    lua_pop(L,1);
+
+    return 0;
+};
 
 
 static int GetBodyList(lua_State *L){//const b2Body * GetBodyList () const Returns the head of the world body list.
@@ -464,6 +528,7 @@ void WorldInitMetaTable(lua_State *L){
         {"Step",Step},
         {"ClearForces",ClearForces},
         {"DebugDraw",DebugDraw},
+        {"RayCast",RayCast},
         {"GetBodyList",GetBodyList},
         {"GetJointList",GetJointList},
         {"SetAllowSleeping",SetAllowSleeping},

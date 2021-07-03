@@ -20,7 +20,7 @@ return function()
             local f = function() return w:GetProfile() end
             local status, value = pcall(f)
             assert_false(status)
-            assert_equal(value , "World already destroyed")
+            assert_equal(value, "World already destroyed")
         end)
 
         test("destroy all refs", function()
@@ -34,27 +34,26 @@ return function()
 
             local status, value = pcall(f)
             assert_false(status)
-            assert_equal(value , "World already destroyed")
-
+            assert_equal(value, "World already destroyed")
 
             status, value = pcall(f2)
             assert_false(status)
-            assert_equal(value , "World already destroyed")
+            assert_equal(value, "World already destroyed")
         end)
 
         test("newIndex", function()
             local w = box2d.NewWorld()
-            local f = function () w.data = {} end
-            local status,value = pcall(f)
+            local f = function() w.data = {} end
+            local status, value = pcall(f)
             assert_false(status)
-            assert_equal(value,"world can't set new fields")
+            assert_equal(value, "world can't set new fields")
             w:Destroy()
         end)
 
         test("tostring", function()
             local w = box2d.NewWorld()
             local s = tostring(w)
-            assert_equal(s:sub(1,8),"b2World[")
+            assert_equal(s:sub(1, 8), "b2World[")
             w:Destroy()
         end)
 
@@ -62,15 +61,14 @@ return function()
             local w = box2d.NewWorld()
             local w2 = box2d.NewWorld()
 
-            assert_equal(w,w)
-            assert_not_equal(w,w2)
-            assert_not_equal(w,1)
+            assert_equal(w, w)
+            assert_not_equal(w, w2)
+            assert_not_equal(w, 1)
             assert_not_equal(w, {})
-
 
             local b = w:CreateBody({})
 
-            assert_equal(w,b:GetWorld())
+            assert_equal(w, b:GetWorld())
 
             w:Destroy()
             w2:Destroy()
@@ -99,7 +97,7 @@ return function()
         test("Step()", function()
             local w = box2d.NewWorld()
             UTILS.test_method(w, "Step", {
-                args = {1/60,2,4}
+                args = { 1 / 60, 2, 4 }
             })
             w:Destroy()
         end)
@@ -116,12 +114,89 @@ return function()
             w:Destroy()
         end)
 
+        test("RayCast()", function()
+            local w = box2d.NewWorld()
+
+            local body_1 = w:CreateBody({ position = vmath.vector3(5, 0, 0) })
+            local body_2 = w:CreateBody({ position = vmath.vector3(10, 0, 0) })
+            local body_3 = w:CreateBody({ position = vmath.vector3(15, 0, 0) })
+
+            body_1:CreateFixture({ shape = box2d.b2Shape.e_polygon, box = true, box_hy = 1, box_hx = 1 }, 1)
+            body_2:CreateFixture({ shape = box2d.b2Shape.e_polygon, box = true, box_hy = 1, box_hx = 1 }, 1)
+            body_3:CreateFixture({ shape = box2d.b2Shape.e_polygon, box = true, box_hy = 1, box_hx = 1 }, 1)
+
+            local cb_results = {}
+            local cb_closest = function(fixture, point, normal, fraction)
+                assert_equal(type(fixture),"table")
+                assert_equal(type(point),"userdata")
+                assert_equal(type(normal),"userdata")
+                assert_equal(type(fraction),"number")
+                table.insert(cb_results, { fixture = fixture, point = point, normal = normal, fraction = fraction })
+                return fraction
+            end
+
+            local cb_all = function(fixture, point, normal, fraction)
+                table.insert(cb_results, { fixture = fixture, point = point, normal = normal, fraction = fraction })
+                return 1
+            end
+
+            local cb_any = function(fixture, point, normal, fraction)
+                table.insert(cb_results, { fixture = fixture, point = point, normal = normal, fraction = fraction })
+                return 0
+            end
+
+            local p1 = vmath.vector3(0, 0, 0)
+            local point_no = vmath.vector3(0, 10, 0)
+            local point_one = vmath.vector3(5, 0, 0)
+            local point_all = vmath.vector3(15, 0, 0)
+
+            --*** NO ***
+            w:RayCast(cb_closest, p1, point_no)
+            assert_equal(#cb_results, 0)
+            w:RayCast(cb_all, p1, point_no)
+            assert_equal(#cb_results, 0)
+            w:RayCast(cb_any, p1, point_no)
+            assert_equal(#cb_results, 0)
+
+            --*** ONE ***
+            w:RayCast(cb_closest, p1, point_one)
+            assert_equal(#cb_results, 1)
+            assert_equal(cb_results[1].fixture:GetBody(), body_1)
+            cb_results = {}
+            w:RayCast(cb_all, p1, point_one)
+            assert_equal(#cb_results, 1)
+            cb_results = {}
+            w:RayCast(cb_any, p1, point_one)
+            assert_equal(#cb_results, 1)
+            cb_results = {}
+
+            --*** ALL ***
+            w:RayCast(cb_closest, p1, point_all)
+            assert_equal(cb_results[#cb_results].fixture:GetBody(), body_1)
+            cb_results = {}
+            w:RayCast(cb_all, p1, point_all)
+            assert_equal(#cb_results, 3)
+            cb_results = {}
+            w:RayCast(cb_any, p1, point_all)
+            assert_equal(#cb_results, 1)
+            cb_results = {}
+
+
+            local cb_error = function() error("error happened") end
+            local status, error = pcall(w.RayCast,w,cb_error,p1,point_all)
+            assert_false(status)
+            --remove line number
+            assert_equal(string.sub(error,28),"error happened")
+
+            w:Destroy()
+        end)
+
         test("GetBodyList()", function()
             local w = box2d.NewWorld()
             assert_nil(w:GetBodyList())
             local body_1 = w:CreateBody()
             local body_2 = w:CreateBody()
-            assert_equal(w:GetBodyList(),body_2)
+            assert_equal(w:GetBodyList(), body_2)
             w:Destroy()
         end)
 
@@ -130,15 +205,15 @@ return function()
             assert_nil(w:GetJointList())
             local body_1 = w:CreateBody()
             local body_2 = w:CreateBody()
-            local joint1 = w:CreateJoint({type = box2d.b2JointType.e_revoluteJoint,bodyA = body_1, bodyB =  body_2})
-            assert_equal(w:GetJointList(),joint1)
+            local joint1 = w:CreateJoint({ type = box2d.b2JointType.e_revoluteJoint, bodyA = body_1, bodyB = body_2 })
+            assert_equal(w:GetJointList(), joint1)
             w:Destroy()
         end)
 
         test("Set/Get AllowSleeping()", function()
             local w = box2d.NewWorld()
             UTILS.test_method_get_set(w, "AllowSleeping", {
-                values = { true,false }
+                values = { true, false }
             })
             w:Destroy()
         end)
@@ -146,7 +221,7 @@ return function()
         test("Set/Get WarmStarting()", function()
             local w = box2d.NewWorld()
             UTILS.test_method_get_set(w, "WarmStarting", {
-                values = { true,false }
+                values = { true, false }
             })
             w:Destroy()
         end)
@@ -154,7 +229,7 @@ return function()
         test("Set/Get ContinuousPhysics()", function()
             local w = box2d.NewWorld()
             UTILS.test_method_get_set(w, "ContinuousPhysics", {
-                values = { true,false }
+                values = { true, false }
             })
             w:Destroy()
         end)
@@ -162,12 +237,12 @@ return function()
         test("Set/Get SubStepping()", function()
             local w = box2d.NewWorld()
             UTILS.test_method_get_set(w, "SubStepping", {
-                values = { true,false }
+                values = { true, false }
             })
             w:Destroy()
         end)
 
-        test("GetProxyCount()",function ()
+        test("GetProxyCount()", function()
             local w = box2d.NewWorld()
             UTILS.test_method(w, "GetProxyCount", {
                 result = 0
@@ -175,7 +250,7 @@ return function()
             w:Destroy()
         end)
 
-        test("GetBodyCount()",function ()
+        test("GetBodyCount()", function()
             local w = box2d.NewWorld()
             UTILS.test_method(w, "GetBodyCount", {
                 result = 0
@@ -183,7 +258,7 @@ return function()
             w:Destroy()
         end)
 
-        test("GetJointCount()",function ()
+        test("GetJointCount()", function()
             local w = box2d.NewWorld()
             UTILS.test_method(w, "GetJointCount", {
                 result = 0
@@ -191,7 +266,7 @@ return function()
             w:Destroy()
         end)
 
-        test("GetContactCount()",function ()
+        test("GetContactCount()", function()
             local w = box2d.NewWorld()
             UTILS.test_method(w, "GetContactCount", {
                 result = 0
@@ -199,7 +274,7 @@ return function()
             w:Destroy()
         end)
 
-        test("GetTreeHeight()",function ()
+        test("GetTreeHeight()", function()
             local w = box2d.NewWorld()
             UTILS.test_method(w, "GetTreeHeight", {
                 result = 0
@@ -207,7 +282,7 @@ return function()
             w:Destroy()
         end)
 
-        test("GetTreeBalance()",function ()
+        test("GetTreeBalance()", function()
             local w = box2d.NewWorld()
             UTILS.test_method(w, "GetTreeBalance", {
                 result = 0
@@ -215,7 +290,7 @@ return function()
             w:Destroy()
         end)
 
-        test("GetTreeQuality()",function ()
+        test("GetTreeQuality()", function()
             local w = box2d.NewWorld()
             UTILS.test_method(w, "GetTreeQuality", {
                 result = 0
@@ -226,13 +301,13 @@ return function()
         test("Set/Get Gravity()", function()
             local w = box2d.NewWorld()
             UTILS.test_method_get_set(w, "Gravity", {
-                v3 = true,default = vmath.vector3(0,0,0),
-                values = {  vmath.vector3(-1,0,0), vmath.vector3(10,0,0), vmath.vector3(0,0,0) }
+                v3 = true, default = vmath.vector3(0, 0, 0),
+                values = { vmath.vector3(-1, 0, 0), vmath.vector3(10, 0, 0), vmath.vector3(0, 0, 0) }
             })
             w:Destroy()
         end)
 
-        test("IsLocked()",function ()
+        test("IsLocked()", function()
             local w = box2d.NewWorld()
             UTILS.test_method(w, "IsLocked", {
                 result = false
@@ -243,14 +318,14 @@ return function()
         test("Set/Get AutoClearForces()", function()
             local w = box2d.NewWorld()
             UTILS.test_method_get_set(w, "AutoClearForces", {
-                values = {  false,true }
+                values = { false, true }
             })
             w:Destroy()
         end)
 
         test("ShiftOrigin()", function()
             local w = box2d.NewWorld()
-            UTILS.test_method(w, "ShiftOrigin", {args = {vmath.vector3(10,10,0)}})
+            UTILS.test_method(w, "ShiftOrigin", { args = { vmath.vector3(10, 10, 0) } })
             w:Destroy()
         end)
 
