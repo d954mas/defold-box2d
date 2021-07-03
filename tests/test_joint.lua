@@ -5,54 +5,30 @@ local LUME = require "libs.lume"
 local create_revoluteJoint = function(w)
     local bodyA = w:CreateBody({ position = vmath.vector3(0, 0, 0), type = box2d.b2BodyType.b2_dynamicBody })
     local bodyB = w:CreateBody({ position = vmath.vector3(1, 1, 0), type = box2d.b2BodyType.b2_dynamicBody })
-    local joint = w:CreateJoint({
-        type = box2d.b2JointType.e_revoluteJoint,
-        bodyA = bodyA,
-        bodyB = bodyB,
-        anchor = vmath.vector3(1, 0, 0)
-    })
+    local joint = w:CreateJoint(box2d.InitializeRevoluteJointDef(bodyA,bodyB,vmath.vector3(0,0,0)))
     return joint, bodyA, bodyB
 end
 
 local create_prismaticJoint = function(w)
     local bodyA = w:CreateBody({ position = vmath.vector3(0, 0, 0), type = box2d.b2BodyType.b2_dynamicBody })
     local bodyB = w:CreateBody({ position = vmath.vector3(1, 1, 0), type = box2d.b2BodyType.b2_dynamicBody })
-    local joint = w:CreateJoint({
-        type = box2d.b2JointType.e_prismaticJoint,
-        bodyA = bodyA,
-        bodyB = bodyB,
-        anchor = vmath.vector3(1, 0, 0),
-        axis = vmath.vector3(1, 0, 0)
-    })
+    local joint = w:CreateJoint(box2d.InitializePrismaticJointDef(bodyA,bodyB,vmath.vector3(1, 0, 0),vmath.vector3(1, 0, 0)))
+
     return joint, bodyA, bodyB
 end
 
 local create_distanceJoint = function(w)
     local bodyA = w:CreateBody({ position = vmath.vector3(0, 0, 0), type = box2d.b2BodyType.b2_dynamicBody })
     local bodyB = w:CreateBody({ position = vmath.vector3(1, 1, 0), type = box2d.b2BodyType.b2_dynamicBody })
-    local joint = w:CreateJoint({
-        type = box2d.b2JointType.e_distanceJoint,
-        bodyA = bodyA,
-        bodyB = bodyB,
-        anchorA = vmath.vector3(0, 0, 0),
-        anchorB = vmath.vector3(1, 0, 0)
-    })
+    local joint = w:CreateJoint(box2d.InitializeDistanceJointDef(bodyA,bodyB,vmath.vector3(0),vmath.vector3(1,0,0)))
     return joint, bodyA, bodyB
 end
 
 local create_pulleyJoint = function(w)
     local bodyA = w:CreateBody({ position = vmath.vector3(0, 0, 0), type = box2d.b2BodyType.b2_dynamicBody })
     local bodyB = w:CreateBody({ position = vmath.vector3(1, 1, 0), type = box2d.b2BodyType.b2_dynamicBody })
-    local joint = w:CreateJoint({
-        type = box2d.b2JointType.e_pulleyJoint,
-        bodyA = bodyA,
-        bodyB = bodyB,
-        groundAnchorA = vmath.vector3(0, 0, 0),
-        groundAnchorB = vmath.vector3(0, 0, 0),
-        anchorA = vmath.vector3(0, 0, 0),
-        anchorB = vmath.vector3(0, 0, 0),
-        ratio = 1
-    })
+    local joint = w:CreateJoint(box2d.InitializePulleyJointDef(bodyA,bodyB,vmath.vector3(0),vmath.vector3(0),
+    vmath.vector3(0),vmath.vector3(0),1))
     return joint, bodyA, bodyB
 end
 
@@ -71,13 +47,11 @@ local create_gearJoint = function(w)
     local bodyB = w:CreateBody({ position = vmath.vector3(1, 1, 0), type = box2d.b2BodyType.b2_dynamicBody })
     local joint1 = w:CreateJoint({ type = box2d.b2JointType.e_revoluteJoint,
                                    bodyA = bodyA,
-                                   bodyB = bodyB,
-                                   anchor = vmath.vector3(1, 0, 0) })
+                                   bodyB = bodyB})
 
     local joint2 = w:CreateJoint({ type = box2d.b2JointType.e_revoluteJoint,
                                    bodyA = bodyA,
-                                   bodyB = bodyB,
-                                   anchor = vmath.vector3(1, 0, 0) })
+                                   bodyB = bodyB})
     local joint = w:CreateJoint({
         type = box2d.b2JointType.e_gearJoint,
         bodyA = bodyA,
@@ -91,48 +65,29 @@ end
 local create_wheelJoint = function(w)
     local bodyA = w:CreateBody({ position = vmath.vector3(0, 0, 0), type = box2d.b2BodyType.b2_dynamicBody })
     local bodyB = w:CreateBody({ position = vmath.vector3(1, 1, 0), type = box2d.b2BodyType.b2_dynamicBody })
-    local joint = w:CreateJoint({
-        type = box2d.b2JointType.e_wheelJoint,
-        bodyA = bodyA,
-        bodyB = bodyB,
-        anchor = vmath.vector3(1, 0, 0),
-        axis = vmath.vector3(1, 0, 0)
-    })
+    local joint = w:CreateJoint(box2d.InitializeWheelJointDef(bodyA,bodyB,vmath.vector3(1,0,0),vmath.vector3(1,0,0)))
     return joint, bodyA, bodyB
 end
 
 local create_weldJoint = function(w)
     local bodyA = w:CreateBody({ position = vmath.vector3(0, 0, 0), type = box2d.b2BodyType.b2_dynamicBody })
     local bodyB = w:CreateBody({ position = vmath.vector3(1, 1, 0), type = box2d.b2BodyType.b2_dynamicBody })
-    local joint = w:CreateJoint({
-        type = box2d.b2JointType.e_weldJoint,
-        bodyA = bodyA,
-        bodyB = bodyB,
-        anchor = vmath.vector3(1, 0, 0),
-    })
+    local joint = w:CreateJoint(box2d.InitializeWeldJointDef(bodyA,bodyB,vmath.vector3(1,0,0)))
+
     return joint, bodyA, bodyB
 end
 
 local create_frictionJoint = function(w)
     local bodyA = w:CreateBody({ position = vmath.vector3(0, 0, 0), type = box2d.b2BodyType.b2_dynamicBody })
     local bodyB = w:CreateBody({ position = vmath.vector3(1, 1, 0), type = box2d.b2BodyType.b2_dynamicBody })
-    local joint = w:CreateJoint({
-        type = box2d.b2JointType.e_frictionJoint,
-        bodyA = bodyA,
-        bodyB = bodyB,
-        anchor = vmath.vector3(1, 0, 0),
-    })
+    local joint = w:CreateJoint(box2d.InitializeFrictionJointDef(bodyA,bodyB,vmath.vector3(1,0,0)))
     return joint, bodyA, bodyB
 end
 
 local create_motorJoint = function(w)
     local bodyA = w:CreateBody({ position = vmath.vector3(0, 0, 0), type = box2d.b2BodyType.b2_dynamicBody })
     local bodyB = w:CreateBody({ position = vmath.vector3(1, 1, 0), type = box2d.b2BodyType.b2_dynamicBody })
-    local joint = w:CreateJoint({
-        type = box2d.b2JointType.e_motorJoint,
-        bodyA = bodyA,
-        bodyB = bodyB,
-    })
+    local joint = w:CreateJoint(box2d.InitializeMotorJointDef(bodyA,bodyB))
     return joint, bodyA, bodyB
 end
 
@@ -395,7 +350,7 @@ return function()
             local w = box2d.NewWorld()
             local b = w:CreateBody()
             local b2 = w:CreateBody()
-            local joint = w:CreateJoint({type = box2d.b2JointType.e_revoluteJoint, bodyA = b, bodyB = b2, anchor = vmath.vector3(0,0,0)})
+            local joint = w:CreateJoint({type = box2d.b2JointType.e_revoluteJoint, bodyA = b, bodyB = b2})
 
             joint:GetType()
             w:DestroyJoint(joint)
@@ -409,7 +364,7 @@ return function()
             local w = box2d.NewWorld()
             local b = w:CreateBody()
             local b2 = w:CreateBody()
-            local joint = w:CreateJoint({type = box2d.b2JointType.e_revoluteJoint, bodyA = b, bodyB = b2, anchor = vmath.vector3(0,0,0)})
+            local joint = w:CreateJoint({type = box2d.b2JointType.e_revoluteJoint, bodyA = b, bodyB = b2})
 
             joint:GetType()
             w:DestroyBody(b)
@@ -423,7 +378,7 @@ return function()
             local w = box2d.NewWorld()
             local b = w:CreateBody()
             local b2 = w:CreateBody()
-            local joint = w:CreateJoint({type = box2d.b2JointType.e_revoluteJoint, bodyA = b, bodyB = b2, anchor = vmath.vector3(0,0,0)})
+            local joint = w:CreateJoint({type = box2d.b2JointType.e_revoluteJoint, bodyA = b, bodyB = b2})
 
             joint:GetType()
             w:Destroy()

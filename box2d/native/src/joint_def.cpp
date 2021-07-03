@@ -9,7 +9,6 @@
 b2RevoluteJointDef* b2RevoluteJointDef_from_table(lua_State *L){
     if (lua_istable(L, -1)) {
         b2RevoluteJointDef* def = new b2RevoluteJointDef();
-        b2Vec2 anchor = extra_utils::table_get_b2vec_safe(L,"anchor","no anchor");
         lua_pushnil(L);  /* first key */
         while (lua_next(L, -2) != 0) {
             const char* key = lua_tostring(L, -2);
@@ -32,8 +31,6 @@ b2RevoluteJointDef* b2RevoluteJointDef_from_table(lua_State *L){
                     def->bodyB = Body_get_userdata_safe(L,-1)->body;
                     break;
                 case HASH_type:
-                    break;
-                case HASH_anchor:
                     break;
                 case HASH_localAnchorA:
                      def->localAnchorA = extra_utils::get_b2vec_safe(L,-1,"localAnchorA not v3");
@@ -72,7 +69,6 @@ b2RevoluteJointDef* b2RevoluteJointDef_from_table(lua_State *L){
         }
         if(def->bodyA == NULL) utils::error(L,"no bodyA");
         if(def->bodyB == NULL) utils::error(L,"no bodyB");
-        def->Initialize(def->bodyA, def->bodyB, anchor);
         return def;
     }else{
         utils::error(L,"JointDef should be table");
@@ -82,8 +78,6 @@ b2RevoluteJointDef* b2RevoluteJointDef_from_table(lua_State *L){
 b2PrismaticJointDef* b2PrismaticJointDef_from_table(lua_State *L){
     if (lua_istable(L, -1)) {
         b2PrismaticJointDef* def = new b2PrismaticJointDef();
-        b2Vec2 anchor = extra_utils::table_get_b2vec_safe(L,"anchor","no anchor");
-        b2Vec2 axis = extra_utils::table_get_b2vec_safe(L,"axis","no axis");
         lua_pushnil(L);  /* first key */
         while (lua_next(L, -2) != 0) {
             const char* key = lua_tostring(L, -2);
@@ -106,10 +100,6 @@ b2PrismaticJointDef* b2PrismaticJointDef_from_table(lua_State *L){
                     def->bodyB = Body_get_userdata_safe(L,-1)->body;
                     break;
                 case HASH_type:
-                    break;
-                case HASH_anchor:
-                    break;
-                case HASH_axis:
                     break;
                 case HASH_localAnchorA:
                     def->localAnchorA = extra_utils::get_b2vec_safe(L,-1,"localAnchorA not v3");
@@ -151,7 +141,6 @@ b2PrismaticJointDef* b2PrismaticJointDef_from_table(lua_State *L){
         }
         if(def->bodyA == NULL) utils::error(L,"no bodyA");
         if(def->bodyB == NULL) utils::error(L,"no bodyB");
-        def->Initialize(def->bodyA, def->bodyB, anchor, axis);
         return def;
     }else{
         utils::error(L,"JointDef should be table");
@@ -161,8 +150,6 @@ b2PrismaticJointDef* b2PrismaticJointDef_from_table(lua_State *L){
 b2DistanceJointDef* b2DistanceJointDef_from_table(lua_State *L){
     if (lua_istable(L, -1)) {
         b2DistanceJointDef* def = new b2DistanceJointDef();
-        b2Vec2 anchorA = extra_utils::table_get_b2vec_safe(L,"anchorA","no anchorA");
-        b2Vec2 anchorB = extra_utils::table_get_b2vec_safe(L,"anchorB","no anchorB");
         lua_pushnil(L);  /* first key */
         while (lua_next(L, -2) != 0) {
             const char* key = lua_tostring(L, -2);
@@ -185,10 +172,6 @@ b2DistanceJointDef* b2DistanceJointDef_from_table(lua_State *L){
                    def->bodyB = Body_get_userdata_safe(L,-1)->body;
                    break;
                 case HASH_type:
-                   break;
-                case HASH_anchorA:
-                   break;
-                case HASH_anchorB:
                    break;
                 case HASH_localAnchorA:
                    def->localAnchorA = extra_utils::get_b2vec_safe(L,-1,"localAnchorA not v3");
@@ -221,7 +204,6 @@ b2DistanceJointDef* b2DistanceJointDef_from_table(lua_State *L){
         }
         if(def->bodyA == NULL) utils::error(L,"no bodyA");
         if(def->bodyB == NULL) utils::error(L,"no bodyB");
-        def->Initialize(def->bodyA, def->bodyB, anchorA, anchorB);
         return def;
     }else{
         utils::error(L,"JointDef should be table");
@@ -231,13 +213,6 @@ b2DistanceJointDef* b2DistanceJointDef_from_table(lua_State *L){
 b2PulleyJointDef* b2PulleyJointDef_from_table(lua_State *L){
     if (lua_istable(L, -1)) {
         b2PulleyJointDef* def = new b2PulleyJointDef();
-        b2Vec2 groundAnchorA = extra_utils::table_get_b2vec_safe(L,"groundAnchorA","no groundAnchorA");
-        b2Vec2 groundAnchorB = extra_utils::table_get_b2vec_safe(L,"groundAnchorB","no groundAnchorB");
-        b2Vec2 anchorA = extra_utils::table_get_b2vec_safe(L,"anchorA","no anchorA");
-        b2Vec2 anchorB = extra_utils::table_get_b2vec_safe(L,"anchorB","no anchorB");
-        if(utils::table_is_nil(L,"ratio")){
-            utils::error(L,"no ratio");
-        }
         lua_pushnil(L);  /* first key */
         while (lua_next(L, -2) != 0) {
             const char* key = lua_tostring(L, -2);
@@ -260,10 +235,6 @@ b2PulleyJointDef* b2PulleyJointDef_from_table(lua_State *L){
                    def->bodyB = Body_get_userdata_safe(L,-1)->body;
                    break;
                 case HASH_type:
-                   break;
-                case HASH_anchorA:
-                   break;
-                case HASH_anchorB:
                    break;
                 case HASH_groundAnchorA:
                    break;
@@ -294,8 +265,6 @@ b2PulleyJointDef* b2PulleyJointDef_from_table(lua_State *L){
         }
         if(def->bodyA == NULL) utils::error(L,"no bodyA");
         if(def->bodyB == NULL) utils::error(L,"no bodyB");
-        def->Initialize(def->bodyA, def->bodyB, groundAnchorA,
-                        groundAnchorB,anchorA, anchorB, def->ratio);
         return def;
     }else{
         utils::error(L,"JointDef should be table");
@@ -412,8 +381,6 @@ b2GearJointDef* b2GearJointDef_from_table(lua_State *L){
 b2WheelJointDef* b2WheelJointDef_from_table(lua_State *L){
     if (lua_istable(L, -1)) {
         b2WheelJointDef* def = new b2WheelJointDef();
-        b2Vec2 anchor = extra_utils::table_get_b2vec_safe(L,"anchor","no anchor");
-        b2Vec2 axis = extra_utils::table_get_b2vec_safe(L,"axis","no axis");
         lua_pushnil(L);  /* first key */
         while (lua_next(L, -2) != 0) {
             const char* key = lua_tostring(L, -2);
@@ -434,10 +401,6 @@ b2WheelJointDef* b2WheelJointDef_from_table(lua_State *L){
                    break;
                 case HASH_bodyB:
                    def->bodyB = Body_get_userdata_safe(L,-1)->body;
-                   break;
-                case HASH_axis:
-                   break;
-                case HASH_anchor:
                    break;
                 case HASH_type:
                    break;
@@ -484,7 +447,6 @@ b2WheelJointDef* b2WheelJointDef_from_table(lua_State *L){
         }
         if(def->bodyA == NULL) utils::error(L,"no bodyA");
         if(def->bodyB == NULL) utils::error(L,"no bodyB");
-        def->Initialize(def->bodyA, def->bodyB,anchor, axis);
         return def;
     }else{
         utils::error(L,"JointDef should be table");
@@ -494,7 +456,6 @@ b2WheelJointDef* b2WheelJointDef_from_table(lua_State *L){
 b2WeldJointDef* b2WeldJointDef_from_table(lua_State *L){
     if (lua_istable(L, -1)) {
         b2WeldJointDef* def = new b2WeldJointDef();
-        b2Vec2 anchor = extra_utils::table_get_b2vec_safe(L,"anchor","no anchor");
         lua_pushnil(L);  /* first key */
         while (lua_next(L, -2) != 0) {
             const char* key = lua_tostring(L, -2);
@@ -517,8 +478,6 @@ b2WeldJointDef* b2WeldJointDef_from_table(lua_State *L){
                    def->bodyB = Body_get_userdata_safe(L,-1)->body;
                    break;
                 case HASH_type:
-                   break;
-                case HASH_anchor:
                    break;
                 case HASH_localAnchorA:
                    def->localAnchorA = extra_utils::get_b2vec_safe(L,-1,"localAnchorA not v3");
@@ -545,7 +504,6 @@ b2WeldJointDef* b2WeldJointDef_from_table(lua_State *L){
         }
         if(def->bodyA == NULL) utils::error(L,"no bodyA");
         if(def->bodyB == NULL) utils::error(L,"no bodyB");
-        def->Initialize(def->bodyA, def->bodyB, anchor);
         return def;
     }else{
         utils::error(L,"JointDef should be table");
@@ -555,7 +513,6 @@ b2WeldJointDef* b2WeldJointDef_from_table(lua_State *L){
 b2FrictionJointDef* b2FrictionJointDef_from_table(lua_State *L){
     if (lua_istable(L, -1)) {
         b2FrictionJointDef* def = new b2FrictionJointDef();
-        b2Vec2 anchor = extra_utils::table_get_b2vec_safe(L,"anchor","no anchor");
         lua_pushnil(L);  /* first key */
         while (lua_next(L, -2) != 0) {
             const char* key = lua_tostring(L, -2);
@@ -579,8 +536,6 @@ b2FrictionJointDef* b2FrictionJointDef_from_table(lua_State *L){
                    break;
                 case HASH_type:
                    break;
-                case HASH_anchor:
-                   break;
                 case HASH_localAnchorA:
                    def->localAnchorA = extra_utils::get_b2vec_safe(L,-1,"localAnchorA not v3");
                    break;
@@ -603,7 +558,6 @@ b2FrictionJointDef* b2FrictionJointDef_from_table(lua_State *L){
         }
         if(def->bodyA == NULL) utils::error(L,"no bodyA");
         if(def->bodyB == NULL) utils::error(L,"no bodyB");
-        def->Initialize(def->bodyA, def->bodyB, anchor);
         return def;
     }else{
         utils::error(L,"JointDef should be table");
@@ -661,7 +615,6 @@ b2MotorJointDef* b2MotorJointDef_from_table(lua_State *L){
         }
         if(def->bodyA == NULL) utils::error(L,"no bodyA");
         if(def->bodyB == NULL) utils::error(L,"no bodyB");
-        def->Initialize(def->bodyA, def->bodyB);
         return def;
     }else{
         utils::error(L,"JointDef should be table");
@@ -724,6 +677,230 @@ b2JointDef* b2JointDef_from_table(lua_State *L, int index){
         utils::error(L,"JointDef should be table");
     }
     return def;
+}
+
+
+
+void b2JointDef_to_table(lua_State *L, b2JointDef* defBase){
+    lua_newtable(L);
+
+    lua_pushnumber(L, defBase->type);
+    lua_setfield(L, -2, "type");
+
+    b2Body *bodyA = defBase->bodyA;
+    b2Body *bodyB = defBase->bodyB;
+    uintptr_t bodyAPointer = NULL;
+    uintptr_t bodyBPointer = NULL;
+    if(bodyA != NULL){
+        bodyAPointer = bodyA->GetUserData().pointer;
+    }
+    if(bodyB != NULL){
+        bodyBPointer = bodyB->GetUserData().pointer;
+    }
+
+    if(bodyAPointer != NULL){
+        ((Body*)bodyAPointer)->Push(L);
+        lua_setfield(L, -2, "bodyA");
+    }
+    if(bodyBPointer != NULL){
+        ((Body*)bodyBPointer)->Push(L);
+        lua_setfield(L, -2, "bodyB");
+    }
+
+    lua_pushboolean(L,defBase->collideConnected);
+    lua_setfield(L, -2, "collideConnected");
+
+    //no add push for userdata. It can't exist here :)
+
+    switch(defBase->type){
+        case b2JointType::e_unknownJoint:
+            utils::error(L,"e_unknownJoint not supported");
+            break;
+        case b2JointType::e_revoluteJoint:{
+            b2RevoluteJointDef* def = (b2RevoluteJointDef*) defBase;
+            utils::push_vector(L, def->localAnchorA.x, def->localAnchorA.y, 0);
+            lua_setfield(L, -2, "localAnchorA");
+            utils::push_vector(L, def->localAnchorB.x, def->localAnchorB.y, 0);
+            lua_setfield(L, -2, "localAnchorB");
+            lua_pushnumber(L,def->referenceAngle);
+            lua_setfield(L, -2, "referenceAngle");
+            lua_pushnumber(L,def->lowerAngle);
+            lua_setfield(L, -2, "lowerAngle");
+            lua_pushnumber(L,def->upperAngle);
+            lua_setfield(L, -2, "upperAngle");
+            lua_pushnumber(L,def->maxMotorTorque);
+            lua_setfield(L, -2, "maxMotorTorque");
+            lua_pushnumber(L,def->motorSpeed);
+            lua_setfield(L, -2, "motorSpeed");
+        	lua_pushboolean(L,def->enableLimit);
+            lua_setfield(L, -2, "enableLimit");
+        	lua_pushboolean(L,def->enableMotor);
+            lua_setfield(L, -2, "enableMotor");
+            break;
+        }
+        case b2JointType::e_prismaticJoint:{
+            b2PrismaticJointDef* def = (b2PrismaticJointDef*) defBase;
+            utils::push_vector(L, def->localAnchorA.x, def->localAnchorA.y, 0);
+            lua_setfield(L, -2, "localAnchorA");
+            utils::push_vector(L, def->localAnchorB.x, def->localAnchorB.y, 0);
+            lua_setfield(L, -2, "localAnchorB");
+            utils::push_vector(L, def->localAxisA.x, def->localAxisA.y, 0);
+            lua_setfield(L, -2, "localAxisA");
+            lua_pushnumber(L,def->referenceAngle);
+            lua_setfield(L, -2, "referenceAngle");
+        	lua_pushboolean(L,def->enableLimit);
+            lua_setfield(L, -2, "enableLimit");
+            lua_pushnumber(L,def->lowerTranslation);
+            lua_setfield(L, -2, "lowerTranslation");
+            lua_pushnumber(L,def->upperTranslation);
+            lua_setfield(L, -2, "upperTranslation");
+        	lua_pushboolean(L,def->enableMotor);
+            lua_setfield(L, -2, "enableMotor");
+            lua_pushnumber(L,def->maxMotorForce);
+            lua_setfield(L, -2, "maxMotorForce");
+            lua_pushnumber(L,def->motorSpeed);
+            lua_setfield(L, -2, "motorSpeed");
+            break;
+        }
+        case b2JointType::e_distanceJoint:{
+            b2DistanceJointDef* def = (b2DistanceJointDef*) defBase;
+            utils::push_vector(L, def->localAnchorA.x, def->localAnchorA.y, 0);
+            lua_setfield(L, -2, "localAnchorA");
+            utils::push_vector(L, def->localAnchorB.x, def->localAnchorB.y, 0);
+            lua_setfield(L, -2, "localAnchorB");
+            lua_pushnumber(L,def->length);
+            lua_setfield(L, -2, "length");
+            lua_pushnumber(L,def->minLength);
+            lua_setfield(L, -2, "minLength");
+            lua_pushnumber(L,def->maxLength);
+            lua_setfield(L, -2, "maxLength");
+            lua_pushnumber(L,def->stiffness);
+            lua_setfield(L, -2, "stiffness");
+            lua_pushnumber(L,def->damping);
+            lua_setfield(L, -2, "damping");
+            break;
+        }
+        case b2JointType::e_pulleyJoint:{
+            b2PulleyJointDef* def = (b2PulleyJointDef*) defBase;
+            utils::push_vector(L, def->groundAnchorA.x, def->groundAnchorA.y, 0);
+            lua_setfield(L, -2, "groundAnchorA");
+            utils::push_vector(L, def->groundAnchorB.x, def->groundAnchorB.y, 0);
+            lua_setfield(L, -2, "groundAnchorB");
+            utils::push_vector(L, def->localAnchorA.x, def->localAnchorA.y, 0);
+            lua_setfield(L, -2, "localAnchorA");
+            utils::push_vector(L, def->localAnchorB.x, def->localAnchorB.y, 0);
+            lua_setfield(L, -2, "localAnchorB");
+            lua_pushnumber(L,def->lengthA);
+            lua_setfield(L, -2, "lengthA");
+            lua_pushnumber(L,def->lengthB);
+            lua_setfield(L, -2, "lengthB");
+            lua_pushnumber(L,def->ratio);
+            lua_setfield(L, -2, "ratio");
+            break;
+        }
+
+        case b2JointType::e_mouseJoint:{
+            b2MouseJointDef* def = (b2MouseJointDef*) defBase;
+            utils::push_vector(L, def->target.x, def->target.y, 0);
+            lua_setfield(L, -2, "target");
+            lua_pushnumber(L,def->maxForce);
+            lua_setfield(L, -2, "maxForce");
+            lua_pushnumber(L,def->stiffness);
+            lua_setfield(L, -2, "stiffness");
+            lua_pushnumber(L,def->damping);
+            lua_setfield(L, -2, "damping");
+            break;
+        }
+        case b2JointType::e_gearJoint:{
+            b2GearJointDef* def = (b2GearJointDef*) defBase;
+            if(def->joint1 != nullptr){
+                Joint* lua_joint = (Joint *)def->joint1->GetUserData().pointer;
+                lua_joint->Push(L);
+                lua_setfield(L, -2, "joint1");
+            }
+            if(def->joint2 != nullptr){
+                Joint* lua_joint = (Joint *)def->joint2->GetUserData().pointer;
+                lua_joint->Push(L);
+                lua_setfield(L, -2, "joint2");
+            }
+            
+            lua_pushnumber(L,def->ratio);
+            lua_setfield(L, -2, "ratio");
+            break;
+        }
+        case b2JointType::e_wheelJoint:{
+            b2WheelJointDef* def = (b2WheelJointDef*) defBase;
+            utils::push_vector(L, def->localAnchorA.x, def->localAnchorA.y, 0);
+            lua_setfield(L, -2, "localAnchorA");
+            utils::push_vector(L, def->localAnchorB.x, def->localAnchorB.y, 0);
+            lua_setfield(L, -2, "localAnchorB");
+            utils::push_vector(L, def->localAxisA.x, def->localAxisA.y, 0);
+            lua_setfield(L, -2, "localAxisA");
+            lua_pushboolean(L,def->enableLimit);
+            lua_setfield(L, -2, "enableLimit");
+            lua_pushnumber(L,def->lowerTranslation);
+            lua_setfield(L, -2, "lowerTranslation");
+            lua_pushnumber(L,def->upperTranslation);
+            lua_setfield(L, -2, "upperTranslation");
+            lua_pushboolean(L, def->enableMotor);
+            lua_setfield(L, -2, "enableMotor");
+            lua_pushnumber(L,def->maxMotorTorque);
+            lua_setfield(L, -2, "maxMotorTorque");
+            lua_pushnumber(L,def->motorSpeed);
+            lua_setfield(L, -2, "motorSpeed");
+            lua_pushnumber(L,def->stiffness);
+            lua_setfield(L, -2, "stiffness");
+            lua_pushnumber(L,def->damping);
+            lua_setfield(L, -2, "damping");
+            break;
+        }
+        case b2JointType::e_weldJoint:{
+            b2WeldJointDef* def = (b2WeldJointDef*) defBase;
+            utils::push_vector(L, def->localAnchorA.x, def->localAnchorA.y, 0);
+            lua_setfield(L, -2, "localAnchorA");
+            utils::push_vector(L, def->localAnchorB.x, def->localAnchorB.y, 0);
+            lua_setfield(L, -2, "localAnchorB");
+            lua_pushnumber(L,def->referenceAngle);
+            lua_setfield(L, -2, "referenceAngle");
+            lua_pushnumber(L,def->stiffness);
+            lua_setfield(L, -2, "stiffness");
+            lua_pushnumber(L,def->damping);
+            lua_setfield(L, -2, "damping");
+            break;
+        }
+        case b2JointType::e_frictionJoint:{
+            b2FrictionJointDef* def = (b2FrictionJointDef*) defBase;
+            utils::push_vector(L, def->localAnchorA.x, def->localAnchorA.y, 0);
+            lua_setfield(L, -2, "localAnchorA");
+            utils::push_vector(L, def->localAnchorB.x, def->localAnchorB.y, 0);
+            lua_setfield(L, -2, "localAnchorB");
+            lua_pushnumber(L,def->maxForce);
+            lua_setfield(L, -2, "maxForce");
+            lua_pushnumber(L,def->maxTorque);
+            lua_setfield(L, -2, "maxTorque");
+            break;
+        }
+        case b2JointType::e_motorJoint:{
+            b2MotorJointDef* def = (b2MotorJointDef*) defBase;
+            utils::push_vector(L, def->linearOffset.x, def->linearOffset.y, 0);
+            lua_setfield(L, -2, "linearOffset");
+            lua_pushnumber(L,def->angularOffset);
+            lua_setfield(L, -2, "angularOffset");
+            lua_pushnumber(L,def->maxForce);
+            lua_setfield(L, -2, "maxForce");
+            lua_pushnumber(L,def->maxTorque);
+            lua_setfield(L, -2, "maxTorque");
+            lua_pushnumber(L,def->correctionFactor);
+            lua_setfield(L, -2, "correctionFactor");
+            break;
+        }
+        case b2JointType::e_ropeJoint:
+            utils::error(L,"e_ropeJoint not supported");
+            break;
+        default:
+            utils::error(L,"bad joint type");
+            break;
+    }
 }
 
 

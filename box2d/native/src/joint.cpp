@@ -108,8 +108,6 @@ static int GetReactionTorque(lua_State *L){ ////virtual float GetReactionTorque(
 
 
 /// Get the next joint the world joint list.
-//b2Joint* GetNext();
-
 static int GetNext(lua_State *L){ //const b2Joint* GetNext() const;
     utils::check_arg_count(L, 1);
     Joint *joint = Joint_get_userdata_safe(L, 1);
