@@ -24,4 +24,5 @@ public:
 void FixtureInitMetaTable(lua_State *L);
 Fixture* Fixture_get_userdata(lua_State *L, int index);
 Fixture* Fixture_get_userdata_safe(lua_State *L, int index);
+Fixture* Fixture_from_b2Fixture(b2Fixture *fixture);
 #endif

@@ -6,6 +6,7 @@
 #include <dmsdk/sdk.h>
 #include <extra_utils.h>
 #include "draw.h"
+#include "contact_listener.h"
 
 
 
@@ -15,6 +16,7 @@ private:
 public:
 	b2World *world;
 	Draw* draw;
+	LuaContactListener* contactListener;
 	int table_ref; //always return same table
 	World(b2Vec2 gravity);
 	~World();

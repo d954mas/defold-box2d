@@ -9,6 +9,7 @@ local TEST_FIXTURE = require "tests.test_fixture"
 local TEST_JOINT_DEF = require "tests.test_joint_def"
 local TEST_JOINT = require "tests.test_joint"
 local TEST_DRAW = require "tests.test_draw"
+local TEST_CONTACT = require "tests.test_contact"
 local TELESCOPE = require "deftest.telescope"
 
 local M = {}
@@ -50,6 +51,7 @@ function M.run()
     DEFTEST.add(TEST_FIXTURE)
     DEFTEST.add(TEST_JOINT_DEF)
     DEFTEST.add(TEST_JOINT)
+    DEFTEST.add(TEST_CONTACT)
     DEFTEST.run()
 end
 

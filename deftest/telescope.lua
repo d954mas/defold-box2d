@@ -533,7 +533,7 @@ local function error_report(contexts, results)
   local buffer = {}
   for _, r in filter(results, function(i, r) return r.message end) do
     local name = contexts[r.test].name
-    table.insert(buffer, name .. ":\n" .. r.message[1] .. "\n" .. r.message[2])
+    table.insert(buffer, name .. ":\n" .. tostring(r.message[1]) .. "\n" .. tostring(r.message[2]))
   end
   if #buffer > 0 then return table.concat(buffer, "\n") end
 end
