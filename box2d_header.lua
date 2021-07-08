@@ -641,6 +641,16 @@ local Box2dBodyDef = {
 ---@class Box2dWorld
 local Box2dWorld = {}
 
+--- Register a contact event listener.
+--- listener = {
+---    BeginContact = function (contact) end,
+---    EndContact = function(contact) end,
+---    PreSolve = function(contact, old_manifold) end,
+---    PostSolve = function(contact,impulse) end
+--- }
+---@param listener table|nil
+function Box2dWorld:SetContactListener(listener) end
+
 --- Register a routine for debug drawing. The debug draw functions are called
 --- inside with b2World:DebugDraw method. The debug draw object is owned
 --- by you and must remain in scope.
@@ -1756,6 +1766,84 @@ function Box2dDebugDraw:ClearFlags(flags) end
 
 ---Destroy, free memory
 function Box2dDebugDraw:Destroy() end
+
+
+---@class Box2dContact
+local Box2dContact = {}
+
+--- Is this contact touching?
+---@return boolean
+function Box2dContact:IsTouching() end
+
+--- Enable/disable this contact. This can be used inside the pre-solve
+--- contact listener. The contact is only disabled for the current
+--- time step (or sub-step in continuous collisions).
+---@param flag boolean
+function Box2dContact:SetEnabled(flag) end
+
+--- Has this contact been disabled?
+---@return boolean
+function Box2dContact:IsEnabled() end
+
+--- Get fixture A in this contact.
+---@return Box2dFixture
+function Box2dContact:GetFixtureA() end
+
+--- Get the child primitive index for fixture A.
+---@return number
+function Box2dContact:GetChildIndexA() end
+
+--- Get fixture B in this contact.
+---@return Box2dFixture
+ function Box2dContact:GetFixtureB() end
+
+--- Get the child primitive index for fixture B.
+---@return number
+function Box2dContact:GetChildIndexB() end
+
+--- Override the default friction mixture. You can call this in b2ContactListener::PreSolve.
+--- This value persists until set or reset.
+---@param friction number
+function Box2dContact:SetFriction(friction) end
+
+--- Get the friction.
+---@return number
+function Box2dContact:GetFriction() end
+
+--- Reset the friction mixture to the default value.
+function Box2dContact:ResetFriction() end
+
+--- Override the default restitution mixture. You can call this in b2ContactListener::PreSolve.
+--- The value persists until you set or reset.
+---@param restitution number
+function Box2dContact:SetRestitution(restitution) end
+
+--- Get the restitution.
+---@return number
+function Box2dContact:GetRestitution() end
+
+--- Reset the restitution to the default value.
+function Box2dContact:ResetRestitution() end
+
+--- Override the default restitution velocity threshold mixture. You can call this in b2ContactListener::PreSolve.
+--- The value persists until you set or reset.
+---@param threshold number
+function Box2dContact:SetRestitutionThreshold(threshold) end
+
+--- Get the restitution threshold.
+---@return number
+function Box2dContact:GetRestitutionThreshold() end
+
+--- Reset the restitution threshold to the default value.
+function Box2dContact:ResetRestitutionThreshold() end
+
+--- Set the desired tangent speed for a conveyor belt behavior. In meters per second.
+---@param speed number
+function Box2dContact:SetTangentSpeed(speed) end
+
+--- Get the desired tangent speed. In meters per second.
+---@return number
+function Box2dContact:GetTangentSpeed() end
 
 
 --endregion

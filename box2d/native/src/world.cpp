@@ -6,6 +6,7 @@
 #include "joint.h"
 #include "draw.h"
 #include "fixture.h"
+#include "static_hash.h"
 
 #include <map>
 
@@ -13,15 +14,16 @@
 #define USERDATA_NAME "__userdata_world"
 
 
-
 std::map<b2World*, World*> WORLD_BY_POINTER; //to get world from body:GetWorld().
 
 World::World(b2Vec2 gravity) :
 	world(NULL) {
 	world = new b2World(gravity);
+	world->SetContactListener(this);
     WORLD_BY_POINTER[world] = this;
     table_ref = LUA_REFNIL;
     draw = NULL;
+    contactListener = NULL;
 }
 
 
@@ -93,7 +95,29 @@ static int GetProfile(lua_State *L){//const b2Profile &GetProfile () const
     return 1;
 }
 //  static int SetContactFilter(lua_State *L); // void SetContactFilter(b2ContactFilter *filter)
-//  static int SetContactListener(lua_State *L); // void SetContactListener (b2ContactListener *listener)
+
+// void SetContactListener (b2ContactListener *listener)
+static int SetContactListener(lua_State *L){
+    utils::check_arg_count(L, 2);
+    World *world = World_get_userdata_safe(L, 1);
+    if (!(lua_isnil(L, 2) || lua_istable(L, 2))) {
+         utils::error(L,"listener can be only table or nil");
+    }
+
+    if(world->contactListener != NULL){
+        world->contactListener->Destroy(L);
+        delete world->contactListener;
+        world->contactListener = NULL;
+    }
+
+
+    if(lua_istable(L, 2)){
+        world->contactListener = new LuaContactListener();
+        world->contactListener->InitFromTable(L,2);
+    }
+
+   return 0;
+}
 static int SetDebugDraw(lua_State *L){//void SetDebugDraw (b2Draw *debugDraw)
     utils::check_arg_count(L, 2);
     World *world = World_get_userdata_safe(L, 1);
@@ -179,9 +203,37 @@ static int Step(lua_State *L){;//void Step (float timeStep, int32 velocityIterat
     double velocity_iterations = lua_tonumber(L, 3);
     double position_iterations = lua_tonumber(L, 4);
 
-    lua_world->world->Step((float)time_step, (int)velocity_iterations, (int)position_iterations);
-    //lua_world->dispatch_collision_events(L);
+    //set script instance
+    if(lua_world->contactListener != NULL){
+        lua_world->contactListener->error = false;
+        lua_world->contactListener->L = L;
+        if(lua_world->contactListener->defold_script_instance_ref != LUA_REFNIL){
+            //save current instance in stack
+            dmScript::GetInstance(L);
+            lua_rawgeti(L, LUA_REGISTRYINDEX, lua_world->contactListener->defold_script_instance_ref);
+            if (!dmScript::IsInstanceValid(L)){
+                utils::error(L,"ContactListener script instance in not valid");
+            }
+            dmScript::SetInstance(L);
+        }
+    }
 
+    lua_world->world->Step((float)time_step, (int)velocity_iterations, (int)position_iterations);
+
+
+    //remove script instance
+    if(lua_world->contactListener != NULL){
+        lua_world->contactListener->EndListen(L);
+        if(lua_world->contactListener->defold_script_instance_ref != LUA_REFNIL){
+            //return prev instance
+            dmScript::SetInstance(L);
+        }
+
+        if(lua_world->contactListener->error){
+            lua_pushstring(L, lua_world->contactListener->error_message);
+            lua_error(L);
+        }
+    }
     return 0;
 }
 
@@ -253,12 +305,12 @@ static int QueryAABB(lua_State *L){
 
     b2AABB aabb;
 
-    if (not lua_isfunction(L, 2)){
+    if (!lua_isfunction(L, 2)){
         utils::error(L,"callback is not function");
         return 0;
     }
 
-    if (not lua_istable(L, 3)){
+    if (!lua_istable(L, 3)){
         utils::error(L,"aabb is not table");
         return 0;
     }
@@ -319,7 +371,7 @@ class LuaRayCastCallback : public b2RayCastCallback {
 static int RayCast(lua_State *L){
     utils::check_arg_count(L, 4);
     World *world = World_get_userdata_safe(L, 1);
-    if (not lua_isfunction(L, 2)){
+    if (!lua_isfunction(L, 2)){
         utils::error(L,"callback is not function");
         return 0;
     }
@@ -365,10 +417,10 @@ static int GetJointList(lua_State *L){ //const b2Joint * GetJointList() const
     World *lua_world = World_get_userdata_safe(L, 1);
     b2Joint* joint_top = lua_world->world->GetJointList();
     if(joint_top == NULL){
-      lua_pushnil(L);
+        lua_pushnil(L);
     }else{
-      Joint* lua_joint_new = (Joint *)joint_top->GetUserData().pointer;
-      lua_joint_new->Push(L);
+        Joint* lua_joint_new = (Joint *)joint_top->GetUserData().pointer;
+        lua_joint_new->Push(L);
     }
     return 1;
 
@@ -548,8 +600,6 @@ int Destroy(lua_State *L) {
 
 	World *lua_world = World_get_userdata_safe(L, 1);
 
-
-
 	for (b2Body *body = lua_world->world->GetBodyList(); body; body = body->GetNext()) {
 		Body *lua_body = (Body *)body->GetUserData().pointer;
         lua_body->DestroyJoints(L);
@@ -582,6 +632,7 @@ void WorldInitMetaTable(lua_State *L){
 
     luaL_Reg functions[] = {
         {"GetProfile",GetProfile},
+        {"SetContactListener",SetContactListener},
         {"SetDebugDraw",SetDebugDraw},
         {"CreateBody",CreateBody},
         {"DestroyBody",DestroyBody},
@@ -638,6 +689,11 @@ void WorldInitMetaTable(lua_State *L){
 void World::Destroy(lua_State *L){
     utils::unref(L, table_ref);
     table_ref = LUA_REFNIL;
+    if(contactListener != NULL){
+        contactListener->Destroy(L);
+        delete contactListener;
+        contactListener = NULL;
+    }
 }
 
 void World::Push(lua_State *L) {
@@ -663,21 +719,25 @@ void World::Push(lua_State *L) {
 
 // b2ContactListener
 void World::BeginContact(b2Contact *contact) {
-	//on_enter_collision(contact, true);
-	//on_enter_collision(contact, false);
+     if(contactListener != NULL){
+        contactListener->BeginContact(contact);
+     }
 }
 
 void World::EndContact(b2Contact *contact) {
-	//on_exit_collision(contact, true);
-	//on_exit_collision(contact, false);
+    if(contactListener != NULL){
+        contactListener->EndContact(contact);
+    }
 }
 
 void World::PreSolve(b2Contact *contact, const b2Manifold *old_manifold) {
-	//on_before_collision(contact, true);
-	//on_before_collision(contact, false);
+    if(contactListener != NULL){
+        contactListener->PreSolve(contact, old_manifold);
+    }
 }
 
 void World::PostSolve(b2Contact* contact, const b2ContactImpulse *impulse) {
-	//on_after_collision(contact, true);
-	//on_after_collision(contact, false);
+    if(contactListener != NULL){
+        contactListener->PostSolve(contact, impulse);
+    }
 }

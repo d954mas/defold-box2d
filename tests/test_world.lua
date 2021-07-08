@@ -88,6 +88,124 @@ return function()
             w:Destroy()
         end)
 
+        test("SetContactListener()", function()
+            local w = box2d.NewWorld()
+            w:Step(1 / 60, 3, 5)
+            w:SetContactListener(nil)
+            w:Step(1 / 60, 3, 5)
+            w:SetContactListener({ })
+            w:Step(1 / 60, 3, 5)
+
+            local contacts = {
+                BeginContact = {},
+                EndContact = {},
+                PreSolve = {},
+                PostSolve = {},
+            }
+            w:SetContactListener({
+                BeginContact = function(contact)
+                    assert_not_nil(contact)
+                    assert_not_nil(contact.__userdata_contact)
+                    table.insert(contacts.BeginContact, true)
+                end,
+                EndContact = function(contact)
+                    assert_not_nil(contact)
+                    assert_not_nil(contact.__userdata_contact)
+                    table.insert(contacts.EndContact, true)
+                end,
+                PreSolve = function(contact, old_manifold)
+                    assert_not_nil(contact)
+                    assert_not_nil(contact.__userdata_contact)
+                    table.insert(contacts.PreSolve, true)
+                end,
+                PostSolve = function(contact, impulse)
+                    assert_not_nil(contact)
+                    assert_not_nil(contact.__userdata_contact)
+                    table.insert(contacts.PostSolve, true)
+                end,
+            })
+            w:Step(1 / 60, 3, 5)
+            assert_equal(#contacts.BeginContact, 0)
+            assert_equal(#contacts.EndContact, 0)
+            assert_equal(#contacts.PreSolve, 0)
+            assert_equal(#contacts.PostSolve, 0)
+
+            local b1 = w:CreateBody({ type = box2d.b2BodyType.b2_dynamicBody, position = vmath.vector3(0, 0, 0) })
+            local b2 = w:CreateBody({ type = box2d.b2BodyType.b2_dynamicBody, position = vmath.vector3(1, 1, 0) })
+
+            b1:CreateFixture({ shape = box2d.b2Shape.e_polygon, box = true, box_hy = 1, box_hx = 1 }, 1)
+            b2:CreateFixture({ shape = box2d.b2Shape.e_polygon, box = true, box_hy = 1, box_hx = 1 }, 1)
+
+            w:Step(1 / 60, 3, 5)
+
+            assert_equal(#contacts.BeginContact, 1)
+            assert_equal(#contacts.EndContact, 0)
+            assert_equal(#contacts.PreSolve, 1)
+            assert_equal(#contacts.PostSolve, 1)
+
+            w:SetContactListener({ PreSolve = function()
+                error("error")
+            end })
+            local status, value = pcall(w.Step, w, 1 / 60, 3, 5)
+            assert_false(status)
+            assert_equal(string.sub(value, 28), "error")
+
+            w:SetContactListener({ PreSolve = function()
+
+            end })
+            w:Step(1 / 60, 3, 5)
+            w:Step(1 / 60, 3, 5)
+            w:Step(1 / 60, 3, 5)
+            w:Step(1 / 60, 3, 5)
+            w:Step(1 / 60, 3, 5)
+
+            w:Destroy()
+        end)
+
+        test("SetContactListener() REUSE", function()
+            local w = box2d.NewWorld()
+            local c
+            w:SetContactListener({
+                BeginContact = function(contact)
+                    c = c or contact
+                    assert_equal(c,contact)
+                end,
+                EndContact = function(contact)
+                    c = c or contact
+                    assert_equal(c,contact)
+                end,
+                PreSolve = function(contact, old_manifold)
+                    c = c or contact
+                    assert_equal(c,contact)
+                end,
+                PostSolve = function(contact, impulse)
+                    c = c or contact
+                    assert_equal(c,contact)
+                end,
+            })
+
+            local b1 = w:CreateBody({ type = box2d.b2BodyType.b2_dynamicBody, position = vmath.vector3(0, 0, 0) })
+            local b2 = w:CreateBody({ type = box2d.b2BodyType.b2_dynamicBody, position = vmath.vector3(0, 1, 0) })
+            local b3 = w:CreateBody({ type = box2d.b2BodyType.b2_dynamicBody, position = vmath.vector3(1, 0, 0) })
+            local b4 = w:CreateBody({ type = box2d.b2BodyType.b2_dynamicBody, position = vmath.vector3(1, 1, 0) })
+
+            b1:CreateFixture({ shape = box2d.b2Shape.e_polygon, box = true, box_hy = 1, box_hx = 1 }, 1)
+            b2:CreateFixture({ shape = box2d.b2Shape.e_polygon, box = true, box_hy = 1, box_hx = 1 }, 1)
+            b3:CreateFixture({ shape = box2d.b2Shape.e_polygon, box = true, box_hy = 1, box_hx = 1 }, 1)
+            b4:CreateFixture({ shape = box2d.b2Shape.e_polygon, box = true, box_hy = 1, box_hx = 1 }, 1)
+
+            w:Step(1 / 60, 3, 5)
+
+
+            assert_not_nil(c)
+            assert_nil(c.__userdata_contact)
+            local status,value = pcall(tostring,c)
+            assert_false(status)
+            assert_equal(value,"Contact already destroyed")
+
+            w:Destroy()
+        end)
+
         -- test("CreateBody()", function() end) -- body tests
         -- test("DestroyBody()", function() end)-- body tests
         -- test("CreateJoint()", function() end) -- jointDef tests
@@ -127,10 +245,10 @@ return function()
 
             local cb_results = {}
             local cb_closest = function(fixture, point, normal, fraction)
-                assert_equal(type(fixture),"table")
-                assert_equal(type(point),"userdata")
-                assert_equal(type(normal),"userdata")
-                assert_equal(type(fraction),"number")
+                assert_equal(type(fixture), "table")
+                assert_equal(type(point), "userdata")
+                assert_equal(type(normal), "userdata")
+                assert_equal(type(fraction), "number")
                 table.insert(cb_results, { fixture = fixture, point = point, normal = normal, fraction = fraction })
                 return fraction
             end
@@ -181,12 +299,11 @@ return function()
             assert_equal(#cb_results, 1)
             cb_results = {}
 
-
             local cb_error = function() error("error happened") end
-            local status, error = pcall(w.RayCast,w,cb_error,p1,point_all)
+            local status, error = pcall(w.RayCast, w, cb_error, p1, point_all)
             assert_false(status)
             --remove line number
-            assert_equal(string.sub(error,28),"error happened")
+            assert_equal(string.sub(error, 28), "error happened")
 
             w:Destroy()
         end)
@@ -204,34 +321,33 @@ return function()
 
             local cb_results = {}
             local cb_all = function(fixture)
-                table.insert(cb_results,{fixture = fixture})
+                table.insert(cb_results, { fixture = fixture })
                 return true;
             end
 
             local cb_one = function(fixture)
-                table.insert(cb_results,{fixture = fixture})
+                table.insert(cb_results, { fixture = fixture })
                 return false;
             end
 
-
-            local aabb_no = {lowerBound = vmath.vector3(-10,0,0),upperBound = vmath.vector3(-0.6,0.1,0)}
-            local aabb_one = {lowerBound = vmath.vector3(0,0,0),upperBound = vmath.vector3(5,0.5,0)}
-            local aabb_all = {lowerBound = vmath.vector3(0,0,0),upperBound = vmath.vector3(15,0.5,0)}
+            local aabb_no = { lowerBound = vmath.vector3(-10, 0, 0), upperBound = vmath.vector3(-0.6, 0.1, 0) }
+            local aabb_one = { lowerBound = vmath.vector3(0, 0, 0), upperBound = vmath.vector3(5, 0.5, 0) }
+            local aabb_all = { lowerBound = vmath.vector3(0, 0, 0), upperBound = vmath.vector3(15, 0.5, 0) }
 
             --*** NO ***
             w:QueryAABB(cb_all, aabb_no)
             assert_equal(#cb_results, 0)
-            w:QueryAABB(cb_one,aabb_no)
+            w:QueryAABB(cb_one, aabb_no)
             assert_equal(#cb_results, 0)
 
             --*** ONE ***
             w:QueryAABB(cb_all, aabb_one)
             assert_equal(#cb_results, 1)
-            assert_equal(cb_results[1].fixture:GetBody(),body_1)
+            assert_equal(cb_results[1].fixture:GetBody(), body_1)
             cb_results = {}
-            w:QueryAABB(cb_one,aabb_one)
+            w:QueryAABB(cb_one, aabb_one)
             assert_equal(#cb_results, 1)
-            assert_equal(cb_results[1].fixture:GetBody(),body_1)
+            assert_equal(cb_results[1].fixture:GetBody(), body_1)
             cb_results = {}
 
 
@@ -239,16 +355,15 @@ return function()
             w:QueryAABB(cb_all, aabb_all)
             assert_equal(#cb_results, 3)
             cb_results = {}
-            w:QueryAABB(cb_one,aabb_all)
+            w:QueryAABB(cb_one, aabb_all)
             assert_equal(#cb_results, 1)
             cb_results = {}
 
-
             local cb_error = function() error("error happened") end
-            local status, error = pcall(w.QueryAABB,w,cb_error,aabb_all)
+            local status, error = pcall(w.QueryAABB, w, cb_error, aabb_all)
             assert_false(status)
             --remove line number
-            assert_equal(string.sub(error,28),"error happened")
+            assert_equal(string.sub(error, 28), "error happened")
 
             w:Destroy()
         end)

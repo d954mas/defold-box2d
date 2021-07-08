@@ -42,6 +42,10 @@ Fixture* Fixture_get_userdata_safe(lua_State *L, int index) {
 	return lua_fixture;
 }
 
+Fixture* Fixture_from_b2Fixture(b2Fixture *fixture){
+    return (Fixture *)fixture->GetUserData().pointer;
+}
+
 static int GetType(lua_State *L){ //b2Shape::Type GetType() const
     utils::check_arg_count(L, 1);
     Fixture *fixture = Fixture_get_userdata_safe(L, 1);
@@ -292,5 +296,6 @@ void Fixture::Destroy(lua_State *L) {
         table_ref = LUA_REFNIL;
     }
 }
+
 
 

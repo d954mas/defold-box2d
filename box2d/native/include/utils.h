@@ -24,7 +24,6 @@ namespace utils {
 		int lua_listener;
 		int lua_script_instance;
 	};
-	typedef std::pair<ScriptListener, Event> Task;
 	uint64_t get_time();
 	void enable_debug();
 	void check_arg_count(lua_State *L, int count_exact);
@@ -75,10 +74,6 @@ namespace utils {
 	bool table_is_not_nil(lua_State *L, const char *key);
 	bool table_is_nil(lua_State *L, const char *key);
 
-	void dispatch_event(lua_State *L, int lua_listener, int lua_script_instance, Event *event);
-
-	void add_task(int lua_listener, int lua_script_instance, Event *event);
-	void execute_tasks(lua_State *L);
 
 	void push_vector(lua_State *L, double x, double y, double z);
 	void push_vector(lua_State *L, double x, double y);

@@ -14,6 +14,7 @@
 #include <joint.h>
 #include <draw.h>
 #include <joint_def.h>
+#include <contact.h>
 
 static int extension_new_world(lua_State *L) {
     DM_LUA_STACK_CHECK(L, 1);
@@ -305,6 +306,7 @@ dmExtension::Result INITIALIZE(dmExtension::Params *params) {
     BodyInitMetaTable(L);
     JointInitMetaTable(L);
     DrawInitMetaTable(L);
+    ContactInitMetaTable(L);
 
 	return dmExtension::RESULT_OK;
 }

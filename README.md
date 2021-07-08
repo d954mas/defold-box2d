@@ -24,6 +24,7 @@ demo:https://d954mas.github.io/defold-box2d/
   * [API](#api)
     + [Extension](#extension)
     + [World](#world)
+    + [Contact](#box2dcontact)
     + [DebugDraw](#debugdraw)
     + [Shape](#shape)
     + [FixtureDef](#fixturedef)
@@ -73,7 +74,6 @@ Box2d version: 2.4.1
 
 	void SetDestructionListener(b2DestructionListener* listener);
 	void SetContactFilter(b2ContactFilter* filter);
-	void SetContactListener(b2ContactListener* listener);
 	b2Contact* GetContactList();
 	const b2ContactManager& GetContactManager() const;
 
@@ -94,6 +94,12 @@ Box2d version: 2.4.1
 7)No binding some b2Joint functions.
 
 	virtual void Draw(b2Draw* draw) const;
+	
+8)No binding some b2Contact functions.
+
+    b2Manifold* GetManifold();
+    void GetWorldManifold(b2WorldManifold* worldManifold) const;
+    b2Contact* GetNext();
 
 ## API
 Support emmylua. box2d_header.lua
@@ -238,6 +244,16 @@ Destroy world, world:Destroy() when you do not need it any more.
 ```lua
 ---@class Box2dWorld
 local Box2dWorld = {}
+
+--- Register a contact event listener.
+--- listener = {
+---    BeginContact = function (contact) end,
+---    EndContact = function(contact) end,
+---    PreSolve = function(contact, old_manifold) end,
+---    PostSolve = function(contact,impulse) end
+--- }
+---@param listener table|nil
+function Box2dWorld:SetContactListener(listener) end
 
 --- Register a routine for debug drawing. The debug draw functions are called
 --- inside with b2World:DebugDraw method. The debug draw object is owned
@@ -384,6 +400,91 @@ function Box2dWorld:Dump() end
 --- Destroy world
 function Box2dWorld:Destroy() end
 ```
+
+### Box2dContact
+The class manages contact between two shapes. A contact exists for each overlapping
+AABB in the broad-phase (except if filtered). Therefore a contact object may exist
+that has no contact points.
+
+```lua
+---@class Box2dContact
+local Box2dContact = {}
+
+--- Is this contact touching?
+---@return boolean
+function Box2dContact:IsTouching() end
+
+--- Enable/disable this contact. This can be used inside the pre-solve
+--- contact listener. The contact is only disabled for the current
+--- time step (or sub-step in continuous collisions).
+---@param flag boolean
+function Box2dContact:SetEnabled(flag) end
+
+--- Has this contact been disabled?
+---@return boolean
+function Box2dContact:IsEnabled() end
+
+--- Get fixture A in this contact.
+---@return Box2dFixture
+function Box2dContact:GetFixtureA() end
+
+--- Get the child primitive index for fixture A.
+---@return number
+function Box2dContact:GetChildIndexA() end
+
+--- Get fixture B in this contact.
+---@return Box2dFixture
+ function Box2dContact:GetFixtureB() end
+
+--- Get the child primitive index for fixture B.
+---@return number
+function Box2dContact:GetChildIndexB() end
+
+--- Override the default friction mixture. You can call this in b2ContactListener::PreSolve.
+--- This value persists until set or reset.
+---@param friction number
+function Box2dContact:SetFriction(friction) end
+
+--- Get the friction.
+---@return number
+function Box2dContact:GetFriction() end
+
+--- Reset the friction mixture to the default value.
+function Box2dContact:ResetFriction() end
+
+--- Override the default restitution mixture. You can call this in b2ContactListener::PreSolve.
+--- The value persists until you set or reset.
+---@param restitution number
+function Box2dContact:SetRestitution(restitution) end
+
+--- Get the restitution.
+---@return number
+function Box2dContact:GetRestitution() end
+
+--- Reset the restitution to the default value.
+function Box2dContact:ResetRestitution() end
+
+--- Override the default restitution velocity threshold mixture. You can call this in b2ContactListener::PreSolve.
+--- The value persists until you set or reset.
+---@param threshold number
+function Box2dContact:SetRestitutionThreshold(threshold) end
+
+--- Get the restitution threshold.
+---@return number
+function Box2dContact:GetRestitutionThreshold() end
+
+--- Reset the restitution threshold to the default value.
+function Box2dContact:ResetRestitutionThreshold() end
+
+--- Set the desired tangent speed for a conveyor belt behavior. In meters per second.
+---@param speed number
+function Box2dContact:SetTangentSpeed(speed) end
+
+--- Get the desired tangent speed. In meters per second.
+---@return number
+function Box2dContact:GetTangentSpeed() end
+```
+
 
 ### DebugDraw
 register this class with a b2World to provide debug drawing of physics
