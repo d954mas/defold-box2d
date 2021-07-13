@@ -1,6 +1,7 @@
 #include "contact.h"
 #include "utils.h"
 #include "fixture.h"
+#include "manifold.h"
 
 #define META_NAME "Box2d::ContactClass"
 #define USERDATA_NAME "__userdata_contact"
@@ -40,6 +41,12 @@ Contact* Contact_get_userdata_safe(lua_State *L, int index) {
 	return lua_contact;
 }
 
+static int GetManifold(lua_State *L){///const b2Manifold* GetManifold() const;]
+    utils::check_arg_count(L, 1);
+    Contact *contact = Contact_get_userdata_safe(L, 1);
+    manifold_to_table(L, contact->contact->GetManifold());
+    return 1;
+}
 /// Is this contact touching?
 static int IsTouching(lua_State *L){///	bool IsTouching() const;
     utils::check_arg_count(L, 1);
@@ -203,6 +210,7 @@ void ContactInitMetaTable(lua_State *L){
     int top = lua_gettop(L);
 
     luaL_Reg functions[] = {
+        {"GetManifold",GetManifold},
         {"IsTouching",IsTouching},
         {"SetEnabled",SetEnabled},
         {"IsEnabled",IsEnabled},

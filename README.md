@@ -410,6 +410,14 @@ that has no contact points.
 ---@class Box2dContact
 local Box2dContact = {}
 
+--- Get the local manifold.
+---@return Box2dManifold
+function Box2dContact:GetManifold() end
+
+--- Get the world manifold.
+---@return Box2dWorldManifold
+function Box2dContact:GetWorldManifold() end
+
 --- Is this contact touching?
 ---@return boolean
 function Box2dContact:IsTouching() end

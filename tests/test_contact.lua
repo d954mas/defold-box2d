@@ -162,5 +162,14 @@ return function()
             w:Destroy()
         end)
 
+        test("GetManifold()", function()
+            local w = box2d.NewWorld()
+            ---@param contact Box2dContact
+            testContact(w, function(name, contact)
+               local manifold = contact:GetRestitution()
+            end)
+            w:Destroy()
+        end)
+
     end)
 end
