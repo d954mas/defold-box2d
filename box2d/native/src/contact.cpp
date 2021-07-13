@@ -53,7 +53,7 @@ static int GetWorldManifold(lua_State *L){///void GetWorldManifold(b2WorldManifo
     Contact *contact = Contact_get_userdata_safe(L, 1);
     b2WorldManifold manifold;
     contact->contact->GetWorldManifold(&manifold);
-    world_manifold_to_table(L, &manifold);
+    world_manifold_to_table(L, &manifold,  contact->contact->GetManifold()->pointCount);
     return 1;
 }
 /// Is this contact touching?

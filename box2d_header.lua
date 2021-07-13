@@ -1919,6 +1919,11 @@ function Box2dContact:GetTangentSpeed() end
 ---@field typeA number	The feature type on shapeA
 ---@field typeB number	The feature type on shapeB
 
+--- This is used to compute the current state of a contact manifold.
+---@class Box2dWorldManifold
+---@field normal vector3 world vector pointing from A to B
+---@field points vector3[] world contact point (point of intersection)
+---@field separations number[] a negative value indicates overlap, in meters
 
 ---@class Box2dProfile
 ---@field step number

@@ -57,7 +57,23 @@ void manifold_to_table(lua_State *L, b2Manifold* manifold){
     lua_setfield(L, -2, "points");
 }
 
-void world_manifold_to_table(lua_State *L, b2WorldManifold* manifold){
-     lua_newtable(L);
+void world_manifold_to_table(lua_State *L, b2WorldManifold* manifold, int32 pointCount){
+    lua_newtable(L);
+    utils::push_vector(L, manifold->normal.x, manifold->normal.y, 0);
+    lua_setfield(L, -2, "normal");
+    lua_newtable(L);
+    for (int32 i = 0; i < pointCount; ++i){
+        b2Vec2 point = manifold->points[i];
+        utils::push_vector(L,point.x, point.y, 0);
+        lua_rawseti(L, -2, i+1);
+    }
+    lua_setfield(L, -2, "points");
+
+    lua_newtable(L);
+    for (int32 i = 0; i < pointCount; ++i){
+        lua_pushnumber(L,manifold->separations[i]);
+        lua_rawseti(L, -2, i+1);
+    }
+    lua_setfield(L, -2, "separations");
 }
 

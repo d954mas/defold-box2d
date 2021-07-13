@@ -167,41 +167,52 @@ return function()
             ---@param contact Box2dContact
             testContact(w, function(name, contact)
                 local manifold = contact:GetManifold()
-                print("MANIFOLD")
-                pprint(manifold)
                 assert_equal(type(manifold), "table")
                 assert_equal(manifold.type, box2d.b2Manifold_Type.e_faceA)
-                assert_equal_v3(manifold.localPoint, vmath.vector3(1,0,0))
-                assert_equal_v3(manifold.localNormal, vmath.vector3(1,0,0))
+                assert_equal_v3(manifold.localPoint, vmath.vector3(1, 0, 0))
+                assert_equal_v3(manifold.localNormal, vmath.vector3(1, 0, 0))
                 assert_equal(#manifold.points, manifold.pointCount)
                 assert_equal(#manifold.points, 2)
-                for i, point in ipairs(manifold.points)do
-                    if(i==1)then
-                        assert_equal_v3(point.localPoint,vmath.vector3(-1, -1, 0))
-                        assert_equal_float(point.normalImpulse,0)
-                        assert_equal_float(point.tangentImpulse,0)
-                        assert_equal(type(point.id),"table")
-                        assert_equal(type(point.id.cf),"table")
-                        assert_equal(type(point.id.key),"number")
-                    elseif(i==2)then
-                        assert_equal_v3(point.localPoint,vmath.vector3(-1, 0.019999980926514, 0))
-                        assert_equal_float(point.normalImpulse,0)
-                        assert_equal_float(point.tangentImpulse,0)
-                        assert_equal(type(point.id),"table")
-                        assert_equal(type(point.id.cf),"table")
-                        assert_equal(type(point.id.key),"number")
+                for i, point in ipairs(manifold.points) do
+                    if (i == 1) then
+                        assert_equal_v3(point.localPoint, vmath.vector3(-1, -1, 0))
+                        assert_equal_float(point.normalImpulse, 0)
+                        assert_equal_float(point.tangentImpulse, 0)
+                        assert_equal(type(point.id), "table")
+                        assert_equal(type(point.id.cf), "table")
+                        assert_equal(type(point.id.key), "number")
+                    elseif (i == 2) then
+                        assert_equal_v3(point.localPoint, vmath.vector3(-1, 0.019999980926514, 0))
+                        assert_equal_float(point.normalImpulse, 0)
+                        assert_equal_float(point.tangentImpulse, 0)
+                        assert_equal(type(point.id), "table")
+                        assert_equal(type(point.id.cf), "table")
+                        assert_equal(type(point.id.key), "number")
                     end
                 end
             end)
-            
+
             w:Destroy()
         end)
         test("GetWorldManifold()", function()
             local w = box2d.NewWorld()
             ---@param contact Box2dContact
             testContact(w, function(name, contact)
-                local manifold = contact:GetWorldManifold()
-                assert_equal(type(manifold), "table")
+                if (name == "BeginContact") then
+                    local manifold = contact:GetWorldManifold()
+                    assert_equal(type(manifold), "table")
+                    assert_equal_v3(manifold.normal, vmath.vector3(1, 0, 0))
+                    assert_equal(#manifold.points, 2)
+                    assert_equal(#manifold.separations, 2)
+                    assert_equal(#manifold.separations, #manifold.points)
+
+                    assert_equal_v3(manifold.points[1], vmath.vector3(0.5, 0, 0))
+                    assert_equal_v3(manifold.points[2], vmath.vector3(0.5, 1.0199999809265, 0))
+
+                    assert_equal_float(manifold.separations[1], -1.0199999809265)
+                    assert_equal_float(manifold.separations[2], -1.0199999809265)
+
+                end
             end)
             w:Destroy()
         end)
