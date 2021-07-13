@@ -297,6 +297,15 @@ dmExtension::Result INITIALIZE(dmExtension::Params *params) {
         lua_setfield(L, -2, "e_centerOfMassBit");
     lua_setfield(L, -2, "b2Draw");
 
+    lua_newtable(L);
+        lua_pushnumber(L, b2Manifold::Type::e_circles);
+        lua_setfield(L, -2, "e_circles");
+        lua_pushnumber(L, b2Manifold::Type::e_faceA);
+        lua_setfield(L, -2, "e_faceA");
+        lua_pushnumber(L, b2Manifold::Type::e_faceB);
+        lua_setfield(L, -2, "e_faceB");
+    lua_setfield(L, -2, "b2Manifold_Type");
+
 
 
 	lua_pop(params->m_L, 1);

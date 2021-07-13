@@ -27,6 +27,12 @@ box2d.b2Draw = {
     e_aabbBit = 4, e_pairBit = 8,
     e_centerOfMassBit = 16
 }
+
+box2d.b2Manifold_Type = {
+    e_circles = 0, e_faceA = 1,
+    e_faceB = 2
+}
+
 ---@param gravity vector3|nil the world gravity vector.
 ---@return Box2dWorld
 function box2d.NewWorld(gravity) end
@@ -1771,6 +1777,14 @@ function Box2dDebugDraw:Destroy() end
 ---@class Box2dContact
 local Box2dContact = {}
 
+--- Get the local manifold.
+---@return Box2dManifold
+function Box2dContact:GetManifold() end
+
+--- Get the world manifold.
+---@return Box2dWorldManifold
+function Box2dContact:GetWorldManifold() end
+
 --- Is this contact touching?
 ---@return boolean
 function Box2dContact:IsTouching() end
@@ -1847,6 +1861,69 @@ function Box2dContact:GetTangentSpeed() end
 
 
 --endregion
+
+--- A manifold for two touching convex shapes.
+--- Box2D supports multiple types of contact:
+--- - clip point versus plane with radius
+--- - point versus point with radius (circles)
+--- The local point usage depends on the manifold type:
+--- -e_circles: the local center of circleA
+--- -e_faceA: the center of faceA
+--- -e_faceB: the center of faceB
+--- Similarly the local normal usage:
+--- -e_circles: not used
+--- -e_faceA: the normal on polygonA
+--- -e_faceB: the normal on polygonB
+--- We store contacts in this way so that position correction can
+--- account for movement, which is critical for continuous physics.
+--- All contact scenarios must be expressed in one of these types.
+--- This structure is stored across time steps, so we keep it small.
+---@class Box2dManifold
+---@field type number box2d.b2Manifold_Type
+---@field localPoint vector3 usage depends on manifold type
+---@field localNormal vector3 not use for Type::e_points
+---@field pointCount number the number of manifold points
+---@field points Box2dManifoldPoint[] the points of contact
+
+--- A manifold point is a contact point belonging to a contact
+--- manifold. It holds details related to the geometry and dynamics
+--- of the contact points.
+--- The local point usage depends on the manifold type:
+--- -e_circles: the local center of circleB
+--- -e_faceA: the local center of cirlceB or the clip point of polygonB
+--- -e_faceB: the clip point of polygonA
+--- This structure is stored across time steps, so we keep it small.
+--- Note: the impulses are used for internal caching and may not
+--- provide reliable contact forces, especially for high speed collisions.
+---@class Box2dManifoldPoint
+---@field localPoint vector3 usage depends on manifold type
+---@field normalImpulse number the non-penetration impulse
+---@field tangentImpulse number	the friction impulse
+---@field id Box2dContactID uniquely identifies a contact point between two shapes
+
+--- Contact ids to facilitate warm starting.
+---@class Box2dContactID
+---@field cf Box2dContactFeature
+---@field key number  Used to quickly compare contact ids.
+
+--- The features that intersect to form the contact point
+--- This must be 4 bytes or less.
+--enum Type
+--	{
+--		e_vertex = 0,
+--		e_face = 1
+--	};
+---@class Box2dContactFeature
+---@field indexA number Feature index on shapeA
+---@field indexB number	Feature index on shapeB
+---@field typeA number	The feature type on shapeA
+---@field typeB number	The feature type on shapeB
+
+--- This is used to compute the current state of a contact manifold.
+---@class Box2dWorldManifold
+---@field normal vector3 world vector pointing from A to B
+---@field points vector3[] world contact point (point of intersection)
+---@field separations number[] a negative value indicates overlap, in meters
 
 ---@class Box2dProfile
 ---@field step number

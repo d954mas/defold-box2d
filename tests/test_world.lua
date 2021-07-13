@@ -148,7 +148,9 @@ return function()
             end })
             local status, value = pcall(w.Step, w, 1 / 60, 3, 5)
             assert_false(status)
-            assert_equal(string.sub(value, 28), "error")
+            pprint("ERROR")
+            pprint(value)
+            UTILS.test_error(value,"error")
 
             w:SetContactListener({ PreSolve = function()
 
@@ -303,7 +305,7 @@ return function()
             local status, error = pcall(w.RayCast, w, cb_error, p1, point_all)
             assert_false(status)
             --remove line number
-            assert_equal(string.sub(error, 28), "error happened")
+            UTILS.test_error(error,"error happened")
 
             w:Destroy()
         end)
@@ -363,7 +365,7 @@ return function()
             local status, error = pcall(w.QueryAABB, w, cb_error, aabb_all)
             assert_false(status)
             --remove line number
-            assert_equal(string.sub(error, 28), "error happened")
+            UTILS.test_error(error,"error happened")
 
             w:Destroy()
         end)
