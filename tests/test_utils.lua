@@ -67,4 +67,17 @@ function M.test_method_get_set(object, key, config)
     end
 end
 
+function M.test_error(error, result)
+    --not worked in html no .lua in string
+   -- local idx = string.find(error, "%.lua:")
+   -- if(idx)then
+    --    error = string.sub(error,idx + 5)
+    --    local idx_2 = string.find(error, ":")
+     --   error = string.sub(error,idx_2+2)
+   -- end
+    error = string.sub(error,#error-#result+1)
+
+    return assert_equal(error,result)
+end
+
 return M
