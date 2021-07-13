@@ -25,10 +25,13 @@ function M.run()
     )
     TELESCOPE.make_assertion(
             "equal_v3",
-            function(_, a,b) return string.format(TELESCOPE.assertion_message_prefix .. "'%s' to be equal to '%s'",a,b) end,
+            function(_, a,b) return string.format(TELESCOPE.assertion_message_prefix .. "'%s' to be equal to '%s'",tostring(a),tostring(b)) end,
             function(a, b)
                 if(type(a) ~= "userdata" or type(b)~= "userdata") then assert("not v3") end
-                return a.x == b.x and a.y == b.y and a.z == b.z
+                local dx = math.abs(a.x-b.x)
+                local dy = math.abs(a.y-b.y)
+                local dz = math.abs(a.z-b.z)
+                return dx <= 0.0000001 and dy <= 0.0000001 and dz <= 0.0000001
             end
     )
     TELESCOPE.make_assertion(

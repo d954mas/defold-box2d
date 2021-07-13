@@ -60,6 +60,11 @@ return function()
                 e_aabbBit = 4, e_pairBit = 8,
                 e_centerOfMassBit = 16
             })
+
+            test_enum("b2Manifold_Type", {
+                e_circles = 0, e_faceA = 1,
+                e_faceB =2
+            })
         end)
 
 
