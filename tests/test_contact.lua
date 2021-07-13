@@ -166,10 +166,21 @@ return function()
             local w = box2d.NewWorld()
             ---@param contact Box2dContact
             testContact(w, function(name, contact)
-               local manifold = contact:GetRestitution()
+               local manifold = contact:GetManifold()
+                assert_equal(type(manifold),"table")
             end)
             w:Destroy()
         end)
+        test("GetWorldManifold()", function()
+            local w = box2d.NewWorld()
+            ---@param contact Box2dContact
+            testContact(w, function(name, contact)
+                local manifold = contact:GetWorldManifold()
+                assert_equal(type(manifold),"table")
+            end)
+            w:Destroy()
+        end)
+
 
     end)
 end

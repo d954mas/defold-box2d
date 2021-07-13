@@ -96,9 +96,6 @@ Box2d version: 2.4.1
 	virtual void Draw(b2Draw* draw) const;
 	
 8)No binding some b2Contact functions.
-
-    b2Manifold* GetManifold();
-    void GetWorldManifold(b2WorldManifold* worldManifold) const;
     b2Contact* GetNext();
 
 ## API

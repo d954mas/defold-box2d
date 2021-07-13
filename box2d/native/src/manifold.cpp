@@ -8,3 +8,8 @@
 void manifold_to_table(lua_State *L, b2Manifold* manifold){
      lua_newtable(L);
 }
+
+void world_manifold_to_table(lua_State *L, b2WorldManifold* manifold){
+     lua_newtable(L);
+}
+

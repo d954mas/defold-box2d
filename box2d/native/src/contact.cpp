@@ -47,6 +47,15 @@ static int GetManifold(lua_State *L){///const b2Manifold* GetManifold() const;]
     manifold_to_table(L, contact->contact->GetManifold());
     return 1;
 }
+
+static int GetWorldManifold(lua_State *L){///void GetWorldManifold(b2WorldManifold* worldManifold) const;
+    utils::check_arg_count(L, 1);
+    Contact *contact = Contact_get_userdata_safe(L, 1);
+    b2WorldManifold manifold;
+    contact->contact->GetWorldManifold(&manifold);
+    world_manifold_to_table(L, &manifold);
+    return 1;
+}
 /// Is this contact touching?
 static int IsTouching(lua_State *L){///	bool IsTouching() const;
     utils::check_arg_count(L, 1);
@@ -211,6 +220,7 @@ void ContactInitMetaTable(lua_State *L){
 
     luaL_Reg functions[] = {
         {"GetManifold",GetManifold},
+        {"GetWorldManifold",GetWorldManifold},
         {"IsTouching",IsTouching},
         {"SetEnabled",SetEnabled},
         {"IsEnabled",IsEnabled},
