@@ -6,7 +6,7 @@
 #include <extra_utils.h>
 
 
-
+namespace box2dDefoldNE {
 
 class Contact {
 private:
@@ -26,4 +26,6 @@ public:
 void ContactInitMetaTable(lua_State *L);
 Contact* Contact_get_userdata(lua_State *L, int index);
 Contact* Contact_get_userdata_safe(lua_State *L, int index);
+
+}
 #endif

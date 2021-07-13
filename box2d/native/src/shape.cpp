@@ -2,6 +2,8 @@
 #include "utils.h"
 #include "extra_utils.h"
 
+namespace box2dDefoldNE {
+
 b2Vec2* parse_vertices(lua_State *L, const char* key,const char* error,int* b2vecSize){
     lua_getfield(L, -1, key);
     if(lua_istable(L,-1)){
@@ -140,5 +142,7 @@ b2Shape* b2Shape_from_table(lua_State *L, int index){
     }else{
         utils::error(L,"b2Shape should be table");
     }
+
+}
 
 }

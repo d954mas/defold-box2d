@@ -8,7 +8,7 @@
 #include "draw.h"
 #include "contact_listener.h"
 
-
+namespace box2dDefoldNE {
 
 class World : public b2ContactListener {
 private:
@@ -36,4 +36,5 @@ World* World_get_userdata_safe(lua_State *L, int index);
 
 World* World_find_by_pointer(b2World* world);
 
+}
 #endif

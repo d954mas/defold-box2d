@@ -4,7 +4,7 @@
 #include <utils.h>
 #include <manifold.h>
 
-
+namespace box2dDefoldNE {
 static void b2ManifoldPointToTable(lua_State *L, b2ManifoldPoint* point){
     lua_newtable(L);
 
@@ -77,3 +77,4 @@ void world_manifold_to_table(lua_State *L, b2WorldManifold* manifold, int32 poin
     lua_setfield(L, -2, "separations");
 }
 
+}

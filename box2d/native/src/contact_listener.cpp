@@ -2,7 +2,7 @@
 #include "utils.h"
 #include "static_hash.h"
 #include "contact.h"
-
+namespace box2dDefoldNE {
 LuaContactListener::LuaContactListener(){
         error = false;
         error_message = NULL;
@@ -160,5 +160,4 @@ void LuaContactListener::PostSolve(b2Contact *contact, const b2ContactImpulse *i
         }
     }
 }
-
-
+}

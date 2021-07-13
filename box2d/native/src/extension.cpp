@@ -16,6 +16,8 @@
 #include <joint_def.h>
 #include <contact.h>
 
+using  namespace box2dDefoldNE;
+
 static int extension_new_world(lua_State *L) {
     DM_LUA_STACK_CHECK(L, 1);
 

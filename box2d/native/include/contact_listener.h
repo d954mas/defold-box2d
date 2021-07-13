@@ -7,7 +7,7 @@
 #include <contact.h>
 
 
-
+namespace box2dDefoldNE {
 class LuaContactListener : public b2ContactListener {
 public:
     int fun_begin_contact_ref;
@@ -30,5 +30,7 @@ public:
     void PreSolve(b2Contact *contact, const b2Manifold *old_manifold);
     void PostSolve(b2Contact *contact, const b2ContactImpulse *impulse);
 };
+
+}
 
 #endif

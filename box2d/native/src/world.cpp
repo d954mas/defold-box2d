@@ -13,6 +13,7 @@
 #define META_NAME "Box2d::WorldClass"
 #define USERDATA_NAME "__userdata_world"
 
+namespace box2dDefoldNE {
 
 std::map<b2World*, World*> WORLD_BY_POINTER; //to get world from body:GetWorld().
 
@@ -740,4 +741,6 @@ void World::PostSolve(b2Contact* contact, const b2ContactImpulse *impulse) {
     if(contactListener != NULL){
         contactListener->PostSolve(contact, impulse);
     }
+}
+
 }

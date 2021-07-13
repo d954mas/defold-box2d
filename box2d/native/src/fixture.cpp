@@ -4,7 +4,7 @@
 
 #define META_NAME "Box2d::FixtureClass"
 #define USERDATA_NAME "__userdata_fixture"
-
+namespace box2dDefoldNE {
 Fixture::Fixture(b2Fixture *f){
     user_data_ref = LUA_REFNIL;
     fixture = f;
@@ -297,5 +297,5 @@ void Fixture::Destroy(lua_State *L) {
     }
 }
 
-
+}
 

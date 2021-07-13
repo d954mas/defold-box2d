@@ -7,7 +7,7 @@
 #include <extra_utils.h>
 
 
-
+namespace box2dDefoldNE {
 
 class Draw : public b2Draw{
 private:
@@ -42,6 +42,8 @@ void DrawInitMetaTable(lua_State *L);
 Draw* Draw_from_table(lua_State *L);
 Draw* Draw_get_userdata(lua_State *L, int index);
 Draw* Draw_get_userdata_safe(lua_State *L, int index);
+
+}
 #endif
 
 

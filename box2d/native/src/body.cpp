@@ -8,6 +8,8 @@
 #define META_NAME "Box2d::BodyClass"
 #define USERDATA_NAME "__userdata_body"
 
+namespace box2dDefoldNE {
+
 Body::Body(b2Body *b){
     user_data_ref = LUA_REFNIL;
 	body = b;
@@ -701,6 +703,8 @@ void Body::DestroyJoints(lua_State *L) {
         Joint* joint_lua = (Joint *)jointEdge->joint->GetUserData().pointer;
         joint_lua->Destroy(L);
     }
+}
+
 }
 
 

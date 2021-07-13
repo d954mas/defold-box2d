@@ -6,6 +6,7 @@
 #define META_NAME "Box2d::ContactClass"
 #define USERDATA_NAME "__userdata_contact"
 
+namespace box2dDefoldNE {
 Contact::Contact(b2Contact *c){
     contact = c;
     reuse = false;
@@ -297,5 +298,5 @@ void Contact::DestroyTable(lua_State *L) {
         table_ref = LUA_REFNIL;
     }
 }
-
+}
 

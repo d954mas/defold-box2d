@@ -6,6 +6,8 @@
 #include <extra_utils.h>
 #include <static_hash.h>
 
+namespace box2dDefoldNE {
+
 b2RevoluteJointDef* b2RevoluteJointDef_from_table(lua_State *L){
     if (lua_istable(L, -1)) {
         b2RevoluteJointDef* def = new b2RevoluteJointDef();
@@ -903,5 +905,5 @@ void b2JointDef_to_table(lua_State *L, b2JointDef* defBase){
     }
 }
 
-
+}
 

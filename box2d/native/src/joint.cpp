@@ -5,6 +5,8 @@
 #define META_NAME "Box2d::JointClass"
 #define USERDATA_NAME "__userdata_joint"
 
+namespace box2dDefoldNE {
+
 Joint::Joint(b2Joint *j){
     user_data_ref = LUA_REFNIL;
     joint = j;
@@ -1437,6 +1439,8 @@ void Joint::Destroy(lua_State *L) {
         utils::unref(L, table_ref);
         table_ref = LUA_REFNIL;
     }
+}
+
 }
 
 

@@ -4,6 +4,7 @@
 #define META_NAME "Box2d::DrawClass"
 #define USERDATA_NAME "__userdata_draw"
 
+namespace box2dDefoldNE {
 Draw::Draw(){
     table_ref  = LUA_REFNIL;
     DrawPolygon_ref = LUA_REFNIL;
@@ -385,4 +386,5 @@ void Draw::Destroy(lua_State *L) {
     DrawTransform_ref = LUA_REFNIL;
     DrawPoint_ref = LUA_REFNIL;
     defold_script_instance = LUA_REFNIL;
+}
 }

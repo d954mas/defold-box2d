@@ -4,7 +4,7 @@
 #include <extra_utils.h>
 #include <static_hash.h>
 
-
+namespace box2dDefoldNE {
 
 b2FixtureDef b2FixtureDef_from_table(lua_State *L, int index){
     b2FixtureDef def;
@@ -64,5 +64,5 @@ b2FixtureDef b2FixtureDef_from_table(lua_State *L, int index){
     return def;
 }
 
-
+}
 

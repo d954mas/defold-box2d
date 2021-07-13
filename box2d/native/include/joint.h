@@ -5,7 +5,7 @@
 #include <dmsdk/sdk.h>
 #include <extra_utils.h>
 
-
+namespace box2dDefoldNE {
 
 
 class Joint {
@@ -25,3 +25,5 @@ void JointInitMetaTable(lua_State *L);
 Joint* Joint_get_userdata(lua_State *L, int index);
 Joint* Joint_get_userdata_safe(lua_State *L, int index);
 #endif
+
+}

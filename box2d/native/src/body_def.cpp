@@ -2,7 +2,7 @@
 #include "utils.h"
 #include <extra_utils.h>
 #include <static_hash.h>
-
+namespace box2dDefoldNE {
 b2BodyDef b2BodyDef_from_table(lua_State *L, int index){
     b2BodyDef def;
     if (lua_istable(L, index)) {
@@ -75,6 +75,6 @@ b2BodyDef b2BodyDef_from_table(lua_State *L, int index){
     }
     return def;
 }
-
+}
 
 
