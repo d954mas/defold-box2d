@@ -82,7 +82,7 @@ static int GetFilterData(lua_State *L){//const b2Filter & GetFilterData () const
     utils::check_arg_count(L, 1);
     Fixture *fixture = Fixture_get_userdata_safe(L, 1);
     b2Filter_to_table(L,fixture->fixture->GetFilterData());
-    return 0;
+    return 1;
 }
 static int Refilter(lua_State *L){ //void Refilter () Call this if you want to establish collision that was previously disabled by b2ContactFilter::ShouldCollide.
     utils::check_arg_count(L, 1);
