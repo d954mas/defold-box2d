@@ -158,6 +158,16 @@ function Box2dFixture:SetSensor(sensor) end
 ---@return boolean the true if the shape is a sensor.
 function Box2dFixture:IsSensor() end
 
+--- Set the contact filtering data. This will not update contacts until the next time
+--- step when either parent body is active and awake.
+--- This automatically calls Refilter.
+---@param filter Box2dFilter
+function Box2dFixture:SetFilterData(filter) end
+
+--- Get the contact filtering data.
+---@return Box2dFilter
+function Box2dFixture:GetFilterData() end
+
 --- Call this if you want to establish collision that was previously disabled by b2ContactFilter::ShouldCollide.
 function Box2dFixture:Refilter() end
 
@@ -573,7 +583,8 @@ local Box2dFixtureDef = {
     isSensor = false,
 
     -- Contact filtering data. b2Filter
-    -- filter = nil
+    ---@type Box2dFilter
+     filter = nil
 }
 --endregion
 
@@ -1924,6 +1935,19 @@ function Box2dContact:GetTangentSpeed() end
 ---@field normal vector3 world vector pointing from A to B
 ---@field points vector3[] world contact point (point of intersection)
 ---@field separations number[] a negative value indicates overlap, in meters
+
+
+--- This holds contact filtering data.
+---@class Box2dFilter
+---@field categoryBits number  The collision category bits. Normally you would just set one bit.
+---The collision mask bits. This states the categories that this
+---shape would accept for collision.
+---@field maskBits number
+--- Collision groups allow a certain group of objects to never collide (negative)
+--- or always collide (positive). Zero means no collision group. Non-zero group
+--- filtering always wins against the mask bits.
+---@field groupIndex  number
+
 
 ---@class Box2dProfile
 ---@field step number

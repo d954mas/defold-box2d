@@ -70,10 +70,16 @@ static int IsSensor(lua_State *L){ //bool IsSensor () const
 }
 
 
-//void SetFilterData (const b2Filter &filter)
-
-//const b2Filter & GetFilterData () constGet the contact filtering data.
-
+static int SetFilterData(lua_State *L){//void SetFilterData (const b2Filter &filter)
+    utils::check_arg_count(L, 2);
+    Fixture *fixture = Fixture_get_userdata_safe(L, 1);
+    return 0;
+}
+static int GetFilterData(lua_State *L){//const b2Filter & GetFilterData () constGet the contact filtering data.
+    utils::check_arg_count(L, 1);
+    Fixture *fixture = Fixture_get_userdata_safe(L, 1);
+    return 0;
+}
 static int Refilter(lua_State *L){ //void Refilter () Call this if you want to establish collision that was previously disabled by b2ContactFilter::ShouldCollide.
     utils::check_arg_count(L, 1);
     Fixture *fixture = Fixture_get_userdata_safe(L, 1);
@@ -236,6 +242,8 @@ void FixtureInitMetaTable(lua_State *L){
         {"GetType",GetType},
         {"SetSensor",SetSensor},
         {"IsSensor",IsSensor},
+        {"SetFilterData",SetFilterData},
+        {"GetFilterData",GetFilterData},
         {"Refilter",Refilter},
         {"GetBody",GetBody},
         {"GetNext",GetNext},
