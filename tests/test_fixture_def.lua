@@ -103,6 +103,25 @@ return function()
             w:Destroy()
         end)
 
+
+        test("filter",function()
+            local w = box2d.NewWorld()
+            local f =createFixture(w,{
+                shape = shape, isSensor = true, filter = {
+                    categoryBits = 32,
+                    maskBits = 16,
+                    groupIndex = 10,
+                }
+            })
+            local filter = f:GetFilterData()
+            assert_equal(filter.categoryBits,32)
+            assert_equal(filter.maskBits,16)
+            assert_equal(filter.groupIndex,10)
+            assert_not_nil(f)
+            assert_true(f:IsSensor())
+
+            w:Destroy()
+        end)
         
 
 

@@ -1,6 +1,7 @@
 #include "fixture_def.h"
 #include "utils.h"
 #include "shape.h"
+#include "filter.h"
 #include <extra_utils.h>
 #include <static_hash.h>
 
@@ -44,7 +45,11 @@ b2FixtureDef b2FixtureDef_from_table(lua_State *L, int index){
                     }
                     break;
                 case HASH_filter:
-
+                    if (lua_istable(L ,-1)) {
+                        def.filter = b2Filter_from_table(L,-1);
+                    }else{
+                        utils::error(L,"filter can be only table or nil");
+                    }
                     break;
                 default:
                     lua_pushfstring(L, "unknown key:%s", key);

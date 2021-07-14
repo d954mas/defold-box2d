@@ -44,6 +44,7 @@ demo:https://d954mas.github.io/defold-box2d/
     + [MotorJoint](#motorjoint)
     + [Box2dManifold](#box2dmanifold)
     + [Box2dMWorldManifold](#box2dworldmanifold)
+    + [Box2dFilter](#box2dfilter)
     + [Box2dProfile](#box2dprofile)
     + [Box2dMassData](#box2dmassdata)
 
@@ -80,11 +81,7 @@ Box2d version: 2.4.1
 	const b2ContactManager& GetContactManager() const;
 
 5)No binding some b2Fixture functions.
-
-	not suppor filter in fixture def.
 	b2Shape* GetShape();
-	void SetFilterData(const b2Filter& filter);
-	const b2Filter& GetFilterData() const;
 	bool RayCast(b2RayCastOutput* output, const b2RayCastInput& input, int32 childIndex) const;
 	const b2AABB& GetAABB(int32 childIndex) const;
 	
@@ -603,7 +600,8 @@ local Box2dFixtureDef = {
     isSensor = false;
 
     -- Contact filtering data. b2Filter
-    -- filter = nil;
+    ---@type Box2dFilter
+     filter = nil
 }
 ```
 
@@ -623,6 +621,16 @@ function Box2dFixture:SetSensor(sensor) end
 ---Is this fixture a sensor (non-solid)?
 ---@return boolean the true if the shape is a sensor.
 function Box2dFixture:IsSensor() end
+
+--- Set the contact filtering data. This will not update contacts until the next time
+--- step when either parent body is active and awake.
+--- This automatically calls Refilter.
+---@param filter Box2dFilter
+function Box2dFixture:SetFilterData(filter) end
+
+--- Get the contact filtering data.
+---@return Box2dFilter
+function Box2dFixture:GetFilterData() end
 
 --- Call this if you want to establish collision that was previously disabled by b2ContactFilter::ShouldCollide.
 function Box2dFixture:Refilter() end
@@ -2131,6 +2139,21 @@ function Box2dMotorJoint:GetCorrectionFactor() end
 ---@field points vector3[] world contact point (point of intersection)
 ---@field separations number[] a negative value indicates overlap, in meters
 ```
+
+### Box2dFilter
+```lua
+--- This holds contact filtering data.
+---@class Box2dFilter
+---@field categoryBits number  The collision category bits. Normally you would just set one bit.
+---The collision mask bits. This states the categories that this
+---shape would accept for collision.
+---@field maskBits number
+--- Collision groups allow a certain group of objects to never collide (negative)
+--- or always collide (positive). Zero means no collision group. Non-zero group
+--- filtering always wins against the mask bits.
+---@field groupIndex  number
+```
+
 ### Box2dProfile
 return by world:GetProfile() method
 ```lua
