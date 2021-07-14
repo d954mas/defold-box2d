@@ -1,6 +1,7 @@
 #include "fixture.h"
 #include "utils.h"
 #include "body.h"
+#include "filter.h"
 
 #define META_NAME "Box2d::FixtureClass"
 #define USERDATA_NAME "__userdata_fixture"
@@ -73,11 +74,14 @@ static int IsSensor(lua_State *L){ //bool IsSensor () const
 static int SetFilterData(lua_State *L){//void SetFilterData (const b2Filter &filter)
     utils::check_arg_count(L, 2);
     Fixture *fixture = Fixture_get_userdata_safe(L, 1);
+    b2Filter filter = b2Filter_from_table(L,2);
+    fixture->fixture->SetFilterData(filter);
     return 0;
 }
 static int GetFilterData(lua_State *L){//const b2Filter & GetFilterData () constGet the contact filtering data.
     utils::check_arg_count(L, 1);
     Fixture *fixture = Fixture_get_userdata_safe(L, 1);
+    b2Filter_to_table(L,fixture->fixture->GetFilterData());
     return 0;
 }
 static int Refilter(lua_State *L){ //void Refilter () Call this if you want to establish collision that was previously disabled by b2ContactFilter::ShouldCollide.
