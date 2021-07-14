@@ -142,6 +142,9 @@ return function()
             assert_equal(filter.maskBits, 16)
             assert_equal(filter.groupIndex, 10)
             w:Destroy()
+
+            local status, error = pcall(f.SetFilterData,f,{})
+            assert_false(status)
         end)
 
         test("Refilter()", function()
