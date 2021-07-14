@@ -1,22 +1,20 @@
 
 # Box2D for Defold
 
-Box2D lua bindings for Defold Game Engine.
+Box2D lua bindings for the Defold Game Engine.
 
-Try to keep lua api same as c++ api when in possible.
+I tried to keep the lua api the same as the c++ api when possible.
 
-
-If you like that extension. You can support me on patreon.
+If you like the extension you can support me on patreon.
 It will help me make more items for defold.
 
 [![](https://c5.patreon.com/external/logo/become_a_patron_button.png)](https://www.patreon.com/d954mas)
 
+Try the demo: https://d954mas.github.io/defold-box2d/
+
 <img src="https://github.com/d954mas/defold-box2d/blob/master/files/screenshot.png">
-demo:https://d954mas.github.io/defold-box2d/
 
-
-
-# Table of content
+# Table of Contents
 - [Box2D for Defold](#box2d-for-defold)
   * [Installation](#installation)
   * [Box2d](#box2d)
@@ -24,7 +22,6 @@ demo:https://d954mas.github.io/defold-box2d/
   * [API](#api)
     + [Extension](#extension)
     + [World](#world)
-    + [Contact](#box2dcontact)
     + [DebugDraw](#debugdraw)
     + [Shape](#shape)
     + [FixtureDef](#fixturedef)
@@ -42,70 +39,68 @@ demo:https://d954mas.github.io/defold-box2d/
     + [WeldJoint](#weldjoint)
     + [FrictionJoint](#frictionjoint)
     + [MotorJoint](#motorjoint)
-    + [Box2dManifold](#box2dmanifold)
-    + [Box2dMWorldManifold](#box2dworldmanifold)
     + [Box2dProfile](#box2dprofile)
     + [Box2dMassData](#box2dmassdata)
 
-
 ## Installation
 
-1)Add defold-box2d in your own project as a Defold library dependency. Open your game.project file and in the dependencies field under project add:
-https://github.com/d954mas/defold-box2d/archive/refs/tags/0.9.zip
+__1)__ Add defold-box2d in your own project as a Defold library dependency. Open your game.project file and in the dependencies field under project add:
+https://github.com/d954mas/defold-box2d/archive/refs/tags/0.8.zip
 
-2)Remove defold engine box2d. If not remove there will be conflict between this box2d and engine box2d.
-use manifest.appmanifest.  Open your game.project file and in the App Manifest field under Native Extension add manifest.
+__2)__ Remove Defold engine box2d. If it's not removed there will be a conflict between this box2d and engine box2d.
+Open your game.project file and in the App Manifest field under Native Extension add manifest.
 
-You can generate manifest yourself https://britzl.github.io/manifestation/ or use /box2d/manifest.appmanifest
+1. Use /box2d/manifest.appmanifest, OR
+2. You can generate a manifest yourself https://britzl.github.io/manifestation/
 
 ## Box2d
-If you need info about how box2d work read it documentation.
+If you need info about how Box2D works, read its documentation.
 https://box2d.org/documentation/
 
-Box2d version: 2.4.1 
+Box2d version: 2.4.1
 
 ## Limitations
 
-1)No binding for b2Vec2. Use defold vector(vmath.vector3)
+__1)__ No binding for b2Vec2. Use defold vector(vmath.vector3)
 
-2)No binding b2Shape. Use table for shape when create fixture.
+__2)__ No binding for b2Shape. Use tables for shapes when creating fixtures.
 
-3)b2Assert. #define b2Assert(A) assert(A) . Engine will crashed if b2Assert happened.
+__3)__ b2Assert. #define b2Assert(A) assert(A) . Engine will crashed if b2Assert happened.
 
-4)No binding some b2World functions.
+__4)__ No binding for some b2World functions.
 
 	void SetDestructionListener(b2DestructionListener* listener);
 	void SetContactFilter(b2ContactFilter* filter);
+	void SetContactListener(b2ContactListener* listener);
+	void QueryAABB(b2QueryCallback* callback, const b2AABB& aabb) const;
+	void RayCast(b2RayCastCallback* callback, const b2Vec2& point1, const b2Vec2& point2) const;
 	b2Contact* GetContactList();
 	const b2ContactManager& GetContactManager() const;
 
-5)No binding some b2Fixture functions.
+__5)__ No binding for some b2Fixture functions.
 
-	not suppor filter in fixture def.
+	not support filter in fixture def.
 	b2Shape* GetShape();
 	void SetFilterData(const b2Filter& filter);
 	const b2Filter& GetFilterData() const;
 	bool RayCast(b2RayCastOutput* output, const b2RayCastInput& input, int32 childIndex) const;
 	const b2AABB& GetAABB(int32 childIndex) const;
-	
-6)No binding some b2Body functions.
+
+__6)__ No binding for some b2Body functions.
 
 	b2JointEdge* GetJointList () Get the list of all joints attached to this body
 	b2ContactEdge* GetContactList();
-	
-7)No binding some b2Joint functions.
+
+__7)__ No binding for some b2Joint functions.
 
 	virtual void Draw(b2Draw* draw) const;
-	
-8)No binding some b2Contact functions.
-    b2Contact* GetNext();
 
 ## API
 Support emmylua. box2d_header.lua
 
 ### Extension
-```lua 
-box2d = {}
+#### Constants:
+```lua
 box2d.b2Shape = {
     e_circle = 0,
     e_edge = 1,
@@ -133,402 +128,254 @@ box2d.b2Draw = {
     e_aabbBit = 4, e_pairBit = 8,
     e_centerOfMassBit = 16
 }
-
-box2d.b2Manifold_Type = {
-    e_circles = 0, e_faceA = 1,
-    e_faceB = 2
-}
-
----@param gravity vector3|nil the world gravity vector.
----@return Box2dWorld
-function box2d.NewWorld(gravity) end
-
----@param data table
----@return Box2dDebugDraw
-function box2d.NewDebugDraw(data) end
-
---- Utility to compute linear stiffness values from frequency and damping ratio
----@param frequencyHertz number
----@param dampingRatio number
----@param bodyA Box2dBody
----@param bodyB Box2dBody
----@return number stiffness
----@return number damping
-function box2d.b2LinearStiffness(frequencyHertz, dampingRatio, bodyA, bodyB) end
-
---- Utility to compute rotational stiffness values frequency and damping ratio
----@param frequencyHertz number
----@param dampingRatio number
----@param bodyA Box2dBody
----@param bodyB Box2dBody
----@return number stiffness
----@return number damping
-function box2d.b2AngularStiffness(frequencyHertz, dampingRatio, bodyA, bodyB) end
-
-
---- Use InitializeJoint methods to create b2JointDef and call b2JointDef::Initialize(...) if
---- joint have such method
-
---- Initialize the bodies, anchors, axis, and reference angle using the world
---- anchor and unit world axis.
----@param bodyA Box2dBody
----@param bodyB Box2dBody
----@param anchor vector3
----@param axis vector3
----@return Box2dPrismaticJointDef
-function box2d.InitializePrismaticJointDef(bodyA, bodyB, anchor, axis) end
-
---- Initialize the bodies, anchors, and rest length using world space anchors.
---- The minimum and maximum lengths are set to the rest length.
----@param bodyA Box2dBody
----@param bodyB Box2dBody
----@param anchorA vector3
----@param anchorB vector3
----@return Box2dDistanceJointDef
-function box2d.InitializeDistanceJointDef(bodyA, bodyB, anchorA, anchorB) end
-
---- Initialize the bodies, anchors, lengths, max lengths, and ratio using the world anchors.
----@param bodyA Box2dBody
----@param bodyB Box2dBody
----@param groundAnchorA vector3
----@param groundAnchorB vector3
----@param anchorA vector3
----@param anchorB vector3
----@param ratio number
----@return Box2dPulleyJointDef
-function box2d.InitializePulleyJointDef(bodyA, bodyB, groundAnchorA, groundAnchorB, anchorA, anchorB, ratio) end
-
----@param bodyA Box2dBody
----@param bodyB Box2dBody
----@return Box2dMouseJointDef
-function box2d.InitializeMouseJointDef(bodyA, bodyB) end
-
----@param bodyA Box2dBody
----@param bodyB Box2dBody
----@param joint1 Box2dJoint
----@param joint2 Box2dBody
----@return Box2dGearJoint
-function box2d.InitializeGearJointDef(bodyA, bodyB, joint1, joint2) end
-
---- Initialize the bodies, anchors, axis, and reference angle using the world
---- anchor and world axis.
----@param bodyA Box2dBody
----@param bodyB Box2dBody
----@param anchor vector3
----@param axis vector3
----@return Box2dWheelJointDef
-function box2d.InitializeWheelJointDef(bodyA, bodyB, anchor, axis) end
-
---- Initialize the bodies, anchors, reference angle, stiffness, and damping.
----@param bodyA Box2dBody
----@param bodyB Box2dBody
----@param anchor vector3
----@return Box2dWeldJointDef
-function box2d.InitializeWeldJointDef(bodyA, bodyB, anchor) end
-
---- Initialize the bodies, anchors, axis, and reference angle using the world
---- anchor and world axis.
----@param bodyA Box2dBody
----@param bodyB Box2dBody
----@param anchor vector3
----@return Box2FrictionJointDef
-function box2d.InitializeFrictionJointDef(bodyA, bodyB, anchor) end
-
---- Initialize the bodies and offsets using the current transforms.
----@param bodyA Box2dBody
----@param bodyB Box2dBody
----@return Box2dMotorJointDef
-function box2d.InitializeMotorJointDef(bodyA, bodyB) end
 ```
+
+#### box2d.NewWorld(gravity)
+
+_ARGUMENTS_
+* __gravity__ <kbd>vector3|nil</kbd> - The world gravity vector.
+
+_RETURNS_
+* <kbd>Box2dWorld</kbd>
+
+#### box2d.NewDebugDraw(data)
+
+_ARGUMENTS_
+* __data__ <kbd>table</kbd> -
+
+_RETURNS_
+* <kbd>Box2dDebugDraw</kbd>
+
+#### box2d.b2LinearStiffness(frequencyHertz, dampingRatio, bodyA, bodyB)
+Utility to compute linear stiffness values from frequency and damping ratio
+
+_ARGUMENTS_
+* __frequencyHertz__ <kbd>number</kbd> -
+* __dampingRatio__ <kbd>number</kbd> -
+* __bodyA__ <kbd>Box2dBody</kbd> -
+* __bodyB__ <kbd>Box2dBody</kbd> -
+
+_RETURNS_
+* <kbd>number</kbd> - Stiffness
+* <kbd>number</kbd> - Damping
+
+#### box2d.b2AngularStiffness(frequencyHertz, dampingRatio, bodyA, bodyB)
+Utility to compute rotational stiffness values from frequency and damping ratio
+
+_ARGUMENTS_
+* __frequencyHertz__ <kbd>number</kbd> -
+* __dampingRatio__ <kbd>number</kbd> -
+* __bodyA__ <kbd>Box2dBody</kbd> -
+* __bodyB__ <kbd>Box2dBody</kbd> -
+
+_RETURNS_
+* <kbd>number</kbd> - Stiffness
+* <kbd>number</kbd> - Damping
 
 ### World
 A physics world is a collection of bodies, fixtures, and constraints that interact together. Box2D supports the creation of multiple worlds, but this is usually not necessary or desirable.
-Destroy world, world:Destroy() when you do not need it any more.
+Destroy the world with world:Destroy() when you do not need it any more.
 
-```lua
----@class Box2dWorld
-local Box2dWorld = {}
+#### Box2dWorld:SetDebugDraw(draw)
+Register a routine for debug drawing. The debug draw functions are called
+inside with b2World:DebugDraw method. The debug draw object is owned
+by you and must remain in scope.
 
---- Register a contact event listener.
---- listener = {
----    BeginContact = function (contact) end,
----    EndContact = function(contact) end,
----    PreSolve = function(contact, old_manifold) end,
----    PostSolve = function(contact,impulse) end
---- }
----@param listener table|nil
-function Box2dWorld:SetContactListener(listener) end
+_ARGUMENTS_
+* __draw__ <kbd>Box2dDebugDraw|nil</kbd> -
 
---- Register a routine for debug drawing. The debug draw functions are called
---- inside with b2World:DebugDraw method. The debug draw object is owned
---- by you and must remain in scope.
----@param draw Box2dDebugDraw|nil
-function Box2dWorld:SetDebugDraw(draw) end
+#### Box2dWorld:CreateBody(bodyDef)
+Create a rigid body given a definition.
+_Warning:_ This function is locked during callbacks.
 
----Create a rigid body given a definition.
----warning This function is locked during callbacks.
----@param bodyDef Box2dBodyDef
----@return Box2dBody
-function Box2dWorld:CreateBody(bodyDef) end
+_ARGUMENTS_
+* __bodyDef__ <kbd>Box2dBodyDef</kbd> -
 
---- Destroy a rigid body given a definition.
---- warning This automatically deletes all associated shapes and joints.
---- warning This function is locked during callbacks.
----@param body Box2dBody
-function Box2dWorld:DestroyBody(body) end
+_RETURNS_
+* <kbd>Box2dBody</kbd>
 
---- Create a joint to constrain bodies together.
---- This may cause the connected bodies to cease colliding.
---- warning This function is locked during callbacks.
----@param def Box2dJointDef
----@return Box2dJoint
-function Box2dWorld:CreateJoint(def) end
+#### Box2dWorld:DestroyBody(body)
+Destroy a rigid body given a definition.
+_Warning:_ This automatically deletes all associated shapes and joints.
+_Warning:_ This function is locked during callbacks.
 
---- Destroy a joint. This may cause the connected bodies to begin colliding.
---- warning This function is locked during callbacks.
----@param joint Box2dJoint
-function Box2dWorld:DestroyJoint(joint) end
+_ARGUMENTS_
+* __body__ <kbd>Box2dBody</kbd> -
 
---- Take a time step. This performs collision detection, integration,
---- and constraint solution.
----@param timeStep number the amount of time to simulate, this should not vary.
----@param velocityIterations number for the velocity constraint solver.
----@param positionIterations number for the position constraint solver.
-function Box2dWorld:Step(timeStep, velocityIterations, positionIterations) end
+#### Box2dWorld:CreateJoint(def)
+Create a joint to constrain bodies together.
+This may cause the connected bodies to cease colliding.
+_Warning:_ This function is locked during callbacks.
 
---- Manually clear the force buffer on all bodies. By default, forces are cleared automatically
---- after each call to Step. The default behavior is modified by calling SetAutoClearForces.
---- The purpose of this function is to support sub-stepping. Sub-stepping is often used to maintain
---- a fixed sized time step under a variable frame-rate.
---- When you perform sub-stepping you will disable auto clearing of forces and instead call
---- ClearForces after all sub-steps are complete in one pass of your game loop.
---- @see SetAutoClearForces
-function Box2dWorld:ClearForces() end
+_ARGUMENTS_
+* __def__ <kbd>Box2dJointDef</kbd> -
 
---- Call this to draw shapes and other debug draw data. This is intentionally non-const.
-function Box2dWorld:DebugDraw() end
+_RETURNS_
+* <kbd>Box2dJoint</kbd>
 
----Get the world body list. With the returned body, use b2Body:GetNext() to get the next body in the world list.
----A nil body indicates the end of the list.
----@return Box2dBody|nil the head of the world body list.
-function Box2dWorld:GetBodyList() end
+#### Box2dWorld:DestroyJoint(joint)
+Destroy a joint. This may cause the connected bodies to begin colliding.
+_Warning:_ This function is locked during callbacks.
 
---- Ray-cast the world for all fixtures in the path of the ray. Your callback
---- controls whether you get the closest point, any point, or n-points.
---- The ray-cast ignores shapes that contain the starting point.
---- @param callback function(Box2dFixture fixture, vector3 point, vector3 normal, float fraction)
---- @param point1 vector3 ray starting point
---- @param point2 vector3 ray ending point
-function Box2dWorld:RayCast(callback, point1, point2) end
+_ARGUMENTS_
+* __joint__ <kbd>Box2dJoint</kbd> -
 
----Get the world joint list. With the returned joint, use b2Joint:GetNext() to get the next joint in the world list.
----A nil joint indicates the end of the list.
----@return Box2dJoint|nil the head of the world joint list.
-function Box2dWorld:GetJointList() end
+#### Box2dWorld:Step(timeStep, velocityIterations, positionIterations)
+Take a time step. This performs collision detection, integration,
+and constraint solution.
 
---- Enable/disable sleep.
-function Box2dWorld:SetAllowSleeping(flag) end
----@return boolean
-function Box2dWorld:GetAllowSleeping() end
+_ARGUMENTS_
+* __timeStep__ <kbd>number</kbd> - The amount of time to simulate, this should not vary.
+* __velocityIterations__ <kbd>number</kbd> - For the velocity constraint solver. Suggested value: 8.
+* __positionIterations__ <kbd>number</kbd> - For the position constraint solver. Suggested value: 3.
 
---- Enable/disable warm starting. For testing.
-function Box2dWorld:SetWarmStarting(flag) end
----@return boolean
-function Box2dWorld:GetWarmStarting() end
+#### Box2dWorld:ClearForces()
+Manually clear the force buffer on all bodies. By default, forces are cleared automatically
+after each call to Step. The default behavior is modified by calling SetAutoClearForces.
+The purpose of this function is to support sub-stepping. Sub-stepping is often used to maintain
+a fixed sized time step under a variable frame-rate.
+When you perform sub-stepping you will disable auto clearing of forces and instead call
+ClearForces after all sub-steps are complete in one pass of your game loop.
+@see SetAutoClearForces
 
---- Enable/disable continuous physics. For testing.
-function Box2dWorld:SetContinuousPhysics(flag) end
----@return boolean
-function Box2dWorld:GetContinuousPhysics() end
+#### Box2dWorld:DebugDraw()
+Call this to draw shapes and other debug draw data. This is intentionally non-const.
 
---- Enable/disable single stepped continuous physics. For testing.
-function Box2dWorld:SetSubStepping(flag) end
----@return boolean
-function Box2dWorld:GetSubStepping() end
+#### Box2dWorld:GetBodyList()
+Get the world body list. With the returned body, use b2Body:GetNext() to get the next body in the world list.
+A nil body indicates the end of the list.
+
+_RETURNS_
+* <kbd>Box2dBody|nil</kbd> - The head of the world body list.
+
+#### Box2dWorld:GetJointList()
+Get the world joint list. With the returned joint, use b2Joint:GetNext() to get the next joint in the world list.
+A nil joint indicates the end of the list.
+
+_RETURNS_
+* <kbd>Box2dJoint|nil</kbd> - The head of the world joint list.
+
+#### Box2dWorld:SetAllowSleeping(flag)
+Enable/disable sleep.
+
+#### Box2dWorld:GetAllowSleeping()
+
+_RETURNS_
+* <kbd>boolean</kbd>
+
+#### Box2dWorld:SetWarmStarting(flag)
+Enable/disable warm starting. For testing.
+
+#### Box2dWorld:GetWarmStarting()
+
+_RETURNS_
+* <kbd>boolean</kbd>
+
+#### Box2dWorld:SetContinuousPhysics(flag)
+Enable/disable continuous physics. For testing.
+
+#### Box2dWorld:GetContinuousPhysics()
+
+_RETURNS_
+* <kbd>boolean</kbd>
+
+#### Box2dWorld:SetSubStepping(flag)
+Enable/disable single stepped continuous physics. For testing.
+
+#### Box2dWorld:GetSubStepping()
+
+_RETURNS_
+* <kbd>boolean</kbd>
 
 
----@return number the number of broad-phase proxies.
-function Box2dWorld:GetProxyCount() end
+#### Box2dWorld:GetProxyCount()
 
----@return number the number of bodies.
-function Box2dWorld:GetBodyCount() end
+_RETURNS_
+* <kbd>number</kbd> - The number of broad-phase proxies.
 
----@return number the number of joints
-function Box2dWorld:GetJointCount() end
+#### Box2dWorld:GetBodyCount()
 
----@return number the number of contacts (each may have 0 or more contact points).
-function Box2dWorld:GetContactCount() end
+_RETURNS_
+* <kbd>number</kbd> - The number of bodies.
 
----@return number the height of the dynamic tree.
-function Box2dWorld:GetTreeHeight() end
+#### Box2dWorld:GetJointCount()
 
----@return number the balance of the dynamic tree.
-function Box2dWorld:GetTreeBalance() end
+_RETURNS_
+* <kbd>number</kbd> - The number of joints
 
---- Get the quality metric of the dynamic tree. The smaller the better.
---- The minimum is 1.
----@return number
-function Box2dWorld:GetTreeQuality() end
+#### Box2dWorld:GetContactCount()
 
---- Change the global gravity vector.
-function Box2dWorld:SetGravity() end
+_RETURNS_
+* <kbd>number</kbd> - The number of contacts (each may have 0 or more contact ###
 
---- Get the global gravity vector.
----@return vector3
-function Box2dWorld:GetGravity() end
+#### Box2dWorld:GetTreeHeight()
 
---- Is the world locked (in the middle of a time step).
----@return boolean
-function Box2dWorld:IsLocked() end
+_RETURNS_
+* <kbd>number</kbd> - The height of the dynamic tree.
 
---- Set flag to control automatic clearing of forces after each time step.
-function Box2dWorld:SetAutoClearForces(flag) end
+#### Box2dWorld:GetTreeBalance()
 
----  Get the flag that controls automatic clearing of forces after each time step.
----@return boolean
-function Box2dWorld:GetAutoClearForces() end
+_RETURNS_
+* <kbd>number</kbd> - The balance of the dynamic tree.
 
---- Shift the world origin. Useful for large worlds.
---- The body shift formula is: position -= newOrigin
----@param newOrigin vector3 the new origin with respect to the old origin
-function Box2dWorld:ShiftOrigin(newOrigin) end
+#### Box2dWorld:GetTreeQuality()
+Get the quality metric of the dynamic tree. The smaller the better.
+The minimum is 1.
 
---- Get the current profile.
----@return Box2dProfile
-function Box2dWorld:GetProfile() end
+_RETURNS_
+* <kbd>number</kbd>
 
---- Dump the world into the log file.
---- warning this should be called outside of a time step.
-function Box2dWorld:Dump() end
+#### Box2dWorld:SetGravity()
+Change the global gravity vector.
 
---- Destroy world
-function Box2dWorld:Destroy() end
-```
+#### Box2dWorld:GetGravity()
+Get the global gravity vector.
 
-### Box2dContact
-The class manages contact between two shapes. A contact exists for each overlapping
-AABB in the broad-phase (except if filtered). Therefore a contact object may exist
-that has no contact points.
+_RETURNS_
+* <kbd>vector3</kbd>
 
-```lua
----@class Box2dContact
-local Box2dContact = {}
+#### Box2dWorld:IsLocked()
+Is the world locked (in the middle of a time step).
 
---- Get the local manifold.
----@return Box2dManifold
-function Box2dContact:GetManifold() end
+_RETURNS_
+* <kbd>boolean</kbd>
 
---- Get the world manifold.
----@return Box2dWorldManifold
-function Box2dContact:GetWorldManifold() end
+#### Box2dWorld:SetAutoClearForces(flag)
+Set flag to control automatic clearing of forces after each time step.
 
---- Is this contact touching?
----@return boolean
-function Box2dContact:IsTouching() end
+#### Box2dWorld:GetAutoClearForces()
+ Get the flag that controls automatic clearing of forces after each time step.
 
---- Enable/disable this contact. This can be used inside the pre-solve
---- contact listener. The contact is only disabled for the current
---- time step (or sub-step in continuous collisions).
----@param flag boolean
-function Box2dContact:SetEnabled(flag) end
+_RETURNS_
+* <kbd>boolean</kbd>
 
---- Has this contact been disabled?
----@return boolean
-function Box2dContact:IsEnabled() end
+#### Box2dWorld:ShiftOrigin(newOrigin)
+Shift the world origin. Useful for large worlds.
+The body shift formula is: position -= newOrigin
+* __newOrigin__ <kbd>vector3</kbd> - The new origin with respect to the old origin
 
---- Get fixture A in this contact.
----@return Box2dFixture
-function Box2dContact:GetFixtureA() end
+#### Box2dWorld:GetProfile()
+Get the current profile.
 
---- Get the child primitive index for fixture A.
----@return number
-function Box2dContact:GetChildIndexA() end
+_RETURNS_
+* <kbd>Box2dProfile</kbd>
 
---- Get fixture B in this contact.
----@return Box2dFixture
- function Box2dContact:GetFixtureB() end
+#### Box2dWorld:Dump()
+Dump the world into the log file.
+_Warning:_ this should be called outside of a time step.
 
---- Get the child primitive index for fixture B.
----@return number
-function Box2dContact:GetChildIndexB() end
-
---- Override the default friction mixture. You can call this in b2ContactListener::PreSolve.
---- This value persists until set or reset.
----@param friction number
-function Box2dContact:SetFriction(friction) end
-
---- Get the friction.
----@return number
-function Box2dContact:GetFriction() end
-
---- Reset the friction mixture to the default value.
-function Box2dContact:ResetFriction() end
-
---- Override the default restitution mixture. You can call this in b2ContactListener::PreSolve.
---- The value persists until you set or reset.
----@param restitution number
-function Box2dContact:SetRestitution(restitution) end
-
---- Get the restitution.
----@return number
-function Box2dContact:GetRestitution() end
-
---- Reset the restitution to the default value.
-function Box2dContact:ResetRestitution() end
-
---- Override the default restitution velocity threshold mixture. You can call this in b2ContactListener::PreSolve.
---- The value persists until you set or reset.
----@param threshold number
-function Box2dContact:SetRestitutionThreshold(threshold) end
-
---- Get the restitution threshold.
----@return number
-function Box2dContact:GetRestitutionThreshold() end
-
---- Reset the restitution threshold to the default value.
-function Box2dContact:ResetRestitutionThreshold() end
-
---- Set the desired tangent speed for a conveyor belt behavior. In meters per second.
----@param speed number
-function Box2dContact:SetTangentSpeed(speed) end
-
---- Get the desired tangent speed. In meters per second.
----@return number
-function Box2dContact:GetTangentSpeed() end
-```
-
+#### Box2dWorld:Destroy()
+Destroy world
 
 ### DebugDraw
 register this class with a b2World to provide debug drawing of physics
 entities in your game.
-Destroy when not need it anymore
+Destroy it when not it's needed anymore.
+
+#### Creation:
 ```lua
---region Box2dDebugDraw
----@class Box2dDebugDraw
-local Box2dDebugDraw = {}
+-- NOTE: See the /box2d/utils module for premade functions using the "draw_line" message.
 
---- Set the drawing flags.
----@param flags number
-function Box2dDebugDraw:SetFlags(flags) end
-
---- Get the drawing flags.
----@return number
-function Box2dDebugDraw:GetFlags() end
-
---- Append flags to the current flags.
----@param flags number
-function Box2dDebugDraw:AppendFlags(flags) end
-
---- Clear flags from the current flags.
----@param flags number
-function Box2dDebugDraw:ClearFlags(flags) end
-
----Destroy, free memory
-function Box2dDebugDraw:Destroy() end
-```
-
-Creation
-```lua
 box2d.NewDebugDraw({
 	DrawPolygon = function(vertices,color) __draw_polygon(physics_scale,vertices,color) end,
 	DrawSolidPolygon = function(vertices,color) __draw_polygon(physics_scale,vertices,color) end,
@@ -538,13 +385,41 @@ box2d.NewDebugDraw({
 })
 ```
 
+#### Box2dDebugDraw:SetFlags(flags)
+Set the drawing flags.
+
+_ARGUMENTS_
+* __flags__ <kbd>number</kbd> -
+
+#### Box2dDebugDraw:GetFlags()
+Get the drawing flags.
+
+_RETURNS_
+* <kbd>number</kbd>
+
+#### Box2dDebugDraw:AppendFlags(flags)
+Append flags to the current flags.
+
+_ARGUMENTS_
+* __flags__ <kbd>number</kbd> -
+
+#### Box2dDebugDraw:ClearFlags(flags)
+Clear flags from the current flags.
+
+_ARGUMENTS_
+* __flags__ <kbd>number</kbd> -
+
+#### Box2dDebugDraw:Destroy()
+Destroy, free memory.
+
 ### Shape
-No binding for b2Shape. Use table with data when need a shape, for example when create fixture.
+There is no direct binding for `b2Shape`. Use a table with data instead when you need a shape, for example when you create a fixture.
+
 ```lua
----@class Box2dShape
 local Box2dShape = {
     --box2d.b2Shape e_circle, e_edge, e_polygon, e_chain
     shape = 0,
+
     --circle
     circle_radius = 1,
     circle_position = vmath.vector3(0), --or nil
@@ -556,7 +431,7 @@ local Box2dShape = {
     edge_v2 = vmath.vector3(0),
     edge_v3 = vmath.vector3(0),
 
-    --polygon box
+    --box (polygon)
     box = true,
     box_hx = 1, box_hy = 1,
     box_center = vmath.vector3(0), --or nil
@@ -572,14 +447,15 @@ local Box2dShape = {
     chain_next_vertex = vmath.vector3(0, 0, 0)
 }
 ```
+
 ### FixtureDef
-A fixture definition is used to create a fixture. 
+A fixture definition is used to create a fixture.
 You can reuse fixture definitions safely.
+
 ```lua
----@class Box2dFixtureDef
 local Box2dFixtureDef = {
     -- The shape, this must be set.
-    ---@type Box2dShape
+    @type Box2dShape
     shape = { shape = box2d.b2Shape.e_circle, circle_radius = 1, circle_position = vmath.vector3(0) },
 
     -- Use this to store application specific fixture data.
@@ -609,98 +485,130 @@ local Box2dFixtureDef = {
 
 ### Fixture
 A fixture binds a shape to a body and adds material properties such as density, friction, and restitution. A fixture puts a shape into the collision system (broad-phase) so that it can collide with other shapes.
-```lua
----@class Box2dFixture
-local Box2dFixture = {}
 
----@return number box2d.b2Shape
-function Box2dFixture:GetType() end
+#### Box2dFixture:GetType()
 
---- Set if this fixture is a sensor.
----@param sensor boolean
-function Box2dFixture:SetSensor(sensor) end
+_RETURNS_
+* <kbd>number(box2d.b2Shape)</kbd> -
 
----Is this fixture a sensor (non-solid)?
----@return boolean the true if the shape is a sensor.
-function Box2dFixture:IsSensor() end
+#### Box2dFixture:SetSensor(sensor)
+Set if this fixture is a sensor.
 
---- Call this if you want to establish collision that was previously disabled by b2ContactFilter::ShouldCollide.
-function Box2dFixture:Refilter() end
+_ARGUMENTS_
+* __sensor__ <kbd>boolean</kbd> -
 
---- Get the parent body of this fixture. This is nil if the fixture is not attached.
----@return Box2dBody the parent body
-function Box2dFixture:GetBody() end
+#### Box2dFixture:IsSensor()
+Is this fixture a sensor (non-solid)?
 
---- Get the next fixture in the parent body's fixture list.
----@return Box2dFixture|nil
-function Box2dFixture:GetNext() end
+_RETURNS_
+* <kbd>boolean</kbd> - The true if the shape is a sensor.
 
---- Get the user data that was assigned in the fixture definition. Use this to
---- store your application specific data.
----@return table|nil
-function Box2dFixture:GetUserData() end
+#### Box2dFixture:Refilter()
+Call this if you want to establish collision that was previously disabled by b2ContactFilter::ShouldCollide.
 
---- Set the user data. Use this to
---- store your application specific data.
----@param userdata table|nil
-function Box2dFixture:SetUserData(userdata) end
+#### Box2dFixture:GetBody()
+Get the parent body of this fixture. This is nil if the fixture is not attached.
 
---- Test a point for containment in this fixture.
----@param point vector3 a point in world coordinates.
-function Box2dFixture:TestPoint(point) end
+_RETURNS_
+* <kbd>Box2dBody</kbd> - The parent body
 
---- Get the mass data for this fixture. The mass data is based on the density and
---- the shape. The rotational inertia is about the shape's origin. This operation
---- may be expensive.
----@return Box2dMassData
-function Box2dFixture:GetMassData() end
+#### Box2dFixture:GetNext()
+Get the next fixture in the parent body's fixture list.
 
---- Get the density of this fixture.
----@return number
-function Box2dFixture:GetDensity() end
+_RETURNS_
+* <kbd>Box2dFixture|nil</kbd>
 
---- Set the density of this fixture. This will _not_ automatically adjust the mass
---- of the body. You must call b2Body::ResetMassData to update the body's mass.
----@param density number
-function Box2dFixture:SetDensity(density) end
+#### Box2dFixture:GetUserData()
+Get the user data that was assigned in the fixture definition. Use this to
+store your application specific data.
 
---- Get the coefficient of friction.
----@return number
-function Box2dFixture:GetFriction() end
+_RETURNS_
+* <kbd>table|nil</kbd>
 
---- Set the coefficient of friction. This will _not_ change the friction of
---- existing contacts.
----@param friction number
-function Box2dFixture:SetFriction(friction) end
+#### Box2dFixture:SetUserData(userdata)
+Set the user data. Use this to
+store your application specific data.
 
---- Get the coefficient of restitution.
----@return number
-function Box2dFixture:GetRestitution() end
+_ARGUMENTS_
+* __userdata__ <kbd>table|nil</kbd> -
 
---- Set the coefficient of restitution. This will _not_ change the restitution of
---- existing contacts.
----@param restitution number
-function Box2dFixture:SetRestitution(restitution) end
+#### Box2dFixture:TestPoint(point)
+Test a point for containment in this fixture.
 
---- Get the restitution velocity threshold.
----@return number
-function Box2dFixture:GetRestitutionThreshold() end
+_ARGUMENTS_
+* __point__ <kbd>vector3</kbd> - A point in world coordinates.
 
---- Set the restitution threshold. This will _not_ change the restitution threshold of
---- existing contacts.
----@param threshold number
-function Box2dFixture:SetRestitutionThreshold(threshold) end
+#### Box2dFixture:GetMassData()
+Get the mass data for this fixture. The mass data is based on the density and
+the shape. The rotational inertia is about the shape's origin. This operation
+may be expensive.
 
---- Dump this fixture to the log file.
----@param bodyIndex number
-function Box2dFixture:Dump(bodyIndex) end
-```
+_RETURNS_
+* <kbd>Box2dMassData</kbd>
+
+#### Box2dFixture:GetDensity()
+Get the density of this fixture.
+
+_RETURNS_
+* <kbd>number</kbd>
+
+#### Box2dFixture:SetDensity(density)
+Set the density of this fixture. This will _not_ automatically adjust the mass
+of the body. You must call Box2dBody:ResetMassData() to update the body's mass.
+
+_ARGUMENTS_
+* __density__ <kbd>number</kbd> -
+
+#### Box2dFixture:GetFriction()
+Get the coefficient of friction.
+
+_RETURNS_
+* <kbd>number</kbd>
+
+#### Box2dFixture:SetFriction(friction)
+Set the coefficient of friction. This will _not_ change the friction of
+existing contacts.
+
+_ARGUMENTS_
+* __friction__ <kbd>number</kbd> -
+
+#### Box2dFixture:GetRestitution()
+Get the coefficient of restitution.
+
+_RETURNS_
+* <kbd>number</kbd>
+
+#### Box2dFixture:SetRestitution(restitution)
+Set the coefficient of restitution. This will _not_ change the restitution of
+existing contacts.
+
+_ARGUMENTS_
+* __restitution__ <kbd>number</kbd> -
+
+#### Box2dFixture:GetRestitutionThreshold()
+Get the restitution velocity threshold.
+
+_RETURNS_
+* <kbd>number</kbd>
+
+#### Box2dFixture:SetRestitutionThreshold(threshold)
+Set the restitution threshold. This will _not_ change the restitution threshold of
+existing contacts.
+
+_ARGUMENTS_
+* __threshold__ <kbd>number</kbd> -
+
+#### Box2dFixture:Dump(bodyIndex)
+Dump this fixture to the log file.
+
+_ARGUMENTS_
+* __bodyIndex__ <kbd>number</kbd> -
 
 ### BodyDef
 A body definition holds all the data needed to construct a rigid body.
 You can safely re-use body definitions. Shapes are added to a body after construction.
+
 ```lua
----@class Box2dBodyDef
 local Box2dBodyDef = {
     -- The body type: static, kinematic, or dynamic.
     -- box2d.b2BodyType
@@ -745,7 +653,7 @@ local Box2dBodyDef = {
     -- Is this a fast moving body that should be prevented from tunneling through
     -- other moving bodies? Note that all bodies are prevented from tunneling through
     -- kinematic and static bodies. This setting is only considered on dynamic bodies.
-    -- @warning You should use this flag sparingly since it increases processing time.
+    -- @_Warning:_ You should use this flag sparingly since it increases processing time.
     bullet = false,
 
     -- Does this body start out enabled?
@@ -761,311 +669,425 @@ local Box2dBodyDef = {
 
 ### Body
 A chunk of matter that is so strong that the distance between any two bits of matter on the chunk is constant. They are hard like a diamond. In the following discussion we use body interchangeably with rigid body.
-```lua
---- A rigid body. These are created via world:CreateBody.
----@class Box2dBody
-local Box2dBody = {}
 
---- Creates a fixture and attach it to this body. Use this function if you need
---- to set some fixture parameters, like friction. Otherwise you can create the
---- fixture directly from a shape.
---- If the density is non-zero, this function automatically updates the mass of the body.
---- Contacts are not created until the next time step.
---- warning This function is locked during callbacks.
----@param def Box2dFixtureDef
----@return Box2dFixture
-function Box2dBody:CreateFixture(def) end
+A rigid body. These are created via world:CreateBody.
 
---- Creates a fixture from a shape and attach it to this body.
---- This is a convenience function. Use b2FixtureDef if you need to set parameters
---- like friction, restitution, user data, or filtering.
---- If the density is non-zero, this function automatically updates the mass of the body.
---- warning This function is locked during callbacks.
----@param shape Box2dShape
----@param density number the shape density (set to zero for static bodies)
----@return Box2dFixture
-function Box2dBody:CreateFixture(shape, density) end
+#### Box2dBody:CreateFixture(def)
+Creates a fixture and attach it to this body. Use this function if you need
+to set some fixture parameters, like friction. Otherwise you can create the
+fixture directly from a shape.
+If the density is non-zero, this function automatically updates the mass of the body.
+Contacts are not created until the next time step.
+_Warning:_ This function is locked during callbacks.
 
---- Destroy a fixture. This removes the fixture from the broad-phase and
---- destroys all contacts associated with this fixture. This will
---- automatically adjust the mass of the body if the body is dynamic and the
---- fixture has positive density.
---- All fixtures attached to a body are implicitly destroyed when the body is destroyed.
---- warning This function is locked during callbacks.
----@param fixture Box2dFixture
-function Box2dBody:DestroyFixture(fixture) end
+_ARGUMENTS_
+* __def__ <kbd>Box2dFixtureDef</kbd> -
 
---- Set the position of the body's origin and rotation.
---- Manipulating a body's transform may cause non-physical behavior.
---- Note: contacts are updated on the next call to b2World::Step.
----@param position vector3 the world position of the body's local origin.
----@param angle number|nil the world rotation in radians. If nil use current angle
-function Box2dBody:SetTransform(position, angle) end
+_RETURNS_
+* <kbd>Box2dFixture</kbd>
 
---- Get the body transform for the body's origin.
----@return vector3 position
----@return number angle
-function Box2dBody:GetTransform() end
+#### Box2dBody:CreateFixture(shape, density)
+Creates a fixture from a shape and attach it to this body.
+This is a convenience function. Use b2FixtureDef if you need to set parameters
+like friction, restitution, user data, or filtering.
+If the density is non-zero, this function automatically updates the mass of the body.
+_Warning:_ This function is locked during callbacks.
 
---- Get the world body origin position.
----@return vector3
-function Box2dBody:GetPosition() end
+_ARGUMENTS_
+* __shape__ <kbd>Box2dShape</kbd> -
+* __density__ <kbd>number</kbd> - The shape density (set to zero for static bodies)
 
---- Get the angle in radians.
----@return number
-function Box2dBody:GetAngle() end
+_RETURNS_
+* <kbd>Box2dFixture</kbd>
 
---- Get the world position of the center of mass.
----@return vector3
-function Box2dBody:GetWorldCenter() end
+#### Box2dBody:DestroyFixture(fixture)
+Destroy a fixture. This removes the fixture from the broad-phase and
+destroys all contacts associated with this fixture. This will
+automatically adjust the mass of the body if the body is dynamic and the
+fixture has positive density.
+All fixtures attached to a body are implicitly destroyed when the body is destroyed.
+_Warning:_ This function is locked during callbacks.
 
---- Get the local position of the center of mass.
----@return vector3
-function Box2dBody:GetLocalCenter() end
+_ARGUMENTS_
+* __fixture__ <kbd>Box2dFixture</kbd> -
 
---- Set the linear velocity of the center of mass.
----@param velocity vector3
-function Box2dBody:SetLinearVelocity(velocity) end
+#### Box2dBody:SetTransform(position, angle)
+Set the position of the body's origin and rotation.
+Manipulating a body's transform may cause non-physical behavior.
+Note: contacts are updated on the next call to b2World::Step.
 
---- Get the linear velocity of the center of mass.
----@return vector3
-function Box2dBody:GetLinearVelocity() end
+_ARGUMENTS_
+* __position__ <kbd>vector3</kbd> - The world position of the body's local origin.
+* __angle__ <kbd>number|nil</kbd> - The world rotation in radians. If nil use current angle
 
---- Set the angular velocity.
----@param omega number the new angular velocity in radians/second.
-function Box2dBody:SetAngularVelocity(omega) end
+#### Box2dBody:GetTransform()
+Get the body transform for the body's origin.
 
---- Get the angular velocity.
----@return number the angular velocity in radians/second.
-function Box2dBody:GetAngularVelocity() end
+_RETURNS_
+* <kbd>vector3</kbd> - Position
+* <kbd>number</kbd> - Angle
 
---- Apply a force at a world point. If the force is not
---- applied at the center of mass, it will generate a torque and
---- affect the angular velocity. This wakes up the body.
----@param force vector3 force the world force vector, usually in Newtons (N).
----@param point vector3 point the world position of the point of application.
----@param wake boolean wake also wake up the body
-function Box2dBody:ApplyForce(force, point, wake) end
+#### Box2dBody:GetPosition()
+Get the world body origin position.
 
---- Apply a force to the center of mass. This wakes up the body.
----@param force vector3 force the world force vector, usually in Newtons (N).
----@param wake boolean wake also wake up the body
-function Box2dBody:ApplyForceToCenter(force, wake) end
+_RETURNS_
+* <kbd>vector3</kbd>
 
---- Apply a torque. This affects the angular velocity
---- without affecting the linear velocity of the center of mass.
----@param torque number torque about the z-axis (out of the screen), usually in N-m.
----@param wake boolean wake also wake up the body
-function Box2dBody:ApplyTorque(torque, wake) end
+#### Box2dBody:GetAngle()
+Get the angle in radians.
 
---- Apply an impulse at a point. This immediately modifies the velocity.
---- It also modifies the angular velocity if the point of application
---- is not at the center of mass. This wakes up the body.
----@param impulse vector3 impulse the world impulse vector, usually in N-seconds or kg-m/s.
----@param point vector3 point the world position of the point of application.
----@param wake boolean wake also wake up the body
-function Box2dBody:ApplyLinearImpulse(impulse, point, wake) end
+_RETURNS_
+* <kbd>number</kbd>
 
---- Apply an impulse to the center of mass. This immediately modifies the velocity.
----@param impulse vector3 impulse the world impulse vector, usually in N-seconds or kg-m/s.
----@param wake boolean wake also wake up the body
-function Box2dBody:ApplyLinearImpulseToCenter(impulse, wake) end
+#### Box2dBody:GetWorldCenter()
+Get the world position of the center of mass.
 
---- Apply an angular impulse.
----@param impulse vector3 impulse the angular impulse in units of kg*m*m/s
----@param wake boolean wake also wake up the body
-function Box2dBody:ApplyAngularImpulse(impulse, wake) end
+_RETURNS_
+* <kbd>vector3</kbd>
 
---- Get the total mass of the body.
----@return number the mass, usually in kilograms (kg).
-function Box2dBody:GetMass() end
+#### Box2dBody:GetLocalCenter()
+Get the local position of the center of mass.
 
---- Get the rotational inertia of the body about the local origin.
----@return number the rotational inertia, usually in kg-m^2.
-function Box2dBody:GetInertia() end
+_RETURNS_
+* <kbd>vector3</kbd>
 
---- This resets the mass properties to the sum of the mass properties of the fixtures.
---- This normally does not need to be called unless you called SetMassData to override
---- the mass and you later want to reset the mass.
-function Box2dBody:ResetMassData() end
+#### Box2dBody:SetLinearVelocity(velocity)
+Set the linear velocity of the center of mass.
 
---- Get the mass data of the body.
----@return Box2dMassData a struct containing the mass, inertia and center of the body.
-function Box2dBody:GetMassData() end
+_ARGUMENTS_
+* __velocity__ <kbd>vector3</kbd> -
 
---- Set the mass properties to override the mass properties of the fixtures.
---- Note that this changes the center of mass position.
---- Note that creating or destroying fixtures can also alter the mass.
---- This function has no effect if the body isn't dynamic.
----@param data Box2dMassData the mass properties.
-function Box2dBody:SetMassData(data) end
+#### Box2dBody:GetLinearVelocity()
+Get the linear velocity of the center of mass.
 
---- Get the world coordinates of a point given the local coordinates.
----@param localPoint vector3 a point on the body measured relative the the body's origin.
----@return vector3 the same point expressed in world coordinates.
-function Box2dBody:GetWorldPoint(localPoint) end
+_RETURNS_
+* <kbd>vector3</kbd>
 
---- Get the world coordinates of a vector given the local coordinates.
----@param localVector vector3 localVector a vector fixed in the body.
----@return vector3 the same vector expressed in world coordinates.
-function Box2dBody:GetWorldVector(localVector) end
+#### Box2dBody:SetAngularVelocity(omega)
+Set the angular velocity.
 
---- Gets a local point relative to the body's origin given a world point.
----@param worldPoint vector3 worldPoint a point in world coordinates.
----@return vector3 the corresponding local point relative to the body's origin.
-function Box2dBody:GetLocalPoint(worldPoint) end
+_ARGUMENTS_
+* __omega__ <kbd>number</kbd> - The new angular velocity in radians/second.
 
---- Gets a local vector given a world vector.
----@param worldVector vector3 worldVector a vector in world coordinates.
----@return vector3 the corresponding local vector.
-function Box2dBody:GetLocalVector(worldVector) end
+#### Box2dBody:GetAngularVelocity()
+Get the angular velocity.
 
---- Get the world linear velocity of a world point attached to this body.
----@param worldPoint vector3 worldPoint a point in world coordinates.
----@return vector3 the world velocity of a point.
-function Box2dBody:GetLinearVelocityFromWorldPoint(worldPoint) end
+_RETURNS_
+* <kbd>number</kbd> - The angular velocity in radians/second.
 
---- Get the world velocity of a local point.
----@param localPoint vector3 localPoint a point in local coordinates.
----@return vector3 the world velocity of a point.
-function Box2dBody:GetLinearVelocityFromLocalPoint(localPoint) end
+#### Box2dBody:ApplyForce(force, point, wake)
+Apply a force at a world point. If the force is not
+applied at the center of mass, it will generate a torque and
+affect the angular velocity. This wakes up the body.
 
---- Set the linear damping of the body.
----@param linearDamping number
-function Box2dBody:SetLinearDamping(linearDamping) end
+_ARGUMENTS_
+* __force__ <kbd>vector3</kbd> - Force the world force vector, usually in Newtons (N).
+* __point__ <kbd>vector3</kbd> - Point the world position of the point of application.
+* __wake__ <kbd>boolean</kbd> - Wake also wake up the body
 
---- Get the linear damping of the body.
----@return number
-function Box2dBody:GetLinearDamping() end
+#### Box2dBody:ApplyForceToCenter(force, wake)
+Apply a force to the center of mass. This wakes up the body.
 
---- Set the angular damping of the body.
----@param angularDamping number
-function Box2dBody:SetAngularDamping(angularDamping) end
+_ARGUMENTS_
+* __force__ <kbd>vector3</kbd> - Force the world force vector, usually in Newtons (N).
+* __wake__ <kbd>boolean</kbd> - Wake also wake up the body
 
---- Get the angular damping of the body.
----@return number
-function Box2dBody:GetAngularDamping() end
+#### Box2dBody:ApplyTorque(torque, wake)
+Apply a torque. This affects the angular velocity
+without affecting the linear velocity of the center of mass.
 
---- Set the gravity scale of the body.
----@param scale number
-function Box2dBody:SetGravityScale(scale) end
+_ARGUMENTS_
+* __torque__ <kbd>number</kbd> - Torque about the z-axis (out of the screen), usually in N-m.
+* __wake__ <kbd>boolean</kbd> - Wake also wake up the body
 
---- Get the gravity scale of the body.
----@return number
-function Box2dBody:GetGravityScale() end
+#### Box2dBody:ApplyLinearImpulse(impulse, point, wake)
+Apply an impulse at a point. This immediately modifies the velocity.
+It also modifies the angular velocity if the point of application
+is not at the center of mass. This wakes up the body.
 
---- Set the type of this body. This may alter the mass and velocity.
----@param type number box2d.b2BodyType
-function Box2dBody:SetType(type) end
+_ARGUMENTS_
+* __impulse__ <kbd>vector3</kbd> - Impulse the world impulse vector, usually in N-seconds or kg-m/s.
+* __point__ <kbd>vector3</kbd> - Point the world position of the point of application.
+* __wake__ <kbd>boolean</kbd> - Wake also wake up the body
 
---- Get the type of this body.
----@return number box2d.b2BodyType
-function Box2dBody:GetType() end
+#### Box2dBody:ApplyLinearImpulseToCenter(impulse, wake)
+Apply an impulse to the center of mass. This immediately modifies the velocity.
 
---- Should this body be treated like a bullet for continuous collision detection?
----@param flag boolean
-function Box2dBody:SetBullet(flag) end
+_ARGUMENTS_
+* __impulse__ <kbd>vector3</kbd> - Impulse the world impulse vector, usually in N-seconds or kg-m/s.
+* __wake__ <kbd>boolean</kbd> - Wake also wake up the body
 
---- Is this body treated like a bullet for continuous collision detection?
----@return boolean
-function Box2dBody:IsBullet() end
+#### Box2dBody:ApplyAngularImpulse(impulse, wake)
+Apply an angular impulse.
 
---- You can disable sleeping on this body. If you disable sleeping, the
---- body will be woken.
----@param flag boolean
-function Box2dBody:SetSleepingAllowed(flag) end
+_ARGUMENTS_
+* __impulse__ <kbd>vector3</kbd> - Impulse the angular impulse in units of kg*m*m/s
+* __wake__ <kbd>boolean</kbd> - Wake also wake up the body
 
---- Is this body allowed to sleep
----@return boolean
-function Box2dBody:IsSleepingAllowed() end
+#### Box2dBody:GetMass()
+Get the total mass of the body.
 
---- Set the sleep state of the body. A sleeping body has very
---- low CPU cost.
----@param flag boolean flag set to true to wake the body, false to put it to sleep.
-function Box2dBody:SetAwake(flag) end
+_RETURNS_
+* <kbd>number</kbd> - The mass, usually in kilograms (kg).
 
---- Get the sleeping state of this body.
----@return boolean  true if the body is awake.
-function Box2dBody:IsAwake() end
+#### Box2dBody:GetInertia()
+Get the rotational inertia of the body about the local origin.
 
---- Allow a body to be disabled. A disabled body is not simulated and cannot
---- be collided with or woken up.
---- If you pass a flag of true, all fixtures will be added to the broad-phase.
---- If you pass a flag of false, all fixtures will be removed from the
---- broad-phase and all contacts will be destroyed.
---- Fixtures and joints are otherwise unaffected. You may continue
---- to create/destroy fixtures and joints on disabled bodies.
---- Fixtures on a disabled body are implicitly disabled and will
---- not participate in collisions, ray-casts, or queries.
---- Joints connected to a disabled body are implicitly disabled.
---- An diabled body is still owned by a b2World object and remains
---- in the body list.
----@param flag boolean
-function Box2dBody:SetEnabled(flag) end
+_RETURNS_
+* <kbd>number</kbd> - The rotational inertia, usually in kg-m^2.
 
---- Get the active state of the body.
----@return boolean
-function Box2dBody:IsEnabled() end
+#### Box2dBody:ResetMassData()
+This resets the mass properties to the sum of the mass properties of the fixtures.
+This normally does not need to be called unless you called SetMassData to override
+the mass and you later want to reset the mass.
 
---- Set this body to have fixed rotation. This causes the mass
---- to be reset.
----@param flag boolean
-function Box2dBody:SetFixedRotation(flag) end
+#### Box2dBody:GetMassData()
+Get the mass data of the body.
 
---- Does this body have fixed rotation?
----@return boolean
-function Box2dBody:IsFixedRotation() end
+_RETURNS_
+* <kbd>Box2dMassData</kbd> - A struct containing the mass, inertia and center of ### bod
 
---- Get the next body in the world's body list.
----@return Box2dBody
-function Box2dBody:GetNext() end
+#### Box2dBody:SetMassData(data)
+Set the mass properties to override the mass properties of the fixtures.
+Note that this changes the center of mass position.
+Note that creating or destroying fixtures can also alter the mass.
+This function has no effect if the body isn't dynamic.
 
---- Get the first fixture in list of all fixtures attached to this body or nil
----@return Box2dFixture|nil
-function Box2dBody:GetFixtureList() end
+_ARGUMENTS_
+* __data__ <kbd>Box2dMassData</kbd> - The mass properties.
 
---- Get the user data table. Use this to store your application specific data.
----@return table|nil
-function Box2dBody:GetUserData() end
+#### Box2dBody:GetWorldPoint(localPoint)
+Get the world coordinates of a point given the local coordinates.
 
---- Set the user data. Use this to store your application specific data.
----@param data table|nil
-function Box2dBody:SetUserData(data) end
+_ARGUMENTS_
+* __localPoint__ <kbd>vector3</kbd> - A point on the body measured relative the the body's origin.
 
---- Get the parent world of this body.
----@return Box2dWorld
-function Box2dBody:GetWorld() end
+_RETURNS_
+* <kbd>vector3</kbd> - The same point expressed in world coordinates.
 
---- Dump this body to a file
-function Box2dBody:Dump() end
-```
+#### Box2dBody:GetWorldVector(localVector)
+Get the world coordinates of a vector given the local coordinates.
 
+_ARGUMENTS_
+* __localVector__ <kbd>vector3</kbd> - LocalVector a vector fixed in the body.
+
+_RETURNS_
+* <kbd>vector3</kbd> - The same vector expressed in world coordinates.
+
+#### Box2dBody:GetLocalPoint(worldPoint)
+Gets a local point relative to the body's origin given a world point.
+
+_ARGUMENTS_
+* __worldPoint__ <kbd>vector3</kbd> - WorldPoint a point in world coordinates.
+
+_RETURNS_
+* <kbd>vector3</kbd> - The corresponding local point relative to the body's origin.
+
+#### Box2dBody:GetLocalVector(worldVector)
+Gets a local vector given a world vector.
+
+_ARGUMENTS_
+* __worldVector__ <kbd>vector3</kbd> - WorldVector a vector in world coordinates.
+
+_RETURNS_
+* <kbd>vector3</kbd> - The corresponding local vector.
+
+#### Box2dBody:GetLinearVelocityFromWorldPoint(worldPoint)
+Get the world linear velocity of a world point attached to this body.
+
+_ARGUMENTS_
+* __worldPoint__ <kbd>vector3</kbd> - WorldPoint a point in world coordinates.
+
+_RETURNS_
+* <kbd>vector3</kbd> - The world velocity of a point.
+
+#### Box2dBody:GetLinearVelocityFromLocalPoint(localPoint)
+Get the world velocity of a local point.
+
+_ARGUMENTS_
+* __localPoint__ <kbd>vector3</kbd> - LocalPoint a point in local coordinates.
+
+_RETURNS_
+* <kbd>vector3</kbd> - The world velocity of a point.
+
+#### Box2dBody:SetLinearDamping(linearDamping)
+Set the linear damping of the body.
+
+_ARGUMENTS_
+* __linearDamping__ <kbd>number</kbd> -
+
+#### Box2dBody:GetLinearDamping()
+Get the linear damping of the body.
+
+_RETURNS_
+* <kbd>number</kbd>
+
+#### Box2dBody:SetAngularDamping(angularDamping)
+Set the angular damping of the body.
+
+_ARGUMENTS_
+* __angularDamping__ <kbd>number</kbd> -
+
+#### Box2dBody:GetAngularDamping()
+Get the angular damping of the body.
+
+_RETURNS_
+* <kbd>number</kbd>
+
+#### Box2dBody:SetGravityScale(scale)
+Set the gravity scale of the body.
+
+_ARGUMENTS_
+* __scale__ <kbd>number</kbd> -
+
+#### Box2dBody:GetGravityScale()
+Get the gravity scale of the body.
+
+_RETURNS_
+* <kbd>number</kbd>
+
+#### Box2dBody:SetType(type)
+Set the type of this body. This may alter the mass and velocity.
+
+_ARGUMENTS_
+* __type__ <kbd>number</kbd> - Box2d.b2BodyType
+
+#### Box2dBody:GetType()
+Get the type of this body.
+
+_RETURNS_
+* <kbd>number</kbd> - Box2d.b2BodyType
+
+#### Box2dBody:SetBullet(flag)
+Should this body be treated like a bullet for continuous collision detection?
+
+_ARGUMENTS_
+* __flag__ <kbd>boolean</kbd> -
+
+#### Box2dBody:IsBullet()
+Is this body treated like a bullet for continuous collision detection?
+
+_RETURNS_
+* <kbd>boolean</kbd>
+
+#### Box2dBody:SetSleepingAllowed(flag)
+You can disable sleeping on this body. If you disable sleeping, the
+body will be woken.
+
+_ARGUMENTS_
+* __flag__ <kbd>boolean</kbd> -
+
+#### Box2dBody:IsSleepingAllowed()
+Is this body allowed to sleep
+
+_RETURNS_
+* <kbd>boolean</kbd>
+
+#### Box2dBody:SetAwake(flag)
+Set the sleep state of the body. A sleeping body has very
+low CPU cost.
+
+_ARGUMENTS_
+* __flag__ <kbd>boolean</kbd> - Flag set to true to wake the body, false to put it to sleep.
+
+#### Box2dBody:IsAwake()
+Get the sleeping state of this body.
+
+_RETURNS_
+* <kbd>boolean</kbd> -  true if the body is awake.
+
+#### Box2dBody:SetEnabled(flag)
+Allow a body to be disabled. A disabled body is not simulated and cannot
+be collided with or woken up.
+If you pass a flag of true, all fixtures will be added to the broad-phase.
+If you pass a flag of false, all fixtures will be removed from the
+broad-phase and all contacts will be destroyed.
+Fixtures and joints are otherwise unaffected. You may continue
+to create/destroy fixtures and joints on disabled bodies.
+Fixtures on a disabled body are implicitly disabled and will
+not participate in collisions, ray-casts, or queries.
+Joints connected to a disabled body are implicitly disabled.
+An diabled body is still owned by a b2World object and remains
+in the body list.
+
+_ARGUMENTS_
+* __flag__ <kbd>boolean</kbd> -
+
+#### Box2dBody:IsEnabled()
+Get the active state of the body.
+
+_RETURNS_
+* <kbd>boolean</kbd>
+
+#### Box2dBody:SetFixedRotation(flag)
+Set this body to have fixed rotation. This causes the mass
+to be reset.
+
+_ARGUMENTS_
+* __flag__ <kbd>boolean</kbd> -
+
+#### Box2dBody:IsFixedRotation()
+Does this body have fixed rotation?
+
+_RETURNS_
+* <kbd>boolean</kbd>
+
+#### Box2dBody:GetNext()
+Get the next body in the world's body list.
+
+_RETURNS_
+* <kbd>Box2dBody</kbd>
+
+#### Box2dBody:GetFixtureList()
+Get the first fixture in list of all fixtures attached to this body or nil
+
+_RETURNS_
+* <kbd>Box2dFixture|nil</kbd>
+
+#### Box2dBody:GetUserData()
+Get the user data table. Use this to store your application specific data.
+
+_RETURNS_
+* <kbd>table|nil</kbd>
+
+#### Box2dBody:SetUserData(data)
+Set the user data. Use this to store your application specific data.
+
+_ARGUMENTS_
+* __data__ <kbd>table|nil</kbd> -
+
+#### Box2dBody:GetWorld()
+Get the parent world of this body.
+
+_RETURNS_
+* <kbd>Box2dWorld</kbd>
+
+#### Box2dBody:Dump()
+Dump this body to a file
 
 ### Joint
 This is a constraint used to hold two or more bodies together. Box2D supports several joint types: revolute, prismatic, distance, and more. Some joints may have limits and motors.
 
 Box2dJointDef is based for other joint def.
 Joint have needed and optional fields.
+If jointDef have Initialize method for example b2PrismaticJointDef, it will be called when create joint def.
 
-If you need to call Initialize method of joint for example b2RevoluteJointDef::Initialize(
-b2Body * bodyA, b2Body * bodyB, const b2Vec2 & anchor) use box2d.InitializeRevoluteJointDef(bodyA, bodyB, anchor)
 ```lua
----@class Box2dJointDef
 local Box2dJointDef = {
     --region JointNeeded
-    --- The joint type
+    The joint type
     type = box2d.b2JointType.e_revoluteJoint,
 
-    ---@type Box2dBody
+    @type Box2dBody
     bodyA = nil,
 
-    ---@type Box2dBody
+    @type Box2dBody
     bodyB = nil,
     --endregion
 
     --region JointOptional
     -- Use this to attach application specific data to your joints.
-    ---@type table|nil
+    @type table|nil
     userData = nil,
 
     -- Set this flag to true if the attached bodies should collide.
@@ -1076,73 +1098,100 @@ local Box2dJointDef = {
 ```
 The base joint class. Joints are used to constraint two bodies together in
 various fashions. Some joints also feature limits and motors.
-```lua
---- The base joint class. Joints are used to constraint two bodies together in
---- various fashions. Some joints also feature limits and motors.
----@class Box2dJoint
-local Box2dJoint = {}
 
---- Get the type of the concrete joint.
----@return number box2d.b2JointType
-function Box2dJoint:GetType() end
+The base joint class. Joints are used to constraint two bodies together in
+various fashions. Some joints also feature limits and motors.
 
---- Get the first body attached to this joint.
----@return Box2dBody bodyA
-function Box2dJoint:GetBodyA() end
+#### Box2dJoint:GetType()
+Get the type of the concrete joint.
 
---- Get the second body attached to this joint.
----@return Box2dBody bodyB
-function Box2dJoint:GetBodyA() end
+_RETURNS_
+* <kbd>number</kbd> - Box2d.b2JointType
 
---- Get the anchor point on bodyA in world coordinates.
----@return vector3
-function Box2dJoint:GetAnchorA() end
+#### Box2dJoint:GetBodyA()
+Get the first body attached to this joint.
 
---- Get the anchor point on bodyB in world coordinates.
----@return vector3
-function Box2dJoint:GetAnchorB() end
+_RETURNS_
+* <kbd>Box2dBody</kbd> - BodyA
 
---- Get the reaction force on bodyB at the joint anchor in Newtons.
----@param inv_dt number
----@return vector3
-function Box2dJoint:GetReactionForce(inv_dt) end
+#### Box2dJoint:GetBodyA()
+Get the second body attached to this joint.
 
---- Get the reaction torque on bodyB in N*m.
----@param inv_dt number
----@return vector3
-function Box2dJoint:GetReactionTorque(inv_dt) end
+_RETURNS_
+* <kbd>Box2dBody</kbd> - BodyB
 
---- Get the next joint the world joint list.
----@return Box2dJoint|nil
-function Box2dJoint:GetNext() end
+#### Box2dJoint:GetAnchorA()
+Get the anchor point on bodyA in world coordinates.
 
---- Get the user data.
---- Use this to store your application specific data.
----@return table|nil
-function Box2dJoint:GetUserData() end
+_RETURNS_
+* <kbd>vector3</kbd>
 
---- Set the user data.
---- Use this to store your application specific data.
----@param userdata table|nil
-function Box2dJoint:SetUserData(userdata) end
+#### Box2dJoint:GetAnchorB()
+Get the anchor point on bodyB in world coordinates.
 
---- Short-cut function to determine if either body is enabled.
----@return boolean
-function Box2dJoint:IsEnabled() end
+_RETURNS_
+* <kbd>vector3</kbd>
 
---- Get collide connected.
---- Note: modifying the collide connect flag won't work correctly because
---- the flag is only checked when fixture AABBs begin to overlap.
----@return boolean
-function Box2dJoint:GetCollideConnected() end
+#### Box2dJoint:GetReactionForce(inv_dt)
+Get the reaction force on bodyB at the joint anchor in Newtons.
 
---- Dump this joint to the log file.
-function Box2dJoint:Dump() end
+_ARGUMENTS_
+* __inv_dt__ <kbd>number</kbd> -
 
---- Shift the origin for any points stored in world coordinates.
----@param newOrigin vector3
-function Box2dJoint:ShiftOrigin(newOrigin) end
-```
+_RETURNS_
+* <kbd>vector3</kbd>
+
+#### Box2dJoint:GetReactionTorque(inv_dt)
+Get the reaction torque on bodyB in N*m.
+
+_ARGUMENTS_
+* __inv_dt__ <kbd>number</kbd> -
+
+_RETURNS_
+* <kbd>vector3</kbd>
+
+#### Box2dJoint:GetNext()
+Get the next joint the world joint list.
+
+_RETURNS_
+* <kbd>Box2dJoint|nil</kbd>
+
+#### Box2dJoint:GetUserData()
+Get the user data.
+Use this to store your application specific data.
+
+_RETURNS_
+* <kbd>table|nil</kbd>
+
+#### Box2dJoint:SetUserData(userdata)
+Set the user data.
+Use this to store your application specific data.
+
+_ARGUMENTS_
+* __userdata__ <kbd>table|nil</kbd> -
+
+#### Box2dJoint:IsEnabled()
+Short-cut function to determine if either body is enabled.
+
+_RETURNS_
+* <kbd>boolean</kbd>
+
+#### Box2dJoint:GetCollideConnected()
+Get collide connected.
+Note: modifying the collide connect flag won't work correctly because
+the flag is only checked when fixture AABBs begin to overlap.
+
+_RETURNS_
+* <kbd>boolean</kbd>
+
+#### Box2dJoint:Dump()
+Dump this joint to the log file.
+
+#### Box2dJoint:ShiftOrigin(newOrigin)
+Shift the origin for any points stored in world coordinates.
+
+_ARGUMENTS_
+* __newOrigin__ <kbd>vector3</kbd> -
 
 ### RevoluteJoint
 
@@ -1158,43 +1207,42 @@ rather than the center of mass because:
 2. if you add/remove shapes from a body and recompute the mass,the joints will be broken.
 
 ```lua
----@class Box2dRevoluteJointDef:Box2dJointDef
 local Box2dRevoluteJointDef = {
     -- Initialize the bodies, anchors, and reference angle using a world
     -- anchor point.
     -- void Initialize(b2Body* bodyA, b2Body* bodyB, const b2Vec2& anchor);
-    
+
     --region JointNeeded
-    anchor = vmath.vector3(0), ---for Initialize
+    anchor = vmath.vector3(0), for Initialize
     --endregion
 
     --region JointOptional
-    --- The local anchor point relative to bodyA's origin.
+    The local anchor point relative to bodyA's origin.
     localAnchorA = vmath.vector3(0, 0, 0),
 
-    --- The local anchor point relative to bodyB's origin.
+    The local anchor point relative to bodyB's origin.
     localAnchorB = vmath.vector3(0, 0, 0),
 
-    --- The bodyB angle minus bodyA angle in the reference state (radians).
+    The bodyB angle minus bodyA angle in the reference state (radians).
     referenceAngle = 0,
 
-    --- A flag to enable joint limits.
+    A flag to enable joint limits.
     enableLimit = false,
 
-    --- The lower angle for the joint limit (radians).
+    The lower angle for the joint limit (radians).
     lowerAngle = 0,
 
-    --- The upper angle for the joint limit (radians).
+    The upper angle for the joint limit (radians).
     upperAngle = 0,
 
-    --- A flag to enable the joint motor.
+    A flag to enable the joint motor.
     enableMotor = false,
 
-    --- The desired motor speed. Usually in radians per second.
+    The desired motor speed. Usually in radians per second.
     motorSpeed = 0,
 
-    --- The maximum motor torque used to achieve the desired motor speed.
-    --- Usually in N-m.
+    The maximum motor torque used to achieve the desired motor speed.
+    Usually in N-m.
     maxMotorTorque = 0,
     --endregion
 }
@@ -1204,80 +1252,112 @@ are free to rotate about the point. The relative rotation about the shared
 point is the joint angle. You can limit the relative rotation with
 a joint limit that specifies a lower and upper angle. You can use a motor
 to drive the relative rotation about the shared point. A maximum motor torque is provided so that infinite forces are not generated.
-```lua
----@class Box2dRevoluteJoint:Box2dJoint
-local Box2dRevoluteJoint = {}
 
---- The local anchor point relative to bodyA's origin.
----@return vector3
-function Box2dRevoluteJoint:GetLocalAnchorA() end
+#### Box2dRevoluteJoint:GetLocalAnchorA()
+The local anchor point relative to bodyA's origin.
 
---- The local anchor point relative to bodyB's origin.
----@return vector3
-function Box2dRevoluteJoint:GetLocalAnchorB() end
+_RETURNS_
+* <kbd>vector3</kbd>
 
---- Get the reference angle.
----@return float
-function Box2dRevoluteJoint:GetReferenceAngle() end
+#### Box2dRevoluteJoint:GetLocalAnchorB()
+The local anchor point relative to bodyB's origin.
 
---- Get the current joint angle in radians.
----@return float
-function Box2dRevoluteJoint:GetJointAngle()end
+_RETURNS_
+* <kbd>vector3</kbd>
 
---- Get the current joint angle speed in radians per second.
----@return float
-function Box2dRevoluteJoint:GetJointSpeed() end
+#### Box2dRevoluteJoint:GetReferenceAngle()
+Get the reference angle.
 
---- Is the joint limit enabled?
----@return boolean
-function Box2dRevoluteJoint:IsLimitEnabled() end
+_RETURNS_
+* <kbd>float</kbd>
 
---- Enable/disable the joint limit.
----@param flag boolean
-function Box2dRevoluteJoint:EnableLimit(flag) end
+### Box2dRevoluteJoint:GetJointAngle(
+Get the current joint angle in radians.
 
---- Get the lower joint limit in radians.
----@return float
-function Box2dRevoluteJoint:GetLowerLimit() end
+_RETURNS_
+* <kbd>float</kbd>
 
---- Get the upper joint limit in radians.
----@return float
-function Box2dRevoluteJoint:GetUpperLimit() end
+#### Box2dRevoluteJoint:GetJointSpeed()
+Get the current joint angle speed in radians per second.
 
---- Set the joint limits in radians.
----@param lower number
----@param upper number
-function Box2dRevoluteJoint:SetLimits(lower, upper) end
+_RETURNS_
+* <kbd>float</kbd>
 
---- Is the joint motor enabled?
----@return boolean
-function Box2dRevoluteJoint:IsMotorEnabled() end
+#### Box2dRevoluteJoint:IsLimitEnabled()
+Is the joint limit enabled?
 
---- Enable/disable the joint motor.
----@param flag boolean
-function Box2dRevoluteJoint:EnableMotor(flag) end
+_RETURNS_
+* <kbd>boolean</kbd>
 
---- Set the motor speed in radians per second.
----@param speed number
-function Box2dRevoluteJoint:SetMotorSpeed(speed) end
+#### Box2dRevoluteJoint:EnableLimit(flag)
+Enable/disable the joint limit.
 
---- Get the motor speed in radians per second.
----@return float
-function Box2dRevoluteJoint:GetMotorSpeed() end
+_ARGUMENTS_
+* __flag__ <kbd>boolean</kbd> -
 
---- Set the maximum motor torque, usually in N-m.
----@param torque number
-function Box2dRevoluteJoint:SetMaxMotorTorque(torque) end
+#### Box2dRevoluteJoint:GetLowerLimit()
+Get the lower joint limit in radians.
 
----@return float
-function Box2dRevoluteJoint:GetMaxMotorTorque() end
+_RETURNS_
+* <kbd>float</kbd>
 
---- Get the current motor torque given the inverse time step.
---- Unit is N*m.
----@param inv_dt number
----@return float
-function Box2dRevoluteJoint:GetMotorTorque(inv_dt) end
-```
+#### Box2dRevoluteJoint:GetUpperLimit()
+Get the upper joint limit in radians.
+
+_RETURNS_
+* <kbd>float</kbd>
+
+#### Box2dRevoluteJoint:SetLimits(lower, upper)
+Set the joint limits in radians.
+
+_ARGUMENTS_
+* __lower__ <kbd>number</kbd> -
+* __upper__ <kbd>number</kbd> -
+
+#### Box2dRevoluteJoint:IsMotorEnabled()
+Is the joint motor enabled?
+
+_RETURNS_
+* <kbd>boolean</kbd>
+
+#### Box2dRevoluteJoint:EnableMotor(flag)
+Enable/disable the joint motor.
+
+_ARGUMENTS_
+* __flag__ <kbd>boolean</kbd> -
+
+#### Box2dRevoluteJoint:SetMotorSpeed(speed)
+Set the motor speed in radians per second.
+
+_ARGUMENTS_
+* __speed__ <kbd>number</kbd> -
+
+#### Box2dRevoluteJoint:GetMotorSpeed()
+Get the motor speed in radians per second.
+
+_RETURNS_
+* <kbd>float</kbd>
+
+#### Box2dRevoluteJoint:SetMaxMotorTorque(torque)
+Set the maximum motor torque, usually in N-m.
+
+_ARGUMENTS_
+* __torque__ <kbd>number</kbd> -
+
+#### Box2dRevoluteJoint:GetMaxMotorTorque()
+
+_RETURNS_
+* <kbd>float</kbd>
+
+#### Box2dRevoluteJoint:GetMotorTorque(inv_dt)
+Get the current motor torque given the inverse time step.
+Unit is N*m.
+
+_ARGUMENTS_
+* __inv_dt__ <kbd>number</kbd> -
+
+_RETURNS_
+* <kbd>float</kbd>
 
 ### PrismaticJoint
 Prismatic joint definition. This requires defining a line of
@@ -1286,46 +1366,46 @@ anchor points and a local axis so that the initial configuration
 can violate the constraint slightly. The joint translation is zero
 when the local anchor points coincide in world space. Using local
 anchors and a local axis helps when saving and loading a game.
+
 ```lua
----@class Box2dPrismaticJointDef:Box2dJointDef
 local Box2dPrismaticJointDef = {
-    --- Initialize the bodies, anchors, axis, and reference angle using the world
-    --- anchor and unit world axis.
-    --- void Initialize(b2Body* bodyA, b2Body* bodyB, const b2Vec2& anchor, const b2Vec2& axis);
+    Initialize the bodies, anchors, axis, and reference angle using the world
+    anchor and unit world axis.
+    void Initialize(b2Body* bodyA, b2Body* bodyB, const b2Vec2& anchor, const b2Vec2& axis);
     --region JointNeeded
-    anchor = vmath.vector3(0), ---for Initialize
-    axis = vmath.vector3(0), ---for Initialize
+    anchor = vmath.vector3(0), for Initialize
+    axis = vmath.vector3(0), for Initialize
     --endregion
 
     --region JointOptional
-    --- The local anchor point relative to bodyA's origin.
+    The local anchor point relative to bodyA's origin.
     localAnchorA = vmath.vector3(0, 0, 0),
-    
-    --- The local anchor point relative to bodyB's origin.
+
+    The local anchor point relative to bodyB's origin.
     localAnchorB = vmath.vector3(0, 0, 0),
-    
-    --- The constrained angle between the bodies: bodyB_angle - bodyA_angle.
+
+    The constrained angle between the bodies: bodyB_angle - bodyA_angle.
     referenceAngle = 0,
-    
-    --- Enable/disable the joint limit.
+
+    Enable/disable the joint limit.
     enableLimit = false,
-    
-    --- Enable/disable the joint motor.
+
+    Enable/disable the joint motor.
     enableMotor = false,
-    
-    --- The desired motor speed in radians per second.
+
+    The desired motor speed in radians per second.
     motorSpeed = 0,
-    
-    --- The local translation unit axis in bodyA.
+
+    The local translation unit axis in bodyA.
     localAxisA = vmath.vector3(1,0,0),
-    
-    --- The lower translation limit, usually in meters.
+
+    The lower translation limit, usually in meters.
     lowerTranslation = 0,
-    
-    --- The upper translation limit, usually in meters.
+
+    The upper translation limit, usually in meters.
     upperTranslation = 0,
-    
-    --- The maximum motor torque, usually in N-m.
+
+    The maximum motor torque, usually in N-m.
     maxMotorForce = 0,
     --endregion
 }
@@ -1335,120 +1415,156 @@ A prismatic joint. This joint provides one degree of freedom: translation
 along an axis fixed in bodyA. Relative rotation is prevented. You can
 use a joint limit to restrict the range of motion and a joint motor to
 drive the motion or to model joint friction.
-```lua
----@class Box2dPrismaticJoint:Box2dJoint
-local Box2dPrismaticJoint = {}
---- The local anchor point relative to bodyA's origin.
----@return vector3
-function Box2dPrismaticJoint:GetLocalAnchorA() end
 
---- The local anchor point relative to bodyB's origin.
----@return vector3
-function Box2dPrismaticJoint:GetLocalAnchorB() end
+#### Box2dPrismaticJoint:GetLocalAnchorA()
+The local anchor point relative to bodyA's origin.
 
---- The local joint axis relative to bodyA.
----@return vector3
-function Box2dPrismaticJoint:GetLocalAxisA() end
+_RETURNS_
+* <kbd>vector3</kbd>
 
---- Get the reference angle.
----@return number
-function Box2dPrismaticJoint:GetReferenceAngle() end
+#### Box2dPrismaticJoint:GetLocalAnchorB()
+The local anchor point relative to bodyB's origin.
 
---- Get the current joint translation, usually in meters.
----@return number
-function Box2dPrismaticJoint:GetJointTranslation() end
+_RETURNS_
+* <kbd>vector3</kbd>
 
---- Get the current joint translation speed, usually in meters per second.
----@return number
-function Box2dPrismaticJoint:GetJointSpeed() end
+#### Box2dPrismaticJoint:GetLocalAxisA()
+The local joint axis relative to bodyA.
 
---- Is the joint limit enabled?
----@return boolean
-function Box2dPrismaticJoint:IsLimitEnabled() end
+_RETURNS_
+* <kbd>vector3</kbd>
 
---- Enable/disable the joint limit.
----@param flag boolean
-function Box2dPrismaticJoint:EnableLimit(flag) end
+#### Box2dPrismaticJoint:GetReferenceAngle()
+Get the reference angle.
 
---- Get the lower joint limit, usually in meters.
----@return number
-function Box2dPrismaticJoint:GetLowerLimit() end
+_RETURNS_
+* <kbd>number</kbd>
 
---- Get the upper joint limit, usually in meters.
----@return number
-function Box2dPrismaticJoint:GetUpperLimit() end
+#### Box2dPrismaticJoint:GetJointTranslation()
+Get the current joint translation, usually in meters.
 
---- Set the joint limits, usually in meters.
----@param lower number
----@param upper number
-function Box2dPrismaticJoint:SetLimits(lower, upper) end
+_RETURNS_
+* <kbd>number</kbd>
 
---- Is the joint motor enabled?
----@return boolean
-function Box2dPrismaticJoint:IsMotorEnabled() end
+#### Box2dPrismaticJoint:GetJointSpeed()
+Get the current joint translation speed, usually in meters per second.
 
---- Enable/disable the joint motor.
----@param flag boolean
-function Box2dPrismaticJoint:EnableMotor(flag) end
+_RETURNS_
+* <kbd>number</kbd>
 
---- Set the motor speed, usually in meters per second.
----@param speed number
-function Box2dPrismaticJoint:SetMotorSpeed(speed) end
+#### Box2dPrismaticJoint:IsLimitEnabled()
+Is the joint limit enabled?
 
---- Get the motor speed, usually in meters per second.
----@return number
-function Box2dPrismaticJoint:GetMotorSpeed() end
+_RETURNS_
+* <kbd>boolean</kbd>
 
---- Set the maximum motor force, usually in N.
----@param force number
-function Box2dPrismaticJoint:SetMaxMotorForce(force) end
----@return number
-function Box2dPrismaticJoint:GetMaxMotorForce() end
+#### Box2dPrismaticJoint:EnableLimit(flag)
+Enable/disable the joint limit.
 
---- Get the current motor force given the inverse time step, usually in N.
----@param inv_dt number
----@return number
-function Box2dPrismaticJoint:GetMotorForce(inv_dt) end
-```
+_ARGUMENTS_
+* __flag__ <kbd>boolean</kbd> -
+
+#### Box2dPrismaticJoint:GetLowerLimit()
+Get the lower joint limit, usually in meters.
+
+_RETURNS_
+* <kbd>number</kbd>
+
+#### Box2dPrismaticJoint:GetUpperLimit()
+Get the upper joint limit, usually in meters.
+
+_RETURNS_
+* <kbd>number</kbd>
+
+#### Box2dPrismaticJoint:SetLimits(lower, upper)
+Set the joint limits, usually in meters.
+
+_ARGUMENTS_
+* __lower__ <kbd>number</kbd> -
+* __upper__ <kbd>number</kbd> -
+
+#### Box2dPrismaticJoint:IsMotorEnabled()
+Is the joint motor enabled?
+
+_RETURNS_
+* <kbd>boolean</kbd>
+
+#### Box2dPrismaticJoint:EnableMotor(flag)
+Enable/disable the joint motor.
+
+_ARGUMENTS_
+* __flag__ <kbd>boolean</kbd> -
+
+#### Box2dPrismaticJoint:SetMotorSpeed(speed)
+Set the motor speed, usually in meters per second.
+
+_ARGUMENTS_
+* __speed__ <kbd>number</kbd> -
+
+#### Box2dPrismaticJoint:GetMotorSpeed()
+Get the motor speed, usually in meters per second.
+
+_RETURNS_
+* <kbd>number</kbd>
+
+#### Box2dPrismaticJoint:SetMaxMotorForce(force)
+Set the maximum motor force, usually in N.
+
+_ARGUMENTS_
+* __force__ <kbd>number</kbd> -
+
+#### Box2dPrismaticJoint:GetMaxMotorForce()
+
+_RETURNS_
+* <kbd>number</kbd>
+
+#### Box2dPrismaticJoint:GetMotorForce(inv_dt)
+Get the current motor force given the inverse time step, usually in N.
+
+_ARGUMENTS_
+* __inv_dt__ <kbd>number</kbd> -
+
+_RETURNS_
+* <kbd>number</kbd>
 
 ### DistanceJoint
 Distance joint definition. This requires defining an anchor point on both
 bodies and the non-zero distance of the distance joint. The definition uses
 local anchor points so that the initial configuration can violate the
 constraint slightly. This helps when saving and loading a game.
+
 ```lua
----@class Box2dDistanceJointDef:Box2dJointDef
 local Box2dDistanceJointDef = {
-    --- Initialize the bodies, anchors, and rest length using world space anchors.
-    --- The minimum and maximum lengths are set to the rest length.
-    ---void Initialize(b2Body* bodyA, b2Body* bodyB,
-    ---const b2Vec2& anchorA, const b2Vec2& anchorB);
-    
+    Initialize the bodies, anchors, and rest length using world space anchors.
+    The minimum and maximum lengths are set to the rest length.
+    void Initialize(b2Body* bodyA, b2Body* bodyB,
+    const b2Vec2& anchorA, const b2Vec2& anchorB);
+
     --region JointNeeded
     anchorA = vmath.vector3(0),
     anchorB = vmath.vector3(0),
     --endregion
 
     --region JointOptional
-    --- The local anchor point relative to bodyA's origin.
+    The local anchor point relative to bodyA's origin.
     localAnchorA = vmath.vector3(0, 0, 0),
 
-    --- The local anchor point relative to bodyB's origin.
+    The local anchor point relative to bodyB's origin.
     localAnchorB = vmath.vector3(0, 0, 0),
 
-    --- The rest length of this joint. Clamped to a stable minimum value.
+    The rest length of this joint. Clamped to a stable minimum value.
     length = 1,
-    
-    --- Minimum length. Clamped to a stable minimum value.
+
+    Minimum length. Clamped to a stable minimum value.
     minLength = 0,
-    
-    --- Maximum length. Must be greater than or equal to the minimum length.
+
+    Maximum length. Must be greater than or equal to the minimum length.
     maxLength = math.huge,
-    
-    --- The linear stiffness in N/m.
+
+    The linear stiffness in N/m.
     stiffness = 0.0,
-    
-    --- The linear damping in N*s/m.
+
+    The linear damping in N*s/m.
     damping = 0.0,
     --endregion
 }
@@ -1456,99 +1572,130 @@ local Box2dDistanceJointDef = {
 
 A distance joint constrains two points on two bodies to remain at a fixed
 distance from each other. You can view this as a massless, rigid rod.
-```lua
----@class Box2dDistanceJoint:Box2dJoint
-local Box2dDistanceJoint = {}
---- The local anchor point relative to bodyA's origin.
----@return vector3
-function Box2dDistanceJoint:GetLocalAnchorA() end
 
---- The local anchor point relative to bodyB's origin.
----@return vector3
-function Box2dDistanceJoint:GetLocalAnchorB() end
+#### Box2dDistanceJoint:GetLocalAnchorA()
+The local anchor point relative to bodyA's origin.
 
---- Get the rest length
----@return number
-function Box2dDistanceJoint:GetLength() end
+_RETURNS_
+* <kbd>vector3</kbd>
 
---- Set the rest length
----@param length number
----@return number clamped rest length
-function Box2dDistanceJoint:SetLength(length) end
+#### Box2dDistanceJoint:GetLocalAnchorB()
+The local anchor point relative to bodyB's origin.
 
---- Get the minimum length
----@return number
-function Box2dDistanceJoint:GetMinLength() end
+_RETURNS_
+* <kbd>vector3</kbd>
 
---- Set the minimum length
----@param minLength number
----@return number the clamped minimum length
-function Box2dDistanceJoint:SetMinLength(minLength) end
+#### Box2dDistanceJoint:GetLength()
+Get the rest length
 
---- Get the maximum length
----@return number
-function Box2dDistanceJoint:GetMaxLength() end
+_RETURNS_
+* <kbd>number</kbd>
 
---- Set the maximum length
----@param maxLength number
----@return number the clamped maximum length
-function Box2dDistanceJoint:SetMaxLength(maxLength) end
+#### Box2dDistanceJoint:SetLength(length)
+Set the rest length
 
---- Get the current length
----@return number
-function Box2dDistanceJoint:GetCurrentLength() end
+_ARGUMENTS_
+* __length__ <kbd>number</kbd> -
 
---- Set/get the linear stiffness in N/m
----@param stiffness number
-function Box2dDistanceJoint:SetStiffness(stiffness) end
----@return number
-function Box2dDistanceJoint:GetStiffness() end
+_RETURNS_
+* <kbd>number</kbd> - Clamped rest length
 
---- Set/get linear damping in N*s/m
----@param damping number
-function Box2dDistanceJoint:SetDamping(damping) end
----@return number
-function Box2dDistanceJoint:GetDamping() end
-```
+#### Box2dDistanceJoint:GetMinLength()
+Get the minimum length
+
+_RETURNS_
+* <kbd>number</kbd>
+
+#### Box2dDistanceJoint:SetMinLength(minLength)
+Set the minimum length
+
+_ARGUMENTS_
+* __minLength__ <kbd>number</kbd> -
+
+_RETURNS_
+* <kbd>number</kbd> - The clamped minimum length
+
+#### Box2dDistanceJoint:GetMaxLength()
+Get the maximum length
+
+_RETURNS_
+* <kbd>number</kbd>
+
+#### Box2dDistanceJoint:SetMaxLength(maxLength)
+Set the maximum length
+
+_ARGUMENTS_
+* __maxLength__ <kbd>number</kbd> -
+
+_RETURNS_
+* <kbd>number</kbd> - The clamped maximum length
+
+#### Box2dDistanceJoint:GetCurrentLength()
+Get the current length
+
+_RETURNS_
+* <kbd>number</kbd>
+
+#### Box2dDistanceJoint:SetStiffness(stiffness)
+Set/get the linear stiffness in N/m
+
+_ARGUMENTS_
+* __stiffness__ <kbd>number</kbd> -
+
+#### Box2dDistanceJoint:GetStiffness()
+
+_RETURNS_
+* <kbd>number</kbd>
+
+#### Box2dDistanceJoint:SetDamping(damping)
+Set/get linear damping in N*s/m
+
+_ARGUMENTS_
+* __damping__ <kbd>number</kbd> -
+
+#### Box2dDistanceJoint:GetDamping()
+
+_RETURNS_
+* <kbd>number</kbd>
 
 ### PulleyJoint
 Pulley joint definition. This requires two ground anchors,
 two dynamic body anchor points, and a pulley ratio.
+
 ```lua
----@class Box2dPulleyJointDef:Box2dJointDef
 local Box2dPulleyJointDef = {
-    --- Initialize the bodies, anchors, lengths, max lengths, and ratio using the world anchors.
-    ---void Initialize(b2Body* bodyA, b2Body* bodyB,
-    ---     const b2Vec2& groundAnchorA, const b2Vec2& groundAnchorB,
-    ---     const b2Vec2& anchorA, const b2Vec2& anchorB,
-    ---     float ratio);
+    Initialize the bodies, anchors, lengths, max lengths, and ratio using the world anchors.
+    void Initialize(b2Body* bodyA, b2Body* bodyB,
+        const b2Vec2& groundAnchorA, const b2Vec2& groundAnchorB,
+        const b2Vec2& anchorA, const b2Vec2& anchorB,
+        float ratio);
 
     --region JointNeeded
     anchorA = vmath.vector3(0), --for Initialize
 
     anchorB = vmath.vector3(0), --for Initialize
-    
-    --- The first ground anchor in world coordinates. This point never moves.
+
+    The first ground anchor in world coordinates. This point never moves.
     groundAnchorA = vmath.vector3(0), --for Initialize
 
-    --- The second ground anchor in world coordinates. This point never moves.
+    The second ground anchor in world coordinates. This point never moves.
     groundAnchorB = vmath.vector3(0), --for Initialize
-    
-    --- The pulley ratio, used to simulate a block-and-tackle.
-    ratio = 0, ---for Initialize
+
+    The pulley ratio, used to simulate a block-and-tackle.
+    ratio = 0, for Initialize
     --endregion
 
     --region JointOptional
-    --- The local anchor point relative to bodyA's origin.
+    The local anchor point relative to bodyA's origin.
     localAnchorA = vmath.vector3(0, 0, 0),
-    
-    --- The local anchor point relative to bodyB\'s origin.
+
+    The local anchor point relative to bodyB\'s origin.
     localAnchorB = vmath.vector3(0, 0, 0),
-    
-    --- The a reference length for the segment attached to bodyA.
+
+    The a reference length for the segment attached to bodyA.
     lengthA = 0,
-    
-    --- The a reference length for the segment attached to bodyB.
+
+    The a reference length for the segment attached to bodyB.
     lengthB = 0
     --endregion
 }
@@ -1563,62 +1710,73 @@ work better when combined with prismatic joints. You should also cover the
 the anchor points with static shapes to prevent one side from going to
 zero length.
 
-```lua
----@class Box2dPulleyJoint:Box2dJoint
-local Box2dPulleyJoint = {}
 
---- Get the first ground anchor.
----@return vector3
-function Box2dPulleyJoint:GetGroundAnchorA() end
 
---- Get the second ground anchor.
----@return vector3
-function Box2dPulleyJoint:GetGroundAnchorB() end
+#### Box2dPulleyJoint:GetGroundAnchorA()
+Get the first ground anchor.
 
---- Get the current length of the segment attached to bodyA.
----@return number
-function Box2dPulleyJoint:GetLengthA() end
+_RETURNS_
+* <kbd>vector3</kbd>
 
---- Get the current length of the segment attached to bodyB.
----@return number
-function Box2dPulleyJoint:GetLengthB() end
+#### Box2dPulleyJoint:GetGroundAnchorB()
+Get the second ground anchor.
 
---- Get the pulley ratio.
----@return number
-function Box2dPulleyJoint:GetRatio() end
+_RETURNS_
+* <kbd>vector3</kbd>
 
---- Get the current length of the segment attached to bodyA.
----@return number
-function Box2dPulleyJoint:GetCurrentLengthA() end
+#### Box2dPulleyJoint:GetLengthA()
+Get the current length of the segment attached to bodyA.
 
---- Get the current length of the segment attached to bodyB.
----@return number
-function Box2dPulleyJoint:GetCurrentLengthB() end
-```
+_RETURNS_
+* <kbd>number</kbd>
+
+#### Box2dPulleyJoint:GetLengthB()
+Get the current length of the segment attached to bodyB.
+
+_RETURNS_
+* <kbd>number</kbd>
+
+#### Box2dPulleyJoint:GetRatio()
+Get the pulley ratio.
+
+_RETURNS_
+* <kbd>number</kbd>
+
+#### Box2dPulleyJoint:GetCurrentLengthA()
+Get the current length of the segment attached to bodyA.
+
+_RETURNS_
+* <kbd>number</kbd>
+
+#### Box2dPulleyJoint:GetCurrentLengthB()
+Get the current length of the segment attached to bodyB.
+
+_RETURNS_
+* <kbd>number</kbd>
 
 ### MouseJoint
 Mouse joint definition. This requires a world target point,
 tuning parameters, and the time step.
+
 ```lua
----@class Box2dMouseJointDef:Box2dJointDef
 local Box2dMouseJointDef = {
     --region JointNeeded
     --endregion
 
     --region JointOptional
-    --- The linear stiffness in N/m
+    The linear stiffness in N/m
     stiffness = 0,
-    
-    --- The linear damping in N*s/m
+
+    The linear damping in N*s/m
     damping = 0,
-    
-    --- The initial world target point. This is assumed
-    --- to coincide with the body anchor initially.
+
+    The initial world target point. This is assumed
+    to coincide with the body anchor initially.
     target = vmath.vector3(0),
-    
-    --- The maximum constraint force that can be exerted
-    --- to move the candidate body. Usually you will express
-    --- as some multiple of the weight (multiplier * mass * gravity).
+
+    The maximum constraint force that can be exerted
+    to move the candidate body. Usually you will express
+    as some multiple of the weight (multiplier * mass * gravity).
     maxForce = 0
     --endregion
 }
@@ -1630,59 +1788,72 @@ applying huge forces.
 NOTE: this joint is not documented in the manual because it was
 developed to be used in the testbed. If you want to learn how to
 use the mouse joint, look at the testbed.
-```lua
----@class Box2dMouseJoint:Box2dJoint
-local Box2dMouseJoint = {}
 
---- Use this to update the target point.
----@param target vector3
-function Box2dMouseJoint:SetTarget(target) end
 
----@return vector3
-function Box2dMouseJoint:GetTarget() end
+#### Box2dMouseJoint:SetTarget(target)
+Use this to update the target point.
 
---- Set/get the maximum force in Newtons.
----@param force number
-function Box2dMouseJoint:SetMaxForce(force) end
+_ARGUMENTS_
+* __target__ <kbd>vector3</kbd> -
 
----@return number
-function Box2dMouseJoint:GetMaxForce() end
+#### Box2dMouseJoint:GetTarget()
 
---- Set/get the linear stiffness in N/m
----@param stiffness number
-function Box2dMouseJoint:SetStiffness(stiffness) end
+_RETURNS_
+* <kbd>vector3</kbd>
 
----@return number
-function Box2dMouseJoint:GetStiffness() end
+#### Box2dMouseJoint:SetMaxForce(force)
+Set/get the maximum force in Newtons.
 
---- Set/get linear damping in N*s/m
----@param damping number
-function Box2dMouseJoint:SetDamping(damping) end
+_ARGUMENTS_
+* __force__ <kbd>number</kbd> -
 
----@return number
-function Box2dMouseJoint:GetDamping() end
-```
+#### Box2dMouseJoint:GetMaxForce()
+
+_RETURNS_
+* <kbd>number</kbd>
+
+#### Box2dMouseJoint:SetStiffness(stiffness)
+Set/get the linear stiffness in N/m
+
+_ARGUMENTS_
+* __stiffness__ <kbd>number</kbd> -
+
+#### Box2dMouseJoint:GetStiffness()
+
+_RETURNS_
+* <kbd>number</kbd>
+
+#### Box2dMouseJoint:SetDamping(damping)
+Set/get linear damping in N*s/m
+
+_ARGUMENTS_
+* __damping__ <kbd>number</kbd> -
+
+#### Box2dMouseJoint:GetDamping()
+
+_RETURNS_
+* <kbd>number</kbd>
 
 ### GearJoint
 Gear joint definition. This definition requires two existing
 revolute or prismatic joints (any combination will work).
-@warning bodyB on the input joints must both be dynamic
+@_Warning:_ bodyB on the input joints must both be dynamic
+
 ```lua
----@class Box2dGearJointDef:Box2dJointDef
 local Box2dGearJointDef = {
     --region JointNeeded
-    --- The first revolute/prismatic joint attached to the gear joint.
-    ---@type Box2dJoint
+    The first revolute/prismatic joint attached to the gear joint.
+    @type Box2dJoint
     joint1 = nil,
 
-    --- The second revolute/prismatic joint attached to the gear joint.
-    ---@type Box2dJoint
+    The second revolute/prismatic joint attached to the gear joint.
+    @type Box2dJoint
     joint2 = nil,
     --endregion
 
     --region JointOptional
-    --- The gear ratio.
-    --- @see Box2dGearJoint for explanation.
+    The gear ratio.
+    @see Box2dGearJoint for explanation.
     ratio = 0
     --endregion
 }
@@ -1694,25 +1865,31 @@ coordinate1 + ratio * coordinate2 = constant
 The ratio can be negative or positive. If one joint is a revolute joint
 and the other joint is a prismatic joint, then the ratio will have units
 of length or units of 1/length.
-warning You have to manually destroy the gear joint if joint1 or joint2
+_Warning:_ You have to manually destroy the gear joint if joint1 or joint2
 is destroyed.
-```lua
----@class Box2dGearJoint:Box2dJoint
-local Box2dGearJoint = {}
---- Get the first joint.
----@return Box2dJoint
-function Box2dGearJoint:GetJoint1() end
 
---- Get the second joint.
----@return Box2dJoint
-function Box2dGearJoint:GetJoint2() end
+#### Box2dGearJoint:GetJoint1()
+Get the first joint.
 
---- Set/Get the gear ratio.
----@param ratio number
-function Box2dGearJoint:SetRatio(ratio) end
----@return number
-function Box2dGearJoint:GetRatio() end
-```
+_RETURNS_
+* <kbd>Box2dJoint</kbd>
+
+#### Box2dGearJoint:GetJoint2()
+Get the second joint.
+
+_RETURNS_
+* <kbd>Box2dJoint</kbd>
+
+#### Box2dGearJoint:SetRatio(ratio)
+Set/Get the gear ratio.
+
+_ARGUMENTS_
+* __ratio__ <kbd>number</kbd> -
+
+#### Box2dGearJoint:GetRatio()
+
+_RETURNS_
+* <kbd>number</kbd>
 
 ### WheelJoint
 Wheel joint definition. This requires defining a line of
@@ -1721,49 +1898,49 @@ anchor points and a local axis so that the initial configuration
 can violate the constraint slightly. The joint translation is zero
 when the local anchor points coincide in world space. Using local
 anchors and a local axis helps when saving and loading a game.
+
 ```lua
----@class Box2dWheelJointDef:Box2dJointDef
 local Box2dWheelJointDef = {
-    --- Initialize the bodies, anchors, axis, and reference angle using the world
-    --- anchor and world axis.
-    --- void Initialize(b2Body* bodyA, b2Body* bodyB, const b2Vec2& anchor, const b2Vec2& axis);
+    Initialize the bodies, anchors, axis, and reference angle using the world
+    anchor and world axis.
+    void Initialize(b2Body* bodyA, b2Body* bodyB, const b2Vec2& anchor, const b2Vec2& axis);
     --region JointNeeded
     anchor = vmath.vector3(0), --for Initialize
     axis = vmath.vector3(0), --for Initialize
     --endregion
 
     --region JointOptional
-    --- The local anchor point relative to bodyA's origin.
+    The local anchor point relative to bodyA's origin.
     localAnchorA = vmath.vector3(0, 0, 0),
-    
-    --- The local anchor point relative to bodyB\'s origin.
+
+    The local anchor point relative to bodyB\'s origin.
     localAnchorB = vmath.vector3(0, 0, 0),
 
-    --- Enable/disable the joint limit.
+    Enable/disable the joint limit.
     enableLimit = false,
 
---- Enable/disable the joint motor.
+Enable/disable the joint motor.
     enableMotor = false,
 
-    --- The desired motor speed in radians per second.
+    The desired motor speed in radians per second.
     motorSpeed = 0,
 
-    --- The maximum motor torque, usually in N-m.
+    The maximum motor torque, usually in N-m.
     maxMotorTorque = 0,
 
-    --- The local translation axis in bodyA.
+    The local translation axis in bodyA.
     localAxisA = vmath.vector3(0),
 
---- The lower translation limit, usually in meters.
+The lower translation limit, usually in meters.
     lowerTranslation = 0,
 
---- The upper translation limit, usually in meters.
+The upper translation limit, usually in meters.
     upperTranslation = 0,
 
---- Suspension stiffness. Typically in units N/m.
+Suspension stiffness. Typically in units N/m.
     stiffness = 0,
 
---- Suspension damping. Typically in units of N*s/m.
+Suspension damping. Typically in units of N*s/m.
     damping = 0,
     --endregion
 }
@@ -1772,131 +1949,180 @@ A wheel joint. This joint provides two degrees of freedom: translation
 along an axis fixed in bodyA and rotation in the plane. In other words, it is a point to
 line constraint with a rotational motor and a linear spring/damper. The spring/damper is
 initialized upon creation. This joint is designed for vehicle suspensions.
-```lua
----@class Box2dWheelJoint:Box2dJoint
-local Box2dWheelJoint = {}
 
---- The local anchor point relative to bodyA's origin.
----@return vector3
-function Box2dWheelJoint:GetLocalAnchorA() end
 
---- The local anchor point relative to bodyB's origin.
----@return vector3
-function Box2dWheelJoint:GetLocalAnchorB() end
 
---- The local joint axis relative to bodyA.
----@return vector3
-function Box2dWheelJoint:GetLocalAxisA() end
+#### Box2dWheelJoint:GetLocalAnchorA()
+The local anchor point relative to bodyA's origin.
 
---- Get the current joint translation, usually in meters.
----@return number
-function Box2dWheelJoint:GetJointTranslation() end
+_RETURNS_
+* <kbd>vector3</kbd>
 
---- Get the current joint linear speed, usually in meters per second.
----@return number
-function Box2dWheelJoint:GetJointLinearSpeed() end
+#### Box2dWheelJoint:GetLocalAnchorB()
+The local anchor point relative to bodyB's origin.
 
---- Get the current joint angle in radians.
----@return number
-function Box2dWheelJoint:GetJointAngle() end
+_RETURNS_
+* <kbd>vector3</kbd>
 
---- Get the current joint angular speed in radians per second.
----@return number
-function Box2dWheelJoint:GetJointAngularSpeed() end
+#### Box2dWheelJoint:GetLocalAxisA()
+The local joint axis relative to bodyA.
 
---- Is the joint limit enabled?
----@return boolean
-function Box2dWheelJoint:IsLimitEnabled() end
+_RETURNS_
+* <kbd>vector3</kbd>
 
---- Enable/disable the joint translation limit.
----@param flag boolean
-function Box2dWheelJoint:EnableLimit(flag) end
+#### Box2dWheelJoint:GetJointTranslation()
+Get the current joint translation, usually in meters.
 
---- Get the lower joint translation limit, usually in meters.
----@return number
-function Box2dWheelJoint:GetLowerLimit() end
+_RETURNS_
+* <kbd>number</kbd>
 
---- Get the upper joint translation limit, usually in meters.
----@return number
-function Box2dWheelJoint:GetUpperLimit() end
+#### Box2dWheelJoint:GetJointLinearSpeed()
+Get the current joint linear speed, usually in meters per second.
 
---- Set the joint translation limits, usually in meters.
----@param lower number
----@param upper number
-function Box2dWheelJoint:SetLimits(lower, upper) end
+_RETURNS_
+* <kbd>number</kbd>
 
---- Is the joint motor enabled?
----@return boolean
-function Box2dWheelJoint:IsMotorEnabled() end
+#### Box2dWheelJoint:GetJointAngle()
+Get the current joint angle in radians.
 
---- Enable/disable the joint motor.
----@param flag boolean
-function Box2dWheelJoint:EnableMotor(flag) end
+_RETURNS_
+* <kbd>number</kbd>
 
---- Set the motor speed, usually in radians per second.
----@param speed number
-function Box2dWheelJoint:SetMotorSpeed(speed) end
+#### Box2dWheelJoint:GetJointAngularSpeed()
+Get the current joint angular speed in radians per second.
 
---- Get the motor speed, usually in radians per second.
----@return number
-function Box2dWheelJoint:GetMotorSpeed() end
+_RETURNS_
+* <kbd>number</kbd>
 
---- Set/Get the maximum motor force, usually in N-m.
----@param torque number
-function Box2dWheelJoint:SetMaxMotorTorque(torque) end
----@return number
-function Box2dWheelJoint:GetMaxMotorTorque() end
+#### Box2dWheelJoint:IsLimitEnabled()
+Is the joint limit enabled?
 
---- Get the current motor torque given the inverse time step, usually in N-m.
----@param inv_dt number
----@return number
-function Box2dWheelJoint:GetMotorTorque(inv_dt) end
+_RETURNS_
+* <kbd>boolean</kbd>
 
---- Access spring stiffness
----@param stiffness number
-function Box2dWheelJoint:SetStiffness(stiffness) end
----@return number
-function Box2dWheelJoint:GetStiffness() end
+#### Box2dWheelJoint:EnableLimit(flag)
+Enable/disable the joint translation limit.
 
---- Access damping
----@param damping number
-function Box2dWheelJoint:SetDamping(damping) end
----@return number
-function Box2dWheelJoint:GetDamping() end
-```
+_ARGUMENTS_
+* __flag__ <kbd>boolean</kbd> -
+
+#### Box2dWheelJoint:GetLowerLimit()
+Get the lower joint translation limit, usually in meters.
+
+_RETURNS_
+* <kbd>number</kbd>
+
+#### Box2dWheelJoint:GetUpperLimit()
+Get the upper joint translation limit, usually in meters.
+
+_RETURNS_
+* <kbd>number</kbd>
+
+#### Box2dWheelJoint:SetLimits(lower, upper)
+Set the joint translation limits, usually in meters.
+
+_ARGUMENTS_
+* __lower__ <kbd>number</kbd> -
+* __upper__ <kbd>number</kbd> -
+
+#### Box2dWheelJoint:IsMotorEnabled()
+Is the joint motor enabled?
+
+_RETURNS_
+* <kbd>boolean</kbd>
+
+#### Box2dWheelJoint:EnableMotor(flag)
+Enable/disable the joint motor.
+
+_ARGUMENTS_
+* __flag__ <kbd>boolean</kbd> -
+
+#### Box2dWheelJoint:SetMotorSpeed(speed)
+Set the motor speed, usually in radians per second.
+
+_ARGUMENTS_
+* __speed__ <kbd>number</kbd> -
+
+#### Box2dWheelJoint:GetMotorSpeed()
+Get the motor speed, usually in radians per second.
+
+_RETURNS_
+* <kbd>number</kbd>
+
+#### Box2dWheelJoint:SetMaxMotorTorque(torque)
+Set/Get the maximum motor force, usually in N-m.
+
+_ARGUMENTS_
+* __torque__ <kbd>number</kbd> -
+
+#### Box2dWheelJoint:GetMaxMotorTorque()
+
+_RETURNS_
+* <kbd>number</kbd>
+
+#### Box2dWheelJoint:GetMotorTorque(inv_dt)
+Get the current motor torque given the inverse time step, usually in N-m.
+
+_ARGUMENTS_
+* __inv_dt__ <kbd>number</kbd> -
+
+_RETURNS_
+* <kbd>number</kbd>
+
+#### Box2dWheelJoint:SetStiffness(stiffness)
+Access spring stiffness
+
+_ARGUMENTS_
+* __stiffness__ <kbd>number</kbd> -
+
+#### Box2dWheelJoint:GetStiffness()
+
+_RETURNS_
+* <kbd>number</kbd>
+
+#### Box2dWheelJoint:SetDamping(damping)
+Access damping
+
+_ARGUMENTS_
+* __damping__ <kbd>number</kbd> -
+
+#### Box2dWheelJoint:GetDamping()
+
+_RETURNS_
+* <kbd>number</kbd>
 
 ### WeldJoint
 Weld joint definition. You need to specify local anchor points
 where they are attached and the relative body angle. The position
 of the anchor points is important for computing the reaction torque.
+
 ```lua
----@class Box2WeldJointDef:Box2dJointDef
 local Box2WeldJointDef = {
     -- Initialize the bodies, anchors, reference angle, stiffness, and damping.
     -- @param bodyA the first body connected by this joint
     -- @param bodyB the second body connected by this joint
     -- @param anchor the point of connection in world coordinates
     --void Initialize(b2Body* bodyA, b2Body* bodyB, const b2Vec2& anchor);
-    
+
     --region JointNeeded
     anchor = vmath.vector3(0), --for Initialize
     --endregion
 
     --region JointOptional
-    --- The local anchor point relative to bodyA's origin.
+    The local anchor point relative to bodyA's origin.
     localAnchorA = vmath.vector3(0, 0, 0),
-    
-    --- The local anchor point relative to bodyB\'s origin.
+
+    The local anchor point relative to bodyB\'s origin.
     localAnchorB = vmath.vector3(0, 0, 0),
-    
-    --- The bodyB angle minus bodyA angle in the reference state (radians).
+
+    The bodyB angle minus bodyA angle in the reference state (radians).
     referenceAngle = 0,
-    
-    --- The rotational stiffness in N*m
-    --- Disable softness with a value of 0
+
+    The rotational stiffness in N*m
+    Disable softness with a value of 0
     stiffness = 0,
-    
-    --- The rotational damping in N*m*s
+
+    The rotational damping in N*m*s
     damping = 0,
     --endregion
 }
@@ -1904,39 +2130,53 @@ local Box2WeldJointDef = {
 
 A weld joint essentially glues two bodies together. A weld joint may
 distort somewhat because the island constraint solver is approximate.
-```lua
----@class Box2dWeldJoint:Box2dJoint
-local Box2dWeldJoint = {}
 
---- The local anchor point relative to bodyA's origin.
----@return vector3
-function Box2dWeldJoint:GetLocalAnchorA() end
 
---- The local anchor point relative to bodyB's origin.
----@return vector3
-function Box2dWeldJoint:GetLocalAnchorB() end
 
---- Get the reference angle.
----@return number
-function Box2dWeldJoint:GetReferenceAngle() end
+#### Box2dWeldJoint:GetLocalAnchorA()
+The local anchor point relative to bodyA's origin.
 
---- Set/get stiffness in N*m
----@param hz number
-function Box2dWeldJoint:SetStiffness(hz) end
----@return number
-function Box2dWeldJoint:GetStiffness() end
+_RETURNS_
+* <kbd>vector3</kbd>
 
---- Set/get damping in N*m*s
----@param damping number
-function Box2dWeldJoint:SetDamping(damping) end
----@return number
-function Box2dWeldJoint:GetDamping() end
-```
+#### Box2dWeldJoint:GetLocalAnchorB()
+The local anchor point relative to bodyB's origin.
+
+_RETURNS_
+* <kbd>vector3</kbd>
+
+#### Box2dWeldJoint:GetReferenceAngle()
+Get the reference angle.
+
+_RETURNS_
+* <kbd>number</kbd>
+
+#### Box2dWeldJoint:SetStiffness(hz)
+Set/get stiffness in N*m
+
+_ARGUMENTS_
+* __hz__ <kbd>number</kbd> -
+
+#### Box2dWeldJoint:GetStiffness()
+
+_RETURNS_
+* <kbd>number</kbd>
+
+#### Box2dWeldJoint:SetDamping(damping)
+Set/get damping in N*m*s
+
+_ARGUMENTS_
+* __damping__ <kbd>number</kbd> -
+
+#### Box2dWeldJoint:GetDamping()
+
+_RETURNS_
+* <kbd>number</kbd>
 
 ### FrictionJoint
 Friction joint definition.
+
 ```lua
----@class Box2FrictionJointDef:Box2dJointDef
 local Box2FrictionJointDef = {
     -- Initialize the bodies, anchors, axis, and reference angle using the world
     -- anchor and world axis.
@@ -1946,55 +2186,65 @@ local Box2FrictionJointDef = {
     --endregion
 
     --region JointOptional
-    --- The local anchor point relative to bodyA's origin.
+    The local anchor point relative to bodyA's origin.
     localAnchorA = vmath.vector3(0, 0, 0),
-    
-    --- The local anchor point relative to bodyB's origin.
-    localAnchorB = vmath.vector3(0, 0, 0), 
-    
-    --- The maximum friction force in N.
+
+    The local anchor point relative to bodyB's origin.
+    localAnchorB = vmath.vector3(0, 0, 0),
+
+    The maximum friction force in N.
     maxForce = 0,
 
-    --- The maximum friction torque in N-m.
+    The maximum friction torque in N-m.
     maxTorque = 0,
     --endregion
 }
 ```
 Friction joint. This is used for top-down friction.
 It provides 2D translational friction and angular friction.
-```lua
----@class Box2FrictionJoint:Box2dJoint
-local Box2FrictionJoint = {}
 
---- The local anchor point relative to bodyA's origin.
----@return vector3
-function Box2FrictionJoint:GetLocalAnchorA() end
 
---- The local anchor point relative to bodyB's origin.
----@return vector3
-function Box2FrictionJoint:GetLocalAnchorB() end
 
---- Set the maximum friction force in N.
----@param force number
-function Box2FrictionJoint:SetMaxForce(force) end
+#### Box2FrictionJoint:GetLocalAnchorA()
+The local anchor point relative to bodyA's origin.
 
---- Get the maximum friction force in N.
----@return number
-function Box2FrictionJoint:GetMaxForce() end
+_RETURNS_
+* <kbd>vector3</kbd>
 
---- Set the maximum friction torque in N*m.
----@param torque number
-function Box2FrictionJoint:SetMaxTorque(torque) end
+#### Box2FrictionJoint:GetLocalAnchorB()
+The local anchor point relative to bodyB's origin.
 
---- Get the maximum friction torque in N*m.
----@return number
-function Box2FrictionJoint:GetMaxTorque() end
-```
+_RETURNS_
+* <kbd>vector3</kbd>
+
+#### Box2FrictionJoint:SetMaxForce(force)
+Set the maximum friction force in N.
+
+_ARGUMENTS_
+* __force__ <kbd>number</kbd> -
+
+#### Box2FrictionJoint:GetMaxForce()
+Get the maximum friction force in N.
+
+_RETURNS_
+* <kbd>number</kbd>
+
+#### Box2FrictionJoint:SetMaxTorque(torque)
+Set the maximum friction torque in N*m.
+
+_ARGUMENTS_
+* __torque__ <kbd>number</kbd> -
+
+#### Box2FrictionJoint:GetMaxTorque()
+Get the maximum friction torque in N*m.
+
+_RETURNS_
+* <kbd>number</kbd>
 
 ### MotorJoint
 Motor joint definition.
+
 ```lua
----@class Box2MotorJointDef:Box2dJointDef
 local Box2MotorJointDef = {
     -- Initialize the bodies and offsets using the current transforms.
     --void Initialize(b2Body* bodyA, b2Body* bodyB);
@@ -2002,19 +2252,19 @@ local Box2MotorJointDef = {
     --endregion
 
     --region JointOptional
-    --- The maximum motor force in N.
+    The maximum motor force in N.
     maxForce = vmath.vector3(0, 0, 0),
-    
-    --- The maximum motor torque in N-m.
+
+    The maximum motor torque in N-m.
     maxTorque = vmath.vector3(0, 0, 0),
-    
-    --- Position of bodyB minus the position of bodyA, in bodyA's frame, in meters.
+
+    Position of bodyB minus the position of bodyA, in bodyA's frame, in meters.
     linearOffset = 0,
-    
-    --- The bodyB angle minus bodyA angle in radians.
+
+    The bodyB angle minus bodyA angle in radians.
     angularOffset = 0,
-    
-    --- Position correction factor in the range [0,1].
+
+    Position correction factor in the range [0,1].
     correctionFactor = 0,
     --endregion
 }
@@ -2023,132 +2273,82 @@ local Box2MotorJointDef = {
 A motor joint is used to control the relative motion
 between two bodies. A typical usage is to control the movement
 of a dynamic body with respect to the ground.
-```lua
----@class Box2dMotorJoint:Box2dJoint
-local Box2dMotorJoint = {}
---- Set/get the target linear offset, in frame A, in meters.
----@param linearOffset vector3
-function Box2dMotorJoint:SetLinearOffset(linearOffset) end
----@return vector3
-function Box2dMotorJoint:GetLinearOffset() end
 
---- Set/get the target angular offset, in radians.
----@param angularOffset number
-function Box2dMotorJoint:SetAngularOffset(angularOffset) end
----@return number
-function Box2dMotorJoint:GetAngularOffset() end
 
---- Set the maximum friction force in N.
----@param force number
-function Box2dMotorJoint:SetMaxForce(force) end
+#### Box2dMotorJoint:SetLinearOffset(linearOffset)
+Set/get the target linear offset, in frame A, in meters.
+* __linearOffset__ <kbd>vector3</kbd> -
 
---- Get the maximum friction force in N.
----@return number
-function Box2dMotorJoint:GetMaxForce() end
+#### Box2dMotorJoint:GetLinearOffset()
 
---- Set the maximum friction torque in N*m.
----@param torque number
-function Box2dMotorJoint:SetMaxTorque(torque) end
+_RETURNS_
+* <kbd>vector3</kbd>
 
---- Get the maximum friction torque in N*m.
----@return number
-function Box2dMotorJoint:GetMaxTorque() end
+#### Box2dMotorJoint:SetAngularOffset(angularOffset)
+Set/get the target angular offset, in radians.
 
---- Set the position correction factor in the range [0,1].
----@param factor number
-function Box2dMotorJoint:SetCorrectionFactor(factor) end
+_ARGUMENTS_
+* __angularOffset__ <kbd>number</kbd> -
 
---- Get the position correction factor in the range [0,1].
----@return number
-function Box2dMotorJoint:GetCorrectionFactor() end
-```
+#### Box2dMotorJoint:GetAngularOffset()
 
-###Box2dManifold
-```lua
---- A manifold for two touching convex shapes.
---- Box2D supports multiple types of contact:
---- - clip point versus plane with radius
---- - point versus point with radius (circles)
---- The local point usage depends on the manifold type:
---- -e_circles: the local center of circleA
---- -e_faceA: the center of faceA
---- -e_faceB: the center of faceB
---- Similarly the local normal usage:
---- -e_circles: not used
---- -e_faceA: the normal on polygonA
---- -e_faceB: the normal on polygonB
---- We store contacts in this way so that position correction can
---- account for movement, which is critical for continuous physics.
---- All contact scenarios must be expressed in one of these types.
---- This structure is stored across time steps, so we keep it small.
----@class Box2dManifold
----@field type number box2d.b2Manifold_Type
----@field localPoint vector3 usage depends on manifold type
----@field localNormal vector3 not use for Type::e_points
----@field pointCount number the number of manifold points
----@field points Box2dManifoldPoint[] the points of contact
+_RETURNS_
+* <kbd>number</kbd>
 
---- A manifold point is a contact point belonging to a contact
---- manifold. It holds details related to the geometry and dynamics
---- of the contact points.
---- The local point usage depends on the manifold type:
---- -e_circles: the local center of circleB
---- -e_faceA: the local center of cirlceB or the clip point of polygonB
---- -e_faceB: the clip point of polygonA
---- This structure is stored across time steps, so we keep it small.
---- Note: the impulses are used for internal caching and may not
---- provide reliable contact forces, especially for high speed collisions.
----@class Box2dManifoldPoint
----@field localPoint vector3 usage depends on manifold type
----@field normalImpulse number the non-penetration impulse
----@field tangentImpulse number	the friction impulse
----@field id Box2dContactID uniquely identifies a contact point between two shapes
+#### Box2dMotorJoint:SetMaxForce(force)
+Set the maximum friction force in N.
 
---- Contact ids to facilitate warm starting.
----@class Box2dContactID
----@field cf Box2dContactFeature
----@field key number  Used to quickly compare contact ids.
+_ARGUMENTS_
+* __force__ <kbd>number</kbd> -
 
---- The features that intersect to form the contact point
---- This must be 4 bytes or less.
---enum Type
---	{
---		e_vertex = 0,
---		e_face = 1
---	};
----@class Box2dContactFeature
----@field indexA number Feature index on shapeA
----@field indexB number	Feature index on shapeB
----@field typeA number	The feature type on shapeA
----@field typeB number	The feature type on shapeB
-```
+#### Box2dMotorJoint:GetMaxForce()
+Get the maximum friction force in N.
 
-### Box2dWorldManifold
-```lua
---- This is used to compute the current state of a contact manifold.
----@class Box2dWorldManifold
----@field normal vector3 world vector pointing from A to B
----@field points vector3[] world contact point (point of intersection)
----@field separations number[] a negative value indicates overlap, in meters
-```
-### Box2dProfile
-return by world:GetProfile() method
-```lua
----@class Box2dProfile
----@field step number
----@field collide number
----@field solve number
----@field solveInit number
----@field solveVelocity number
----@field solvePosition number
----@field broadphase number
----@field solveTOI number
-```
+_RETURNS_
+* <kbd>number</kbd>
 
-### Box2dMassData
-```lua
----@class Box2dMassData
----@field mass number
----@field center vector3
----@field I number
-```
+#### Box2dMotorJoint:SetMaxTorque(torque)
+Set the maximum friction torque in N*m.
+
+_ARGUMENTS_
+* __torque__ <kbd>number</kbd> -
+
+#### Box2dMotorJoint:GetMaxTorque()
+Get the maximum friction torque in N*m.
+
+_RETURNS_
+* <kbd>number</kbd>
+
+#### Box2dMotorJoint:SetCorrectionFactor(factor)
+Set the position correction factor in the range [0,1].
+
+_ARGUMENTS_
+* __factor__ <kbd>number</kbd> -
+
+#### Box2dMotorJoint:GetCorrectionFactor()
+Get the position correction factor in the range [0,1].
+
+_RETURNS_
+* <kbd>number</kbd>
+
+### Box2dProfile <kbd>table</kbd>
+Profiling data. Times are in milliseconds.
+Returned by world:GetProfile().
+
+_FIELDS_
+* __step__ <kbd>number</kbd> -
+* __collide__ <kbd>number</kbd> -
+* __solve__ <kbd>number</kbd> -
+* __solveInit__ <kbd>number</kbd> -
+* __solveVelocity__ <kbd>number</kbd> -
+* __solvePosition__ <kbd>number</kbd> -
+* __broadphase__ <kbd>number</kbd> -
+* __solveTOI__ <kbd>number</kbd> -
+
+### Box2dMassData <kbd>table</kbd>
+This holds the mass data computed for a shape.
+
+_FIELDS_
+* __mass__ <kbd>number</kbd> - The mass of the shape, usually in kilograms.
+* __center__ <kbd>vector3</kbd> - The position of the shape's centroid relative to the shape's origin.
+* __I__ <kbd>number</kbd> -  The rotational inertia of the shape about the local origin.
