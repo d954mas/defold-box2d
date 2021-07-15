@@ -1,4 +1,5 @@
 local BOX2D_UTILS = require "box2d.utils"
+local LUME = require "libs.lume"
 
 local M = {}
 
@@ -40,6 +41,14 @@ function M.update(dt)
         cfg.world:Step(cfg.dt * cfg.time_scale,cfg.velocityIterations,cfg.positionIterations)
         cfg.world:DebugDraw()
     end
+end
+
+
+function M.cfg_velocity_iterations_add(value)
+    M.scene_config.velocityIterations = LUME.clamp(M.scene_config.velocityIterations+value,1,100)
+end
+function M.cfg_position_iterations_add(value)
+    M.scene_config.positionIterations = LUME.clamp(M.scene_config.positionIterations+value,1,100)
 end
 
 return M
