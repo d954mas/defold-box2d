@@ -6,6 +6,27 @@ Never constructed. Sent as a parameter in the contact listener functions: BeginC
 
 ## Methods
 
+* Box2dContact:[GetManifold](#box2dcontactgetmanifold) ()
+* Box2dContact:[GetWorldManifold](#box2dcontactgetworldmanifold) ()
+* Box2dContact:[IsTouching](#box2dcontactistouching) ()
+* Box2dContact:[SetEnabled](#box2dcontactsetenabledflag) (flag)
+* Box2dContact:[IsEnabled](#box2dcontactisenabled) ()
+* Box2dContact:[GetFixtureA](#box2dcontactgetfixturea) ()
+* Box2dContact:[GetChildIndexA](#box2dcontactgetchildindexa) ()
+* Box2dContact:[GetFixtureB](#box2dcontactgetfixtureb) ()
+* Box2dContact:[GetChildIndexB](#box2dcontactgetchildindexb) ()
+* Box2dContact:[SetFriction](#box2dcontactsetfrictionfriction) (friction)
+* Box2dContact:[GetFriction](#box2dcontactgetfriction) ()
+* Box2dContact:[ResetFriction](#box2dcontactresetfriction) ()
+* Box2dContact:[SetRestitution](#box2dcontactsetrestitutionrestitution) (restitution)
+* Box2dContact:[GetRestitution](#box2dcontactgetrestitution) ()
+* Box2dContact:[ResetRestitution](#box2dcontactresetrestitution) ()
+* Box2dContact:[SetRestitutionThreshold](#box2dcontactsetrestitutionthresholdthreshold) (threshold)
+* Box2dContact:[GetRestitutionThreshold](#box2dcontactgetrestitutionthreshold) ()
+* Box2dContact:[ResetRestitutionThreshold](#box2dcontactresetrestitutionthreshold) ()
+* Box2dContact:[SetTangentSpeed](#box2dcontactsettangentspeedspeed) (speed)
+* Box2dContact:[GetTangentSpeed](#box2dcontactgettangentspeed) ()
+
 #### Box2dContact:GetManifold()
 Get the local manifold.
 
