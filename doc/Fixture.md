@@ -36,6 +36,8 @@ _RETURNS_
 * Box2dFixture:[GetType](#box2dfixturegettype) ()
 * Box2dFixture:[SetSensor](#box2dfixturesetsensorsensor) (sensor)
 * Box2dFixture:[IsSensor](#box2dfixtureissensor) ()
+* Box2dFixture:[SetFilterData](#box2dfixturesetfilterdatafilter) (filter)
+* Box2dFixture:[GetFilterData](#box2dfixturegetfilterdata) ()
 * Box2dFixture:[Refilter](#box2dfixturerefilter) ()
 * Box2dFixture:[GetBody](#box2dfixturegetbody) ()
 * Box2dFixture:[GetNext](#box2dfixturegetnext) ()
@@ -69,6 +71,19 @@ Is this fixture a sensor (non-solid)?
 
 _RETURNS_
 * <kbd>boolean</kbd> - The true if the shape is a sensor.
+
+#### Box2dFixture:SetFilterData(filter)
+Set the contact filtering data. This will not update contacts until the next time step when either parent body is active and awake.
+This automatically calls Refilter.
+
+_ARGUMENTS_
+* __filter__ [`Box2dFilter`](Box2dFilter.md)
+
+#### Box2dFixture:GetFilterData()
+Get the contact filtering data.
+
+_RETURNS_
+* [`Box2dFilter`](Box2dFilter.md)
 
 #### Box2dFixture:Refilter()
 Call this if you want to establish collision that was previously disabled by b2ContactFilter::ShouldCollide.
