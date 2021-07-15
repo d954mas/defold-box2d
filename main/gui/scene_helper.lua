@@ -16,6 +16,8 @@ M.scene_config = {
     dt = 1 / 60,
 }
 
+M.world_step_time = 0
+
 M.debug_draw = {
     draw = BOX2D_UTILS.create_debug_draw(0.04),
     flags = bit.bor(box2d.b2Draw.e_shapeBit,box2d.b2Draw.e_jointBit)
@@ -38,9 +40,18 @@ end
 function M.update(dt)
     local cfg = M.scene_config
     if (cfg.world) then
+        local time = socket.gettime()
         cfg.world:Step(cfg.dt * cfg.time_scale,cfg.velocityIterations,cfg.positionIterations)
+        M.world_step_time = socket.gettime() - time
         cfg.world:DebugDraw()
     end
+end
+
+function M.reset()
+    local cfg = M.scene_config
+    M.dirty = true
+    cfg.velocityIterations = 8
+    cfg.positionIterations = 3
 end
 
 
@@ -50,5 +61,7 @@ end
 function M.cfg_position_iterations_add(value)
     M.scene_config.positionIterations = LUME.clamp(M.scene_config.positionIterations+value,1,100)
 end
+
+M.reset()
 
 return M

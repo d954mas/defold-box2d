@@ -1,6 +1,7 @@
 local SCENE_HELPER = require "main.gui.scene_helper"
 local DIRTY_LARRY = require "gooey-dirtylarry.dirtylarry"
 local GOOEY = require "gooey.gooey"
+local MONARCH = require "monarch.monarch"
 
 local gui_refresh_scale = function(button)
     button.initial_scale = button.initial_scale or gui.get_scale(button.node)
@@ -21,13 +22,17 @@ function init(self)
         lbl_title = gui.get_node("lbl_title"),
         lbl_position_number = gui.get_node("position/number"),
         lbl_velocity_number = gui.get_node("velocity/number"),
+        lbl_world_step_time = gui.get_node("lbl_world_step_time"),
     }
     self.gui_functions = {
         btn_pos_plus =  function() SCENE_HELPER.cfg_position_iterations_add(1) end,
         btn_pos_minus =  function() SCENE_HELPER.cfg_position_iterations_add(-1) end,
         btn_velocity_plus =  function() SCENE_HELPER.cfg_velocity_iterations_add(1) end,
         btn_velocity_minus =  function() SCENE_HELPER.cfg_velocity_iterations_add(-1) end,
+        btn_reset_changes =  function() SCENE_HELPER.reset() end,
+        btn_restart =  function() MONARCH.show(MONARCH.top(), { reload = true }) end,
     }
+    self.delay_step_time_update = 0
     reset_gui(self)
 end
 
@@ -42,6 +47,15 @@ function update(self,dt)
     end
     gui.set_text(self.vh.lbl_position_number,SCENE_HELPER.scene_config.positionIterations)
     gui.set_text(self.vh.lbl_velocity_number,SCENE_HELPER.scene_config.velocityIterations)
+
+    --update every 10 frame. Or too fast to read it
+    self.delay_step_time_update = self.delay_step_time_update - dt
+    if(self.delay_step_time_update<0)then
+        self.delay_step_time_update = 10/60
+        gui.set_text(self.vh.lbl_world_step_time,string.format("World step:\n %f ms",SCENE_HELPER.world_step_time*1000))
+    end
+
+
 end
 
 function on_message(self, message_id, message, sender)
@@ -54,5 +68,7 @@ function on_input(self, action_id, action)
     GOOEY.button("btn_pos_minus/bg", action_id, action, self.gui_functions.btn_pos_minus, gui_refresh_scale)
     GOOEY.button("btn_velocity_plus/bg", action_id, action, self.gui_functions.btn_velocity_plus, gui_refresh_scale)
     GOOEY.button("btn_velocity_minus/bg", action_id, action, self.gui_functions.btn_velocity_minus, gui_refresh_scale)
+    DIRTY_LARRY.button("btn_reset_changes", action_id, action, self.gui_functions.btn_reset_changes)
+    DIRTY_LARRY.button("btn_restart", action_id, action, self.gui_functions.btn_restart, gui_refresh_scale)
 end
 
