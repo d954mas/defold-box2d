@@ -10,16 +10,16 @@ zero length.
 
 ## Constructor
 
-#### Box2dWorld:CreateJoint(def)
+### Box2dWorld:CreateJoint(def)
 Create a joint to constrain bodies together.
 This may cause the connected bodies to cease colliding.
 _Warning:_ This function is locked during callbacks.
 
-_ARGUMENTS_
-* __def__ [`Box2dJointDef`](../Joint.md) - Pulley joint definition.
+**PARAMETERS**
+* `def` [(Box2dJointDef)](../Joint.md) - Pulley joint definition.
 
-_RETURNS_
-* [`Box2dJoint`](../Joint.md)
+**RETURN**
+* [(Box2dJoint)](../Joint.md)
 
 #### JointDef
 Pulley joint definition. This requires two ground anchors,
@@ -74,44 +74,44 @@ local Box2dPulleyJointDef = {
 * Box2dPulleyJoint:[GetCurrentLengthA](#box2dpulleyjointgetcurrentlengtha) ()
 * Box2dPulleyJoint:[GetCurrentLengthB](#box2dpulleyjointgetcurrentlengthb) ()
 
-#### Box2dPulleyJoint:GetGroundAnchorA()
+### Box2dPulleyJoint:GetGroundAnchorA()
 Get the first ground anchor.
 
-_RETURNS_
-* <kbd>vector3</kbd>
+**RETURN**
+* (vector3)
 
-#### Box2dPulleyJoint:GetGroundAnchorB()
+### Box2dPulleyJoint:GetGroundAnchorA()
 Get the second ground anchor.
 
-_RETURNS_
-* <kbd>vector3</kbd>
+**RETURN**
+* (vector3)
 
-#### Box2dPulleyJoint:GetLengthA()
+### Box2dPulleyJoint:GetGroundAnchorA()
 Get the current length of the segment attached to bodyA.
 
-_RETURNS_
-* <kbd>number</kbd>
+**RETURN**
+* (number)
 
-#### Box2dPulleyJoint:GetLengthB()
+### Box2dPulleyJoint:GetGroundAnchorA()
 Get the current length of the segment attached to bodyB.
 
-_RETURNS_
-* <kbd>number</kbd>
+**RETURN**
+* (number)
 
-#### Box2dPulleyJoint:GetRatio()
+### Box2dPulleyJoint:GetGroundAnchorA()
 Get the pulley ratio.
 
-_RETURNS_
-* <kbd>number</kbd>
+**RETURN**
+* (number)
 
-#### Box2dPulleyJoint:GetCurrentLengthA()
+### Box2dPulleyJoint:GetGroundAnchorA()
 Get the current length of the segment attached to bodyA.
 
-_RETURNS_
-* <kbd>number</kbd>
+**RETURN**
+* (number)
 
-#### Box2dPulleyJoint:GetCurrentLengthB()
+### Box2dPulleyJoint:GetGroundAnchorA()
 Get the current length of the segment attached to bodyB.
 
-_RETURNS_
-* <kbd>number</kbd>
+**RETURN**
+* (number)

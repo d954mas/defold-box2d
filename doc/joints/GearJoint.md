@@ -11,16 +11,16 @@ is destroyed.
 
 ## Constructor
 
-#### Box2dWorld:CreateJoint(def)
+### Box2dWorld:CreateJoint(def)
 Create a joint to constrain bodies together.
 This may cause the connected bodies to cease colliding.
 _Warning:_ This function is locked during callbacks.
 
-_ARGUMENTS_
-* __def__ [`Box2dJointDef`](../Joint.md) - Gear joint definition.
+**PARAMETERS**
+* `def` [(Box2dJointDef)](../Joint.md) - Gear joint definition.
 
-_RETURNS_
-* [`Box2dJoint`](../Joint.md)
+**RETURN**
+* [(Box2dJoint)](../Joint.md)
 
 #### JointDef
 Gear joint definition. This definition requires two existing
@@ -54,25 +54,25 @@ local Box2dGearJointDef = {
 * Box2dGearJoint:[SetRatio](#box2dgearjointsetratioratio) (ratio)
 * Box2dGearJoint:[GetRatio](#box2dgearjointgetratio) ()
 
-#### Box2dGearJoint:GetJoint1()
+### Box2dGearJoint:GetJoint1()
 Get the first joint.
 
-_RETURNS_
-* [`Box2dJoint`](../Joint.md)
+**RETURN**
+* [(Box2dJoint)](../Joint.md)
 
-#### Box2dGearJoint:GetJoint2()
+### Box2dGearJoint:GetJoint2()
 Get the second joint.
 
-_RETURNS_
-* [`Box2dJoint`](../Joint.md)
+**RETURN**
+* [(Box2dJoint)](../Joint.md)
 
-#### Box2dGearJoint:SetRatio(ratio)
+### Box2dGearJoint:SetRatio(ratio)
 Set/Get the gear ratio.
 
-_ARGUMENTS_
-* __ratio__ <kbd>number</kbd> -
+**PARAMETERS**
+* `ratio` (number) -
 
-#### Box2dGearJoint:GetRatio()
+### Box2dGearJoint:GetRatio()
 
-_RETURNS_
-* <kbd>number</kbd>
+**RETURN**
+* (number)

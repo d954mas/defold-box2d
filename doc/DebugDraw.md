@@ -5,13 +5,13 @@ Destroy it when not it's needed anymore.
 
 ## Constructor
 > NOTE: See the /box2d/utils module for premade functions using the "draw_line" message.
-#### box2d.NewDebugDraw(data)
+### box2d.NewDebugDraw(data)
 
-_ARGUMENTS_
-* __data__ <kbd>table</kbd> -
+**PARAMETERS**
+* `data` (table) -
 
-_RETURNS_
-* [`Box2dDebugDraw`](DebugDraw.md)
+**RETURN**
+* [(Box2dDebugDraw)](DebugDraw.md)
 
 ```lua
 box2d.NewDebugDraw({
@@ -31,29 +31,29 @@ box2d.NewDebugDraw({
 * Box2dDebugDraw:[ClearFlags](#box2ddebugdrawclearflagsflags) (flags)
 * Box2dDebugDraw:[Destroy](#box2ddebugdrawdestroy) ()
 
-#### Box2dDebugDraw:SetFlags(flags)
+### Box2dDebugDraw:SetFlags(flags)
 Set the drawing flags.
 
-_ARGUMENTS_
-* __flags__ <kbd>number</kbd> -
+**PARAMETERS**
+* `flags` (number) -
 
-#### Box2dDebugDraw:GetFlags()
+### Box2dDebugDraw:GetFlags()
 Get the drawing flags.
 
-_RETURNS_
-* <kbd>number</kbd>
+**RETURN**
+* (number)
 
-#### Box2dDebugDraw:AppendFlags(flags)
+### Box2dDebugDraw:AppendFlags(flags)
 Append flags to the current flags.
 
-_ARGUMENTS_
-* __flags__ <kbd>number</kbd> -
+**PARAMETERS**
+* `flags` (number) -
 
-#### Box2dDebugDraw:ClearFlags(flags)
+### Box2dDebugDraw:ClearFlags(flags)
 Clear flags from the current flags.
 
-_ARGUMENTS_
-* __flags__ <kbd>number</kbd> -
+**PARAMETERS**
+* `flags` (number) -
 
-#### Box2dDebugDraw:Destroy()
+### Box2dDebugDraw:Destroy()
 Destroy, free memory.

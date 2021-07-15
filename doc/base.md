@@ -45,44 +45,44 @@ box2d.b2Manifold_Type = {
 * box2d.[b2LinearStiffness](#box2db2linearstiffnessfrequencyhertz-dampingratio-bodya-bodyb) (frequencyHertz, dampingRatio, bodyA, bodyB)
 * box2d.[b2AngularStiffness](#box2db2angularstiffnessfrequencyhertz-dampingratio-bodya-bodyb) (frequencyHertz, dampingRatio, bodyA, bodyB)
 
-#### box2d.NewWorld(gravity)
+### box2d.NewWorld(gravity)
 
-_ARGUMENTS_
-* __gravity__ <kbd>vector3|nil</kbd> - The world gravity vector.
+**PARAMETERS**
+* `gravity` (vector3|nil) - The world gravity vector.
 
-_RETURNS_
-* [`Box2dWorld`](World.md)
+**RETURN**
+* [(Box2dWorld)](World.md)
 
-#### box2d.NewDebugDraw(data)
+### box2d.NewDebugDraw(data)
 
-_ARGUMENTS_
-* __data__ <kbd>table</kbd> -
+**PARAMETERS**
+* `data` (table)
 
-_RETURNS_
-* [`Box2dDebugDraw`](DebugDraw.md)
+**RETURN**
+* [(Box2dWorld)](DebugDraw.md)
 
-#### box2d.b2LinearStiffness(frequencyHertz, dampingRatio, bodyA, bodyB)
+### box2d.b2LinearStiffness(frequencyHertz, dampingRatio, bodyA, bodyB)
 Utility to compute linear stiffness values from frequency and damping ratio
 
-_ARGUMENTS_
-* __frequencyHertz__ <kbd>number</kbd> -
-* __dampingRatio__ <kbd>number</kbd> -
-* __bodyA__ [`Box2dBody`](Body.md) -
-* __bodyB__ [`Box2dBody`](Body.md) -
+**PARAMETERS**
+* `data` (table) -
+* `data` (table) -
+* `bodyA` [(Box2dBody)](Body.md) -
+* `bodyB` [(Box2dBody)](Body.md) -
 
-_RETURNS_
-* <kbd>number</kbd> - Stiffness
-* <kbd>number</kbd> - Damping
+**RETURN**
+* (table) - Stiffness
+* (table) - Damping
 
-#### box2d.b2AngularStiffness(frequencyHertz, dampingRatio, bodyA, bodyB)
+### box2d.b2AngularStiffness(frequencyHertz, dampingRatio, bodyA, bodyB)
 Utility to compute rotational stiffness values from frequency and damping ratio
 
-_ARGUMENTS_
-* __frequencyHertz__ <kbd>number</kbd> -
-* __dampingRatio__ <kbd>number</kbd> -
-* __bodyA__ [`Box2dBody`](Body.md) -
-* __bodyB__ [`Box2dBody`](Body.md) -
+**PARAMETERS**
+* `data` (table) -
+* `data` (table) -
+* `bodyA` [(Box2dBody)](Body.md) -
+* `bodyB` [(Box2dBody)](Body.md) -
 
-_RETURNS_
-* <kbd>number</kbd> - Stiffness
-* <kbd>number</kbd> - Damping
+**RETURN**
+* (table) - Stiffness
+* (table) - Damping

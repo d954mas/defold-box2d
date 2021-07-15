@@ -3,11 +3,11 @@ Profiling data. Times are in milliseconds.
 Returned by world:GetProfile().
 
 _FIELDS_
-* __step__ <kbd>number</kbd> -
-* __collide__ <kbd>number</kbd> -
-* __solve__ <kbd>number</kbd> -
-* __solveInit__ <kbd>number</kbd> -
-* __solveVelocity__ <kbd>number</kbd> -
-* __solvePosition__ <kbd>number</kbd> -
-* __broadphase__ <kbd>number</kbd> -
-* __solveTOI__ <kbd>number</kbd> -
+* `step` (number) -
+* `collide` (number) -
+* `solve` (number) -
+* `solveInit` (number) -
+* `solveVelocity` (number) -
+* `solvePosition` (number) -
+* `broadphase` (number) -
+* `solveTOI` (number) -

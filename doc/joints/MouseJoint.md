@@ -9,16 +9,16 @@ use the mouse joint, look at the testbed.
 
 ## Constructor
 
-#### Box2dWorld:CreateJoint(def)
+### Box2dWorld:CreateJoint(def)
 Create a joint to constrain bodies together.
 This may cause the connected bodies to cease colliding.
 _Warning:_ This function is locked during callbacks.
 
-_ARGUMENTS_
-* __def__ [`Box2dJointDef`](../Joint.md) - Mouse joint definition.
+**PARAMETERS**
+* `def` [(Box2dJointDef)](../Joint.md) - Mouse joint definition.
 
-_RETURNS_
-* [`Box2dJoint`](../Joint.md)
+**RETURN**
+* [(Box2dJoint)](../Joint.md)
 
 #### JointDef
 Mouse joint definition. This requires a world target point,
@@ -59,46 +59,46 @@ local Box2dMouseJointDef = {
 * Box2dMouseJoint:[SetDamping](#box2dmousejointsetdampingdamping) (damping)
 * Box2dMouseJoint:[GetDamping](#box2dmousejointgetdamping) ()
 
-#### Box2dMouseJoint:SetTarget(target)
+### Box2dMouseJoint:SetTarget(target)
 Use this to update the target point.
 
-_ARGUMENTS_
-* __target__ <kbd>vector3</kbd> -
+**PARAMETERS**
+* `target` (vector3) -
 
-#### Box2dMouseJoint:GetTarget()
+### Box2dMouseJoint:GetTarget()
 
-_RETURNS_
-* <kbd>vector3</kbd>
+**RETURN**
+* (vector3)
 
-#### Box2dMouseJoint:SetMaxForce(force)
+### Box2dMouseJoint:SetMaxForce(force)
 Set/get the maximum force in Newtons.
 
-_ARGUMENTS_
-* __force__ <kbd>number</kbd> -
+**PARAMETERS**
+* `force` (number) -
 
-#### Box2dMouseJoint:GetMaxForce()
+### Box2dMouseJoint:GetMaxForce()
 
-_RETURNS_
-* <kbd>number</kbd>
+**RETURN**
+* (number)
 
-#### Box2dMouseJoint:SetStiffness(stiffness)
+### Box2dMouseJoint:SetStiffness(stiffness)
 Set/get the linear stiffness in N/m
 
-_ARGUMENTS_
-* __stiffness__ <kbd>number</kbd> -
+**PARAMETERS**
+* `stiffness` (number) -
 
-#### Box2dMouseJoint:GetStiffness()
+### Box2dMouseJoint:GetStiffness()
 
-_RETURNS_
-* <kbd>number</kbd>
+**RETURN**
+* (number)
 
-#### Box2dMouseJoint:SetDamping(damping)
+### Box2dMouseJoint:SetDamping(damping)
 Set/get linear damping in N*s/m
 
-_ARGUMENTS_
-* __damping__ <kbd>number</kbd> -
+**PARAMETERS**
+* `damping` (number) -
 
-#### Box2dMouseJoint:GetDamping()
+### Box2dMouseJoint:GetDamping()
 
-_RETURNS_
-* <kbd>number</kbd>
+**RETURN**
+* (number)

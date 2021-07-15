@@ -3,7 +3,7 @@ A fixture binds a shape to a body and adds material properties such as density, 
 
 ## Constructors
 
-#### Box2dBody:CreateFixture(def)
+### Box2dBody:CreateFixture(def)
 Creates a fixture and attach it to this body. Use this function if you need
 to set some fixture parameters, like friction. Otherwise you can create the
 fixture directly from a shape.
@@ -11,25 +11,25 @@ If the density is non-zero, this function automatically updates the mass of the 
 Contacts are not created until the next time step.
 _Warning:_ This function is locked during callbacks.
 
-_ARGUMENTS_
-* __def__ [`Box2dFixtureDef`](FixtureDef.md)
+**PARAMETERS**
+* `def` [(Box2dFixtureDef)](FixtureDef.md)
 
-_RETURNS_
-* [`Box2dFixture`](Fixture.md)
+**RETURN**
+* [(Box2dFixture)](Fixture.md)
 
-#### Box2dBody:CreateFixture(shape, density)
+### Box2dBody:CreateFixture(shape, density)
 Creates a fixture from a shape and attach it to this body.
 This is a convenience function. Use b2FixtureDef if you need to set parameters
 like friction, restitution, user data, or filtering.
 If the density is non-zero, this function automatically updates the mass of the body.
 _Warning:_ This function is locked during callbacks.
 
-_ARGUMENTS_
-* __shape__ [`Box2dShape`](Shape.md) -
-* __density__ <kbd>number</kbd> - The shape density (set to zero for static bodies)
+**PARAMETERS**
+* `shape` [(Box2dShape)](Shape.md) -
+* `density` (number) - The shape density (set to zero for static bodies)
 
-_RETURNS_
-* [`Box2dFixture`](Fixture.md)
+**RETURN**
+* [(Box2dFixture)](Fixture.md)
 
 ## Methods
 
@@ -55,133 +55,133 @@ _RETURNS_
 * Box2dFixture:[SetRestitutionThreshold](#box2dfixturesetrestitutionthresholdthreshold) (threshold)
 * Box2dFixture:[Dump](#box2dfixturedumpbodyindex) (bodyIndex)
 
-#### Box2dFixture:GetType()
+### Box2dFixture:GetType()
 
-_RETURNS_
+**RETURN**
 * <kbd>number(box2d.b2Shape)</kbd> -
 
-#### Box2dFixture:SetSensor(sensor)
+### Box2dFixture:SetSensor(sensor)
 Set if this fixture is a sensor.
 
-_ARGUMENTS_
-* __sensor__ <kbd>boolean</kbd> -
+**PARAMETERS**
+* `sensor` (boolean) -
 
-#### Box2dFixture:IsSensor()
+### Box2dFixture:IsSensor()
 Is this fixture a sensor (non-solid)?
 
-_RETURNS_
-* <kbd>boolean</kbd> - The true if the shape is a sensor.
+**RETURN**
+* (boolean) - The true if the shape is a sensor.
 
-#### Box2dFixture:SetFilterData(filter)
+### Box2dFixture:SetFilterData(filter)
 Set the contact filtering data. This will not update contacts until the next time step when either parent body is active and awake.
 This automatically calls Refilter.
 
-_ARGUMENTS_
-* __filter__ [`Box2dFilter`](Box2dFilter.md)
+**PARAMETERS**
+* `filter` [(Box2dFilter)](Box2dFilter.md)
 
-#### Box2dFixture:GetFilterData()
+### Box2dFixture:GetFilterData()
 Get the contact filtering data.
 
-_RETURNS_
-* [`Box2dFilter`](Box2dFilter.md)
+**RETURN**
+* [(Box2dFilter)](Box2dFilter.md)
 
-#### Box2dFixture:Refilter()
+### Box2dFixture:Refilter()
 Call this if you want to establish collision that was previously disabled by b2ContactFilter::ShouldCollide.
 
-#### Box2dFixture:GetBody()
+### Box2dFixture:GetBody()
 Get the parent body of this fixture. This is nil if the fixture is not attached.
 
-_RETURNS_
-* [`Box2dBody`](Body.md) - The parent body
+**RETURN**
+* [(Box2dBody)](Body.md) - The parent body
 
-#### Box2dFixture:GetNext()
+### Box2dFixture:GetNext()
 Get the next fixture in the parent body's fixture list.
 
-_RETURNS_
-* [`Box2dFixture`](Fixture.md)|<kbd>nil</kbd>
+**RETURN**
+* [(Box2dFixture)](Fixture.md)|(nil)
 
-#### Box2dFixture:GetUserData()
+### Box2dFixture:GetUserData()
 Get the user data that was assigned in the fixture definition. Use this to
 store your application specific data.
 
-_RETURNS_
-* <kbd>table|nil</kbd>
+**RETURN**
+* (table|nil)
 
-#### Box2dFixture:SetUserData(userdata)
+### Box2dFixture:SetUserData(userdata)
 Set the user data. Use this to
 store your application specific data.
 
-_ARGUMENTS_
-* __userdata__ <kbd>table|nil</kbd> -
+**PARAMETERS**
+* `userdata` (table|nil) -
 
-#### Box2dFixture:TestPoint(point)
+### Box2dFixture:TestPoint(point)
 Test a point for containment in this fixture.
 
-_ARGUMENTS_
-* __point__ <kbd>vector3</kbd> - A point in world coordinates.
+**PARAMETERS**
+* `point` (vector3) - A point in world coordinates.
 
-#### Box2dFixture:GetMassData()
+### Box2dFixture:GetMassData()
 Get the mass data for this fixture. The mass data is based on the density and
 the shape. The rotational inertia is about the shape's origin. This operation
 may be expensive.
 
-_RETURNS_
-* [`Box2dMassData`](Box2dMassData.md)
+**RETURN**
+* [(Box2dMassData)](Box2dMassData.md)
 
-#### Box2dFixture:GetDensity()
+### Box2dFixture:GetDensity()
 Get the density of this fixture.
 
-_RETURNS_
-* <kbd>number</kbd>
+**RETURN**
+* (number)
 
-#### Box2dFixture:SetDensity(density)
+### Box2dFixture:SetDensity(density)
 Set the density of this fixture. This will _not_ automatically adjust the mass
 of the body. You must call Box2dBody:ResetMassData() to update the body's mass.
 
-_ARGUMENTS_
-* __density__ <kbd>number</kbd> -
+**PARAMETERS**
+* `density` (number) -
 
-#### Box2dFixture:GetFriction()
+### Box2dFixture:GetFriction()
 Get the coefficient of friction.
 
-_RETURNS_
-* <kbd>number</kbd>
+**RETURN**
+* (number)
 
-#### Box2dFixture:SetFriction(friction)
+### Box2dFixture:SetFriction(friction)
 Set the coefficient of friction. This will _not_ change the friction of
 existing contacts.
 
-_ARGUMENTS_
-* __friction__ <kbd>number</kbd> -
+**PARAMETERS**
+* `friction` (number) -
 
-#### Box2dFixture:GetRestitution()
+### Box2dFixture:GetRestitution()
 Get the coefficient of restitution.
 
-_RETURNS_
-* <kbd>number</kbd>
+**RETURN**
+* (number)
 
-#### Box2dFixture:SetRestitution(restitution)
+### Box2dFixture:SetRestitution(restitution)
 Set the coefficient of restitution. This will _not_ change the restitution of
 existing contacts.
 
-_ARGUMENTS_
-* __restitution__ <kbd>number</kbd> -
+**PARAMETERS**
+* `restitution` (number) -
 
-#### Box2dFixture:GetRestitutionThreshold()
+### Box2dFixture:GetRestitutionThreshold()
 Get the restitution velocity threshold.
 
-_RETURNS_
-* <kbd>number</kbd>
+**RETURN**
+* (number)
 
-#### Box2dFixture:SetRestitutionThreshold(threshold)
+### Box2dFixture:SetRestitutionThreshold(threshold)
 Set the restitution threshold. This will _not_ change the restitution threshold of
 existing contacts.
 
-_ARGUMENTS_
-* __threshold__ <kbd>number</kbd> -
+**PARAMETERS**
+* `threshold` (number) -
 
-#### Box2dFixture:Dump(bodyIndex)
+### Box2dFixture:Dump(bodyIndex)
 Dump this fixture to the log file.
 
-_ARGUMENTS_
-* __bodyIndex__ <kbd>number</kbd> -
+**PARAMETERS**
+* `bodyIndex` (number) -

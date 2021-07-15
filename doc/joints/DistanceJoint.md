@@ -4,16 +4,16 @@ distance from each other. You can view this as a massless, rigid rod.
 
 ## Constructor
 
-#### Box2dWorld:CreateJoint(def)
+### Box2dWorld:CreateJoint(def)
 Create a joint to constrain bodies together.
 This may cause the connected bodies to cease colliding.
 _Warning:_ This function is locked during callbacks.
 
-_ARGUMENTS_
-* __def__ [`Box2dJointDef`](../Joint.md) - Distance joint definition.
+**PARAMETERS**
+* `def` [(Box2dJointDef)](../Joint.md) - Distance joint definition.
 
-_RETURNS_
-* [`Box2dJoint`](../Joint.md)
+**RETURN**
+* [(Box2dJoint)](../Joint.md)
 
 #### JointDef
 Distance joint definition. This requires defining an anchor point on both
@@ -74,87 +74,87 @@ local Box2dDistanceJointDef = {
 * Box2dDistanceJoint:[SetDamping](#box2ddistancejointsetdampingdamping) (damping)
 * Box2dDistanceJoint:[GetDamping](#box2ddistancejointgetdamping) ()
 
-#### Box2dDistanceJoint:GetLocalAnchorA()
+### Box2dDistanceJoint:GetLocalAnchorA()
 The local anchor point relative to bodyA's origin.
 
-_RETURNS_
-* <kbd>vector3</kbd>
+**RETURN**
+* (vector3)
 
-#### Box2dDistanceJoint:GetLocalAnchorB()
+### Box2dDistanceJoint:GetLocalAnchorB()
 The local anchor point relative to bodyB's origin.
 
-_RETURNS_
-* <kbd>vector3</kbd>
+**RETURN**
+* (vector3)
 
-#### Box2dDistanceJoint:GetLength()
+### Box2dDistanceJoint:GetLength()
 Get the rest length
 
-_RETURNS_
-* <kbd>number</kbd>
+**RETURN**
+* (number)
 
-#### Box2dDistanceJoint:SetLength(length)
+### Box2dDistanceJoint:SetLength(length)
 Set the rest length
 
-_ARGUMENTS_
-* __length__ <kbd>number</kbd> -
+**PARAMETERS**
+* `length` (number) -
 
-_RETURNS_
-* <kbd>number</kbd> - Clamped rest length
+**RETURN**
+* (number) - Clamped rest length
 
-#### Box2dDistanceJoint:GetMinLength()
+### Box2dDistanceJoint:GetMinLength()
 Get the minimum length
 
-_RETURNS_
-* <kbd>number</kbd>
+**RETURN**
+* (number)
 
-#### Box2dDistanceJoint:SetMinLength(minLength)
+### Box2dDistanceJoint:SetMinLength(minLength)
 Set the minimum length
 
-_ARGUMENTS_
-* __minLength__ <kbd>number</kbd> -
+**PARAMETERS**
+* `minLength` (number) -
 
-_RETURNS_
-* <kbd>number</kbd> - The clamped minimum length
+**RETURN**
+* (number) - The clamped minimum length
 
-#### Box2dDistanceJoint:GetMaxLength()
+### Box2dDistanceJoint:GetMaxLength()
 Get the maximum length
 
-_RETURNS_
-* <kbd>number</kbd>
+**RETURN**
+* (number)
 
-#### Box2dDistanceJoint:SetMaxLength(maxLength)
+### Box2dDistanceJoint:SetMaxLength(maxLength)
 Set the maximum length
 
-_ARGUMENTS_
-* __maxLength__ <kbd>number</kbd> -
+**PARAMETERS**
+* `maxLength` (number) -
 
-_RETURNS_
-* <kbd>number</kbd> - The clamped maximum length
+**RETURN**
+* (number) - The clamped maximum length
 
-#### Box2dDistanceJoint:GetCurrentLength()
+### Box2dDistanceJoint:GetCurrentLength()
 Get the current length
 
-_RETURNS_
-* <kbd>number</kbd>
+**RETURN**
+* (number)
 
-#### Box2dDistanceJoint:SetStiffness(stiffness)
+### Box2dDistanceJoint:SetStiffness(stiffness)
 Set/get the linear stiffness in N/m
 
-_ARGUMENTS_
-* __stiffness__ <kbd>number</kbd> -
+**PARAMETERS**
+* `stiffness` (number) -
 
-#### Box2dDistanceJoint:GetStiffness()
+### Box2dDistanceJoint:GetStiffness()
 
-_RETURNS_
-* <kbd>number</kbd>
+**RETURN**
+* (number)
 
-#### Box2dDistanceJoint:SetDamping(damping)
+### Box2dDistanceJoint:SetDamping(damping)
 Set/get linear damping in N*s/m
 
-_ARGUMENTS_
-* __damping__ <kbd>number</kbd> -
+**PARAMETERS**
+* `damping` (number) -
 
-#### Box2dDistanceJoint:GetDamping()
+### Box2dDistanceJoint:GetDamping()
 
-_RETURNS_
-* <kbd>number</kbd>
+**RETURN**
+* (number)

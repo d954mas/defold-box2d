@@ -6,16 +6,16 @@ drive the motion or to model joint friction.
 
 ## Constructor
 
-#### Box2dWorld:CreateJoint(def)
+### Box2dWorld:CreateJoint(def)
 Create a joint to constrain bodies together.
 This may cause the connected bodies to cease colliding.
 _Warning:_ This function is locked during callbacks.
 
-_ARGUMENTS_
-* __def__ [`Box2dJointDef`](../Joint.md) - Prismatic joint definition.
+**PARAMETERS**
+* `def` [(Box2dJointDef)](../Joint.md) - Prismatic joint definition.
 
-_RETURNS_
-* [`Box2dJoint`](../Joint.md)
+**RETURN**
+* [(Box2dJoint)](../Joint.md)
 
 #### JointDef
 Prismatic joint definition. This requires defining a line of
@@ -90,113 +90,113 @@ local Box2dPrismaticJointDef = {
 * Box2dPrismaticJoint:[GetMaxMotorForce](#box2dprismaticjointgetmaxmotorforce) ()
 * Box2dPrismaticJoint:[GetMotorForce](#box2dprismaticjointgetmotorforceinvdt) (inv_dt)
 
-#### Box2dPrismaticJoint:GetLocalAnchorA()
+### Box2dPrismaticJoint:GetLocalAnchorA()
 The local anchor point relative to bodyA's origin.
 
-_RETURNS_
-* <kbd>vector3</kbd>
+**RETURN**
+* (vector3)
 
-#### Box2dPrismaticJoint:GetLocalAnchorB()
+### Box2dPrismaticJoint:GetLocalAnchorB()
 The local anchor point relative to bodyB's origin.
 
-_RETURNS_
-* <kbd>vector3</kbd>
+**RETURN**
+* (vector3)
 
-#### Box2dPrismaticJoint:GetLocalAxisA()
+### Box2dPrismaticJoint:GetLocalAxisA()
 The local joint axis relative to bodyA.
 
-_RETURNS_
-* <kbd>vector3</kbd>
+**RETURN**
+* (vector3)
 
-#### Box2dPrismaticJoint:GetReferenceAngle()
+### Box2dPrismaticJoint:GetReferenceAngle()
 Get the reference angle.
 
-_RETURNS_
-* <kbd>number</kbd>
+**RETURN**
+* (number)
 
-#### Box2dPrismaticJoint:GetJointTranslation()
+### Box2dPrismaticJoint:GetJointTranslation()
 Get the current joint translation, usually in meters.
 
-_RETURNS_
-* <kbd>number</kbd>
+**RETURN**
+* (number)
 
-#### Box2dPrismaticJoint:GetJointSpeed()
+### Box2dPrismaticJoint:GetJointSpeed()
 Get the current joint translation speed, usually in meters per second.
 
-_RETURNS_
-* <kbd>number</kbd>
+**RETURN**
+* (number)
 
-#### Box2dPrismaticJoint:IsLimitEnabled()
+### Box2dPrismaticJoint:IsLimitEnabled()
 Is the joint limit enabled?
 
-_RETURNS_
-* <kbd>boolean</kbd>
+**RETURN**
+* (boolean)
 
-#### Box2dPrismaticJoint:EnableLimit(flag)
+### Box2dPrismaticJoint:EnableLimit(flag)
 Enable/disable the joint limit.
 
-_ARGUMENTS_
-* __flag__ <kbd>boolean</kbd> -
+**PARAMETERS**
+* `flag` (boolean) -
 
-#### Box2dPrismaticJoint:GetLowerLimit()
+### Box2dPrismaticJoint:GetLowerLimit()
 Get the lower joint limit, usually in meters.
 
-_RETURNS_
-* <kbd>number</kbd>
+**RETURN**
+* (number)
 
-#### Box2dPrismaticJoint:GetUpperLimit()
+### Box2dPrismaticJoint:GetUpperLimit()
 Get the upper joint limit, usually in meters.
 
-_RETURNS_
-* <kbd>number</kbd>
+**RETURN**
+* (number)
 
-#### Box2dPrismaticJoint:SetLimits(lower, upper)
+### Box2dPrismaticJoint:SetLimits(lower, upper)
 Set the joint limits, usually in meters.
 
-_ARGUMENTS_
-* __lower__ <kbd>number</kbd> -
-* __upper__ <kbd>number</kbd> -
+**PARAMETERS**
+* `lower` (number) -
+* `upper` (number) -
 
-#### Box2dPrismaticJoint:IsMotorEnabled()
+### Box2dPrismaticJoint:IsMotorEnabled()
 Is the joint motor enabled?
 
-_RETURNS_
-* <kbd>boolean</kbd>
+**RETURN**
+* (boolean)
 
-#### Box2dPrismaticJoint:EnableMotor(flag)
+### Box2dPrismaticJoint:EnableMotor(flag)
 Enable/disable the joint motor.
 
-_ARGUMENTS_
-* __flag__ <kbd>boolean</kbd> -
+**PARAMETERS**
+* `flag` (boolean) -
 
-#### Box2dPrismaticJoint:SetMotorSpeed(speed)
+### Box2dPrismaticJoint:SetMotorSpeed(speed)
 Set the motor speed, usually in meters per second.
 
-_ARGUMENTS_
-* __speed__ <kbd>number</kbd> -
+**PARAMETERS**
+* `speed` (number) -
 
-#### Box2dPrismaticJoint:GetMotorSpeed()
+### Box2dPrismaticJoint:GetMotorSpeed()
 Get the motor speed, usually in meters per second.
 
-_RETURNS_
-* <kbd>number</kbd>
+**RETURN**
+* (number)
 
-#### Box2dPrismaticJoint:SetMaxMotorForce(force)
+### Box2dPrismaticJoint:SetMaxMotorForce(force)
 Set the maximum motor force, usually in N.
 
-_ARGUMENTS_
-* __force__ <kbd>number</kbd> -
+**PARAMETERS**
+* `force` (number) -
 
-#### Box2dPrismaticJoint:GetMaxMotorForce()
+### Box2dPrismaticJoint:GetMaxMotorForce()
 
-_RETURNS_
-* <kbd>number</kbd>
+**RETURN**
+* (number)
 
-#### Box2dPrismaticJoint:GetMotorForce(inv_dt)
+### Box2dPrismaticJoint:GetMotorForce(inv_dt)
 Get the current motor force given the inverse time step, usually in N.
 
-_ARGUMENTS_
-* __inv_dt__ <kbd>number</kbd> -
+**PARAMETERS**
+* `inv_dt` (number) -
 
-_RETURNS_
-* <kbd>number</kbd>
+**RETURN**
+* (number)

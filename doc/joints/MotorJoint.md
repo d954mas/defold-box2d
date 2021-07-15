@@ -5,16 +5,16 @@ of a dynamic body with respect to the ground.
 
 ## Constructor
 
-#### Box2dWorld:CreateJoint(def)
+### Box2dWorld:CreateJoint(def)
 Create a joint to constrain bodies together.
 This may cause the connected bodies to cease colliding.
 _Warning:_ This function is locked during callbacks.
 
-_ARGUMENTS_
-* __def__ [`Box2dJointDef`](../Joint.md) - Motor joint definition.
+**PARAMETERS**
+* `def` [(Box2dJointDef)](../Joint.md) - Motor joint definition.
 
-_RETURNS_
-* [`Box2dJoint`](../Joint.md)
+**RETURN**
+* [(Box2dJoint)](../Joint.md)
 
 #### JointDef
 Motor joint definition.
@@ -58,58 +58,58 @@ local Box2MotorJointDef = {
 * Box2dMotorJoint:[SetCorrectionFactor](#box2dmotorjointsetcorrectionfactorfactor) (factor)
 * Box2dMotorJoint:[GetCorrectionFactor](#box2dmotorjointgetcorrectionfactor) ()
 
-#### Box2dMotorJoint:SetLinearOffset(linearOffset)
+### Box2dMotorJoint:SetLinearOffset(linearOffset)
 Set/get the target linear offset, in frame A, in meters.
-* __linearOffset__ <kbd>vector3</kbd> -
+* `linearOffset` (vector3) -
 
-#### Box2dMotorJoint:GetLinearOffset()
+### Box2dMotorJoint:GetLinearOffset()
 
-_RETURNS_
-* <kbd>vector3</kbd>
+**RETURN**
+* (vector3)
 
-#### Box2dMotorJoint:SetAngularOffset(angularOffset)
+### Box2dMotorJoint:SetAngularOffset(angularOffset)
 Set/get the target angular offset, in radians.
 
-_ARGUMENTS_
-* __angularOffset__ <kbd>number</kbd> -
+**PARAMETERS**
+* `angularOffset` (number) -
 
-#### Box2dMotorJoint:GetAngularOffset()
+### Box2dMotorJoint:GetAngularOffset()
 
-_RETURNS_
-* <kbd>number</kbd>
+**RETURN**
+* (number)
 
-#### Box2dMotorJoint:SetMaxForce(force)
+### Box2dMotorJoint:SetMaxForce(force)
 Set the maximum friction force in N.
 
-_ARGUMENTS_
-* __force__ <kbd>number</kbd> -
+**PARAMETERS**
+* `force` (number) -
 
-#### Box2dMotorJoint:GetMaxForce()
+### Box2dMotorJoint:GetMaxForce()
 Get the maximum friction force in N.
 
-_RETURNS_
-* <kbd>number</kbd>
+**RETURN**
+* (number)
 
-#### Box2dMotorJoint:SetMaxTorque(torque)
+### Box2dMotorJoint:SetMaxTorque(torque)
 Set the maximum friction torque in N*m.
 
-_ARGUMENTS_
-* __torque__ <kbd>number</kbd> -
+**PARAMETERS**
+* `torque` (number) -
 
-#### Box2dMotorJoint:GetMaxTorque()
+### Box2dMotorJoint:GetMaxTorque()
 Get the maximum friction torque in N*m.
 
-_RETURNS_
-* <kbd>number</kbd>
+**RETURN**
+* (number)
 
-#### Box2dMotorJoint:SetCorrectionFactor(factor)
+### Box2dMotorJoint:SetCorrectionFactor(factor)
 Set the position correction factor in the range [0,1].
 
-_ARGUMENTS_
-* __factor__ <kbd>number</kbd> -
+**PARAMETERS**
+* `factor` (number) -
 
-#### Box2dMotorJoint:GetCorrectionFactor()
+### Box2dMotorJoint:GetCorrectionFactor()
 Get the position correction factor in the range [0,1].
 
-_RETURNS_
-* <kbd>number</kbd>
+**RETURN**
+* (number)

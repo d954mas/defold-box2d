@@ -4,16 +4,16 @@ It provides 2D translational friction and angular friction.
 
 ## Constructor
 
-#### Box2dWorld:CreateJoint(def)
+### Box2dWorld:CreateJoint(def)
 Create a joint to constrain bodies together.
 This may cause the connected bodies to cease colliding.
 _Warning:_ This function is locked during callbacks.
 
-_ARGUMENTS_
-* __def__ [`Box2dJointDef`](../Joint.md) - Friction joint definition.
+**PARAMETERS**
+* `def` [(Box2dJointDef)](../Joint.md) - Friction joint definition.
 
-_RETURNS_
-* [`Box2dJoint`](../Joint.md)
+**RETURN**
+* [(Box2dJoint)](../Joint.md)
 
 #### JointDef
 ```lua
@@ -50,38 +50,38 @@ local Box2FrictionJointDef = {
 * Box2FrictionJoint:[SetMaxTorque](#box2frictionjointsetmaxtorquetorque) (torque)
 * Box2FrictionJoint:[GetMaxTorque](#box2frictionjointgetmaxtorque) ()
 
-#### Box2FrictionJoint:GetLocalAnchorA()
+### Box2FrictionJoint:GetLocalAnchorA()
 The local anchor point relative to bodyA's origin.
 
-_RETURNS_
-* <kbd>vector3</kbd>
+**RETURN**
+* (vector3)
 
-#### Box2FrictionJoint:GetLocalAnchorB()
+### Box2FrictionJoint:GetLocalAnchorB()
 The local anchor point relative to bodyB's origin.
 
-_RETURNS_
-* <kbd>vector3</kbd>
+**RETURN**
+* (vector3)
 
-#### Box2FrictionJoint:SetMaxForce(force)
+### Box2FrictionJoint:SetMaxForce(force)
 Set the maximum friction force in N.
 
-_ARGUMENTS_
-* __force__ <kbd>number</kbd> -
+**PARAMETERS**
+* `force` (number) -
 
-#### Box2FrictionJoint:GetMaxForce()
+### Box2FrictionJoint:GetMaxForce()
 Get the maximum friction force in N.
 
-_RETURNS_
-* <kbd>number</kbd>
+**RETURN**
+* (number)
 
-#### Box2FrictionJoint:SetMaxTorque(torque)
+### Box2FrictionJoint:SetMaxTorque(torque)
 Set the maximum friction torque in N*m.
 
-_ARGUMENTS_
-* __torque__ <kbd>number</kbd> -
+**PARAMETERS**
+* `torque` (number) -
 
-#### Box2FrictionJoint:GetMaxTorque()
+### Box2FrictionJoint:GetMaxTorque()
 Get the maximum friction torque in N*m.
 
-_RETURNS_
-* <kbd>number</kbd>
+**RETURN**
+* (number)

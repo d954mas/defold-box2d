@@ -4,16 +4,16 @@ distort somewhat because the island constraint solver is approximate.
 
 ## Constructor
 
-#### Box2dWorld:CreateJoint(def)
+### Box2dWorld:CreateJoint(def)
 Create a joint to constrain bodies together.
 This may cause the connected bodies to cease colliding.
 _Warning:_ This function is locked during callbacks.
 
-_ARGUMENTS_
-* __def__ [`Box2dJointDef`](../Joint.md) - Weld joint definition.
+**PARAMETERS**
+* `def` [(Box2dJointDef)](../Joint.md) - Weld joint definition.
 
-_RETURNS_
-* [`Box2dJoint`](../Joint.md)
+**RETURN**
+* [(Box2dJoint)](../Joint.md)
 
 #### JointDef
 Weld joint definition. You need to specify local anchor points
@@ -62,42 +62,42 @@ local Box2WeldJointDef = {
 * Box2dWeldJoint:[SetDamping](#box2dweldjointsetdampingdamping) (damping)
 * Box2dWeldJoint:[GetDamping](#box2dweldjointgetdamping) ()
 
-#### Box2dWeldJoint:GetLocalAnchorA()
+### Box2dWeldJoint:GetLocalAnchorA()
 The local anchor point relative to bodyA's origin.
 
-_RETURNS_
-* <kbd>vector3</kbd>
+**RETURN**
+* (vector3)
 
-#### Box2dWeldJoint:GetLocalAnchorB()
+### Box2dWeldJoint:GetLocalAnchorB()
 The local anchor point relative to bodyB's origin.
 
-_RETURNS_
-* <kbd>vector3</kbd>
+**RETURN**
+* (vector3)
 
-#### Box2dWeldJoint:GetReferenceAngle()
+### Box2dWeldJoint:GetReferenceAngle()
 Get the reference angle.
 
-_RETURNS_
-* <kbd>number</kbd>
+**RETURN**
+* (number)
 
-#### Box2dWeldJoint:SetStiffness(hz)
+### Box2dWeldJoint:SetStiffness(hz)
 Set/get stiffness in N*m
 
-_ARGUMENTS_
-* __hz__ <kbd>number</kbd> -
+**PARAMETERS**
+* `hz` (number) -
 
-#### Box2dWeldJoint:GetStiffness()
+### Box2dWeldJoint:GetStiffness()
 
-_RETURNS_
-* <kbd>number</kbd>
+**RETURN**
+* (number)
 
-#### Box2dWeldJoint:SetDamping(damping)
+### Box2dWeldJoint:SetDamping(damping)
 Set/get damping in N*m*s
 
-_ARGUMENTS_
-* __damping__ <kbd>number</kbd> -
+**PARAMETERS**
+* `damping` (number) -
 
-#### Box2dWeldJoint:GetDamping()
+### Box2dWeldJoint:GetDamping()
 
-_RETURNS_
-* <kbd>number</kbd>
+**RETURN**
+* (number)

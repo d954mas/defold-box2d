@@ -7,16 +7,16 @@ to drive the relative rotation about the shared point. A maximum motor torque is
 
 ## Constructor
 
-#### Box2dWorld:CreateJoint(def)
+### Box2dWorld:CreateJoint(def)
 Create a joint to constrain bodies together.
 This may cause the connected bodies to cease colliding.
 _Warning:_ This function is locked during callbacks.
 
-_ARGUMENTS_
-* __def__ [`Box2dJointDef`](../Joint.md) - Revolute joint definition.
+**PARAMETERS**
+* `def` [(Box2dJointDef)](../Joint.md) - Revolute joint definition.
 
-_RETURNS_
-* [`Box2dJoint`](../Joint.md)
+**RETURN**
+* [(Box2dJoint)](../Joint.md)
 
 #### JointDef
 Revolute joint definition. This requires defining an anchor point where the
@@ -92,108 +92,108 @@ local Box2dRevoluteJointDef = {
 * Box2dRevoluteJoint:[GetMaxMotorTorque](#box2drevolutejointgetmaxmotortorque) ()
 * Box2dRevoluteJoint:[GetMotorTorque](#box2drevolutejointgetmotortorqueinvdt) (inv_dt)
 
-#### Box2dRevoluteJoint:GetLocalAnchorA()
+### Box2dRevoluteJoint:GetLocalAnchorA()
 The local anchor point relative to bodyA's origin.
 
-_RETURNS_
-* <kbd>vector3</kbd>
+**RETURN**
+* (vector3)
 
-#### Box2dRevoluteJoint:GetLocalAnchorB()
+### Box2dRevoluteJoint:GetLocalAnchorB()
 The local anchor point relative to bodyB's origin.
 
-_RETURNS_
-* <kbd>vector3</kbd>
+**RETURN**
+* (vector3)
 
-#### Box2dRevoluteJoint:GetReferenceAngle()
+### Box2dRevoluteJoint:GetReferenceAngle()
 Get the reference angle.
 
-_RETURNS_
-* <kbd>float</kbd>
+**RETURN**
+* (float)
 
 #### Box2dRevoluteJoint:GetJointAngle(
 Get the current joint angle in radians.
 
-_RETURNS_
-* <kbd>float</kbd>
+**RETURN**
+* (float)
 
-#### Box2dRevoluteJoint:GetJointSpeed()
+### Box2dRevoluteJoint:GetJointSpeed()
 Get the current joint angle speed in radians per second.
 
-_RETURNS_
-* <kbd>float</kbd>
+**RETURN**
+* (float)
 
-#### Box2dRevoluteJoint:IsLimitEnabled()
+### Box2dRevoluteJoint:IsLimitEnabled()
 Is the joint limit enabled?
 
-_RETURNS_
-* <kbd>boolean</kbd>
+**RETURN**
+* (boolean)
 
-#### Box2dRevoluteJoint:EnableLimit(flag)
+### Box2dRevoluteJoint:EnableLimit(flag)
 Enable/disable the joint limit.
 
-_ARGUMENTS_
-* __flag__ <kbd>boolean</kbd> -
+**PARAMETERS**
+* `flag` (boolean) -
 
-#### Box2dRevoluteJoint:GetLowerLimit()
+### Box2dRevoluteJoint:GetLowerLimit()
 Get the lower joint limit in radians.
 
-_RETURNS_
-* <kbd>float</kbd>
+**RETURN**
+* (float)
 
-#### Box2dRevoluteJoint:GetUpperLimit()
+### Box2dRevoluteJoint:GetUpperLimit()
 Get the upper joint limit in radians.
 
-_RETURNS_
-* <kbd>float</kbd>
+**RETURN**
+* (float)
 
-#### Box2dRevoluteJoint:SetLimits(lower, upper)
+### Box2dRevoluteJoint:SetLimits(lower, upper)
 Set the joint limits in radians.
 
-_ARGUMENTS_
-* __lower__ <kbd>number</kbd> -
-* __upper__ <kbd>number</kbd> -
+**PARAMETERS**
+* `lower` (number) -
+* `upper` (number) -
 
-#### Box2dRevoluteJoint:IsMotorEnabled()
+### Box2dRevoluteJoint:IsMotorEnabled()
 Is the joint motor enabled?
 
-_RETURNS_
-* <kbd>boolean</kbd>
+**RETURN**
+* (boolean)
 
-#### Box2dRevoluteJoint:EnableMotor(flag)
+### Box2dRevoluteJoint:EnableMotor(flag)
 Enable/disable the joint motor.
 
-_ARGUMENTS_
-* __flag__ <kbd>boolean</kbd> -
+**PARAMETERS**
+* `flag` (boolean) -
 
-#### Box2dRevoluteJoint:SetMotorSpeed(speed)
+### Box2dRevoluteJoint:SetMotorSpeed(speed)
 Set the motor speed in radians per second.
 
-_ARGUMENTS_
-* __speed__ <kbd>number</kbd> -
+**PARAMETERS**
+* `speed` (number) -
 
-#### Box2dRevoluteJoint:GetMotorSpeed()
+### Box2dRevoluteJoint:GetMotorSpeed()
 Get the motor speed in radians per second.
 
-_RETURNS_
-* <kbd>float</kbd>
+**RETURN**
+* (float)
 
-#### Box2dRevoluteJoint:SetMaxMotorTorque(torque)
+### Box2dRevoluteJoint:SetMaxMotorTorque(torque)
 Set the maximum motor torque, usually in N-m.
 
-_ARGUMENTS_
-* __torque__ <kbd>number</kbd> -
+**PARAMETERS**
+* `torque` (number) -
 
-#### Box2dRevoluteJoint:GetMaxMotorTorque()
+### Box2dRevoluteJoint:GetMaxMotorTorque()
 
-_RETURNS_
-* <kbd>float</kbd>
+**RETURN**
+* (float)
 
-#### Box2dRevoluteJoint:GetMotorTorque(inv_dt)
+### Box2dRevoluteJoint:GetMotorTorque(inv_dt)
 Get the current motor torque given the inverse time step.
 Unit is N*m.
 
-_ARGUMENTS_
-* __inv_dt__ <kbd>number</kbd> -
+**PARAMETERS**
+* `inv_dt` (number) -
 
-_RETURNS_
-* <kbd>float</kbd>
+**RETURN**
+* (float)
