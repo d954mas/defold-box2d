@@ -10,10 +10,10 @@ Create a rigid body given a definition.
 _Warning:_ This function is locked during callbacks.
 
 _ARGUMENTS_
-* __bodyDef__ [`Box2dBodyDef`](doc/BodyDef.md) -
+* __bodyDef__ [`Box2dBodyDef`](BodyDef.md) -
 
 _RETURNS_
-* [`Box2dBody`](doc/Body.md)
+* [`Box2dBody`](Body.md)
 
 ## Methods
 
@@ -81,10 +81,10 @@ Contacts are not created until the next time step.
 _Warning:_ This function is locked during callbacks.
 
 _ARGUMENTS_
-* __def__ [`Box2dFixtureDef`](doc/FixtureDef.md)
+* __def__ [`Box2dFixtureDef`](FixtureDef.md)
 
 _RETURNS_
-* [`Box2dFixture`](doc/Fixture.md)
+* [`Box2dFixture`](Fixture.md)
 
 #### Box2dBody:CreateFixture(shape, density)
 Creates a fixture from a shape and attach it to this body.
@@ -94,11 +94,11 @@ If the density is non-zero, this function automatically updates the mass of the 
 _Warning:_ This function is locked during callbacks.
 
 _ARGUMENTS_
-* __shape__ [`Box2dShape`](doc/Shape.md) -
+* __shape__ [`Box2dShape`](Shape.md) -
 * __density__ <kbd>number</kbd> - The shape density (set to zero for static bodies)
 
 _RETURNS_
-* [`Box2dFixture`](doc/Fixture.md)
+* [`Box2dFixture`](Fixture.md)
 
 #### Box2dBody:DestroyFixture(fixture)
 Destroy a fixture. This removes the fixture from the broad-phase and
@@ -109,7 +109,7 @@ All fixtures attached to a body are implicitly destroyed when the body is destro
 _Warning:_ This function is locked during callbacks.
 
 _ARGUMENTS_
-* __fixture__ [`Box2dFixture`](doc/Fixture.md) -
+* __fixture__ [`Box2dFixture`](Fixture.md) -
 
 #### Box2dBody:SetTransform(position, angle)
 Set the position of the body's origin and rotation.
@@ -245,7 +245,7 @@ the mass and you later want to reset the mass.
 Get the mass data of the body.
 
 _RETURNS_
-* [`Box2dMassData`](doc/Box2dMassData.md) - A struct containing the mass, inertia and center of ### bod
+* [`Box2dMassData`](Box2dMassData.md) - A struct containing the mass, inertia and center of ### bod
 
 #### Box2dBody:SetMassData(data)
 Set the mass properties to override the mass properties of the fixtures.
@@ -254,7 +254,7 @@ Note that creating or destroying fixtures can also alter the mass.
 This function has no effect if the body isn't dynamic.
 
 _ARGUMENTS_
-* __data__ [`Box2dMassData`](doc/Box2dMassData.md) - The mass properties.
+* __data__ [`Box2dMassData`](Box2dMassData.md) - The mass properties.
 
 #### Box2dBody:GetWorldPoint(localPoint)
 Get the world coordinates of a point given the local coordinates.
@@ -436,13 +436,13 @@ _RETURNS_
 Get the next body in the world's body list.
 
 _RETURNS_
-* [`Box2dBody`](doc/Body.md)
+* [`Box2dBody`](Body.md)
 
 #### Box2dBody:GetFixtureList()
 Get the first fixture in list of all fixtures attached to this body or nil
 
 _RETURNS_
-* [`Box2dFixture`](doc/Fixture.md)|<kbd>nil</kbd>
+* [`Box2dFixture`](Fixture.md)|<kbd>nil</kbd>
 
 #### Box2dBody:GetUserData()
 Get the user data table. Use this to store your application specific data.
@@ -460,7 +460,7 @@ _ARGUMENTS_
 Get the parent world of this body.
 
 _RETURNS_
-* [`Box2dWorld`](doc/World.md)
+* [`Box2dWorld`](World.md)
 
 #### Box2dBody:Dump()
 Dump this body to a file

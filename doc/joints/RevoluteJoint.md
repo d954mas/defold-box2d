@@ -13,10 +13,10 @@ This may cause the connected bodies to cease colliding.
 _Warning:_ This function is locked during callbacks.
 
 _ARGUMENTS_
-* __def__ [`Box2dJointDef`](doc/Joint.md) - Revolute joint definition.
+* __def__ [`Box2dJointDef`](../Joint.md) - Revolute joint definition.
 
 _RETURNS_
-* [`Box2dJoint`](doc/Joint.md)
+* [`Box2dJoint`](../Joint.md)
 
 #### JointDef
 Revolute joint definition. This requires defining an anchor point where the

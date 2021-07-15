@@ -11,7 +11,7 @@ _ARGUMENTS_
 * __data__ <kbd>table</kbd> -
 
 _RETURNS_
-* [`Box2dDebugDraw`](doc/DebugDraw.md)
+* [`Box2dDebugDraw`](DebugDraw.md)
 
 ```lua
 box2d.NewDebugDraw({

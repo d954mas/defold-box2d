@@ -15,10 +15,10 @@ This may cause the connected bodies to cease colliding.
 _Warning:_ This function is locked during callbacks.
 
 _ARGUMENTS_
-* __def__ [`Box2dJointDef`](doc/Joint.md) - Mouse joint definition.
+* __def__ [`Box2dJointDef`](../Joint.md) - Mouse joint definition.
 
 _RETURNS_
-* [`Box2dJoint`](doc/Joint.md)
+* [`Box2dJoint`](../Joint.md)
 
 #### JointDef
 Mouse joint definition. This requires a world target point,

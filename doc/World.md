@@ -10,7 +10,7 @@ _ARGUMENTS_
 * __gravity__ <kbd>vector3|nil</kbd> - The world gravity vector.
 
 _RETURNS_
-* [`Box2dWorld`](doc/World.md)
+* [`Box2dWorld`](World.md)
 
 ## Methods
 
@@ -55,17 +55,17 @@ inside with b2World:DebugDraw method. The debug draw object is owned
 by you and must remain in scope.
 
 _ARGUMENTS_
-* __draw__ [`Box2dDebugDraw`](doc/DebugDraw.md)|<kbd>nil</kbd> -
+* __draw__ [`Box2dDebugDraw`](DebugDraw.md)|<kbd>nil</kbd> -
 
 #### Box2dWorld:CreateBody(bodyDef)
 Create a rigid body given a definition.
 _Warning:_ This function is locked during callbacks.
 
 _ARGUMENTS_
-* __bodyDef__ [`Box2dBodyDef`](doc/BodyDef.md) -
+* __bodyDef__ [`Box2dBodyDef`](BodyDef.md) -
 
 _RETURNS_
-* [`Box2dBody`](doc/Body.md)
+* [`Box2dBody`](Body.md)
 
 #### Box2dWorld:DestroyBody(body)
 Destroy a rigid body given a definition.
@@ -73,7 +73,7 @@ _Warning:_ This automatically deletes all associated shapes and joints.
 _Warning:_ This function is locked during callbacks.
 
 _ARGUMENTS_
-* __body__ [`Box2dBody`](doc/Body.md) -
+* __body__ [`Box2dBody`](Body.md) -
 
 #### Box2dWorld:CreateJoint(def)
 Create a joint to constrain bodies together.
@@ -81,17 +81,17 @@ This may cause the connected bodies to cease colliding.
 _Warning:_ This function is locked during callbacks.
 
 _ARGUMENTS_
-* __def__ [`Box2dJointDef`](doc/Joint.md) -
+* __def__ [`Box2dJointDef`](Joint.md) -
 
 _RETURNS_
-* [`Box2dJoint`](doc/Joint.md)
+* [`Box2dJoint`](Joint.md)
 
 #### Box2dWorld:DestroyJoint(joint)
 Destroy a joint. This may cause the connected bodies to begin colliding.
 _Warning:_ This function is locked during callbacks.
 
 _ARGUMENTS_
-* __joint__ [`Box2dJoint`](doc/Joint.md) -
+* __joint__ [`Box2dJoint`](Joint.md) -
 
 #### Box2dWorld:Step(timeStep, velocityIterations, positionIterations)
 Take a time step. This performs collision detection, integration,
@@ -119,14 +119,14 @@ Get the world body list. With the returned body, use b2Body:GetNext() to get the
 A nil body indicates the end of the list.
 
 _RETURNS_
-* [`Box2dBody`](doc/Body.md)|<kbd>nil</kbd> - The head of the world body list.
+* [`Box2dBody`](Body.md)|<kbd>nil</kbd> - The head of the world body list.
 
 #### Box2dWorld:GetJointList()
 Get the world joint list. With the returned joint, use b2Joint:GetNext() to get the next joint in the world list.
 A nil joint indicates the end of the list.
 
 _RETURNS_
-* [`Box2dJoint`](doc/Joint.md)|<kbd>nil</kbd> - The head of the world joint list.
+* [`Box2dJoint`](Joint.md)|<kbd>nil</kbd> - The head of the world joint list.
 
 #### Box2dWorld:SetAllowSleeping(flag)
 Enable/disable sleep.
@@ -231,7 +231,7 @@ The body shift formula is: position -= newOrigin
 Get the current profile.
 
 _RETURNS_
-* [`Box2dProfile`](doc/Box2dProfile.md)
+* [`Box2dProfile`](Box2dProfile.md)
 
 #### Box2dWorld:Dump()
 Dump the world into the log file.

@@ -17,10 +17,10 @@ This may cause the connected bodies to cease colliding.
 _Warning:_ This function is locked during callbacks.
 
 _ARGUMENTS_
-* __def__ [`Box2dJointDef`](doc/Joint.md) - Gear joint definition.
+* __def__ [`Box2dJointDef`](../Joint.md) - Gear joint definition.
 
 _RETURNS_
-* [`Box2dJoint`](doc/Joint.md)
+* [`Box2dJoint`](../Joint.md)
 
 #### JointDef
 Gear joint definition. This definition requires two existing
@@ -58,13 +58,13 @@ local Box2dGearJointDef = {
 Get the first joint.
 
 _RETURNS_
-* [`Box2dJoint`](doc/Joint.md)
+* [`Box2dJoint`](../Joint.md)
 
 #### Box2dGearJoint:GetJoint2()
 Get the second joint.
 
 _RETURNS_
-* [`Box2dJoint`](doc/Joint.md)
+* [`Box2dJoint`](../Joint.md)
 
 #### Box2dGearJoint:SetRatio(ratio)
 Set/Get the gear ratio.

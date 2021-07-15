@@ -12,10 +12,10 @@ Contacts are not created until the next time step.
 _Warning:_ This function is locked during callbacks.
 
 _ARGUMENTS_
-* __def__ [`Box2dFixtureDef`](doc/FixtureDef.md)
+* __def__ [`Box2dFixtureDef`](FixtureDef.md)
 
 _RETURNS_
-* [`Box2dFixture`](doc/Fixture.md)
+* [`Box2dFixture`](Fixture.md)
 
 #### Box2dBody:CreateFixture(shape, density)
 Creates a fixture from a shape and attach it to this body.
@@ -25,11 +25,11 @@ If the density is non-zero, this function automatically updates the mass of the 
 _Warning:_ This function is locked during callbacks.
 
 _ARGUMENTS_
-* __shape__ [`Box2dShape`](doc/Shape.md) -
+* __shape__ [`Box2dShape`](Shape.md) -
 * __density__ <kbd>number</kbd> - The shape density (set to zero for static bodies)
 
 _RETURNS_
-* [`Box2dFixture`](doc/Fixture.md)
+* [`Box2dFixture`](Fixture.md)
 
 ## Methods
 
@@ -77,13 +77,13 @@ Call this if you want to establish collision that was previously disabled by b2C
 Get the parent body of this fixture. This is nil if the fixture is not attached.
 
 _RETURNS_
-* [`Box2dBody`](doc/Body.md) - The parent body
+* [`Box2dBody`](Body.md) - The parent body
 
 #### Box2dFixture:GetNext()
 Get the next fixture in the parent body's fixture list.
 
 _RETURNS_
-* [`Box2dFixture`](doc/Fixture.md)|<kbd>nil</kbd>
+* [`Box2dFixture`](Fixture.md)|<kbd>nil</kbd>
 
 #### Box2dFixture:GetUserData()
 Get the user data that was assigned in the fixture definition. Use this to
@@ -111,7 +111,7 @@ the shape. The rotational inertia is about the shape's origin. This operation
 may be expensive.
 
 _RETURNS_
-* [`Box2dMassData`](doc/Box2dMassData.md)
+* [`Box2dMassData`](Box2dMassData.md)
 
 #### Box2dFixture:GetDensity()
 Get the density of this fixture.
