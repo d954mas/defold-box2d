@@ -2,7 +2,7 @@
 The class manages contact between two shapes. A contact exists for each overlapping AABB in the broad-phase (except if filtered). Therefore a contact object may exist that has no contact points.
 
 ## Constructor
-Never constructed. Sent as a parameter in the contact lister functions: BeginContact, EndContact, PreSolve, PostSolve
+Never constructed. Sent as a parameter in the contact listener functions: BeginContact, EndContact, PreSolve, and PostSolve (see [`World:SetContactListener`](World.md#box2dworldsetcontactlistenerlistener)).
 
 ## Methods
 
@@ -10,13 +10,13 @@ Never constructed. Sent as a parameter in the contact lister functions: BeginCon
 Get the local manifold.
 
 _RETURNS_
-* <kbd>Box2dManifold</kbd>
+* [`Box2dManifold`](Box2dManifold.md)
 
 #### Box2dContact:GetWorldManifold()
 Get the world manifold.
 
 _RETURNS_
-* <kbd>Box2dWorldManifold</kbd>
+* [`Box2dWorldManifold`](Box2dWorldManifold.md)
 
 #### Box2dContact:IsTouching()
 Is this contact touching?
@@ -42,7 +42,7 @@ _RETURNS_
 Get fixture A in this contact.
 
 _RETURNS_
-* <kbd>Box2dFixture</kbd>
+* [`Box2dFixture`](Fixture.md)
 
 #### Box2dContact:GetChildIndexA()
 Get the child primitive index for fixture A.
@@ -54,7 +54,7 @@ _RETURNS_
 Get fixture B in this contact.
 
 _RETURNS_
-* <kbd>Box2dFixture</kbd>
+* [`Box2dFixture`](Fixture.md)
 
 #### Box2dContact:GetChildIndexB()
 Get the child primitive index for fixture B.

@@ -60,12 +60,13 @@ _ARGUMENTS_
 
 ```lua
 listener = {
-   BeginContact = function (contact) end,
+   BeginContact = function(contact) end,
    EndContact = function(contact) end,
    PreSolve = function(contact, old_manifold) end,
    PostSolve = function(contact,impulse) end
 }
 ```
+_See also:_ [Contact](Contact.md)
 
 #### Box2dWorld:SetDebugDraw(draw)
 Register a routine for debug drawing. The debug draw functions are called
