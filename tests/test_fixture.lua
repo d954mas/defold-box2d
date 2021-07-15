@@ -38,7 +38,7 @@ return function()
             local body = w:CreateBody()
             --call with def but put shape
             local f = function()
-                body:CreateFixture({shape = box2d.b2Shape.e_circle, circle_radius = 1, circle_position = vmath.vector3(0) })
+                body:CreateFixture({ shape = box2d.b2Shape.e_circle, circle_radius = 1, circle_position = vmath.vector3(0) })
             end
             local status, error = pcall(f)
             assert_false(status)
@@ -127,6 +127,24 @@ return function()
                 values = { true, false, true }
             })
             w:Destroy()
+        end)
+
+        test("Set/Get FilterData()", function()
+            local w = box2d.NewWorld()
+            local f = createFixture(w, { shape = shape })
+            f:SetFilterData({
+                categoryBits = 32,
+                maskBits = 16,
+                groupIndex = 10,
+            })
+            local filter = f:GetFilterData()
+            assert_equal(filter.categoryBits, 32)
+            assert_equal(filter.maskBits, 16)
+            assert_equal(filter.groupIndex, 10)
+            w:Destroy()
+
+            local status, error = pcall(f.SetFilterData,f,{})
+            assert_false(status)
         end)
 
         test("Refilter()", function()
@@ -229,7 +247,7 @@ return function()
         test("Dump()", function()
             local w = box2d.NewWorld()
             local f = createFixture(w, { shape = shape })
-            UTILS.test_method(f, "Dump", {args = {0}})
+            UTILS.test_method(f, "Dump", { args = { 0 } })
             w:Destroy()
         end)
 
