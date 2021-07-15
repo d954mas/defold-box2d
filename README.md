@@ -23,7 +23,7 @@ Try the demo: https://d954mas.github.io/defold-box2d/
     + [Extension](doc/base.md)
     + [World](doc/World.md)
     + [DebugDraw](doc/DebugDraw.md)
-    + [Shape](doc/shape.md)
+    + [Shape](doc/Shape.md)
     + [FixtureDef](doc/FixtureDef.md)
     + [Fixture](doc/Fixture.md)
     + [BodyDef](doc/BodyDef.md)

@@ -36,8 +36,8 @@ box2d.b2Draw = {
 
 * box2d.[NewWorld](#box2dnewworldgravity) (gravity)
 * box2d.[NewDebugDraw](#box2dnewdebugdrawdata) (data)
-* box2d.[b2LinearStiffness](#box2db2linearstiffnessfrequencyhertzdampingratiobodyabodyb) (frequencyHertz, dampingRatio, bodyA, bodyB)
-* box2d.[b2AngularStiffness](#box2db2angularstiffnessfrequencyhertzdampingratiobodyabodyb) (frequencyHertz, dampingRatio, bodyA, bodyB)
+* box2d.[b2LinearStiffness](#box2db2linearstiffnessfrequencyhertz-dampingratio-bodya-bodyb) (frequencyHertz, dampingRatio, bodyA, bodyB)
+* box2d.[b2AngularStiffness](#box2db2angularstiffnessfrequencyhertz-dampingratio-bodya-bodyb) (frequencyHertz, dampingRatio, bodyA, bodyB)
 
 #### box2d.NewWorld(gravity)
 
@@ -45,7 +45,7 @@ _ARGUMENTS_
 * __gravity__ <kbd>vector3|nil</kbd> - The world gravity vector.
 
 _RETURNS_
-* <kbd>Box2dWorld</kbd>
+* [`Box2dWorld`](doc/World.md)
 
 #### box2d.NewDebugDraw(data)
 
@@ -53,7 +53,7 @@ _ARGUMENTS_
 * __data__ <kbd>table</kbd> -
 
 _RETURNS_
-* <kbd>Box2dDebugDraw</kbd>
+* [`Box2dDebugDraw`](doc/DebugDraw.md)
 
 #### box2d.b2LinearStiffness(frequencyHertz, dampingRatio, bodyA, bodyB)
 Utility to compute linear stiffness values from frequency and damping ratio
@@ -61,8 +61,8 @@ Utility to compute linear stiffness values from frequency and damping ratio
 _ARGUMENTS_
 * __frequencyHertz__ <kbd>number</kbd> -
 * __dampingRatio__ <kbd>number</kbd> -
-* __bodyA__ <kbd>Box2dBody</kbd> -
-* __bodyB__ <kbd>Box2dBody</kbd> -
+* __bodyA__ [`Box2dBody`](doc/Body.md) -
+* __bodyB__ [`Box2dBody`](doc/Body.md) -
 
 _RETURNS_
 * <kbd>number</kbd> - Stiffness
@@ -74,8 +74,8 @@ Utility to compute rotational stiffness values from frequency and damping ratio
 _ARGUMENTS_
 * __frequencyHertz__ <kbd>number</kbd> -
 * __dampingRatio__ <kbd>number</kbd> -
-* __bodyA__ <kbd>Box2dBody</kbd> -
-* __bodyB__ <kbd>Box2dBody</kbd> -
+* __bodyA__ [`Box2dBody`](doc/Body.md) -
+* __bodyB__ [`Box2dBody`](doc/Body.md) -
 
 _RETURNS_
 * <kbd>number</kbd> - Stiffness

@@ -10,67 +10,67 @@ Create a rigid body given a definition.
 _Warning:_ This function is locked during callbacks.
 
 _ARGUMENTS_
-* __bodyDef__ <kbd>Box2dBodyDef</kbd> -
+* __bodyDef__ [`Box2dBodyDef`](doc/BodyDef.md) -
 
 _RETURNS_
-* <kbd>Box2dBody</kbd>
+* [`Box2dBody`](doc/Body.md)
 
 ## Methods
 
-* Box2dBody:[CreateFixture](Box2dBody:CreateFixture(def)) (def)
-* Box2dBody:[CreateFixture](Box2dBody:CreateFixture(shape,density)) (shape, density)
-* Box2dBody:[DestroyFixture](Box2dBody:DestroyFixture(fixture)) (fixture)
-* Box2dBody:[SetTransform](Box2dBody:SetTransform(position,angle)) (position, angle)
-* Box2dBody:[GetTransform](Box2dBody:GetTransform()) ()
-* Box2dBody:[GetPosition](Box2dBody:GetPosition()) ()
-* Box2dBody:[GetAngle](Box2dBody:GetAngle()) ()
-* Box2dBody:[GetWorldCenter](Box2dBody:GetWorldCenter()) ()
-* Box2dBody:[GetLocalCenter](Box2dBody:GetLocalCenter()) ()
-* Box2dBody:[SetLinearVelocity](Box2dBody:SetLinearVelocity(velocity)) (velocity)
-* Box2dBody:[GetLinearVelocity](Box2dBody:GetLinearVelocity()) ()
-* Box2dBody:[SetAngularVelocity](Box2dBody:SetAngularVelocity(omega)) (omega)
-* Box2dBody:[GetAngularVelocity](Box2dBody:GetAngularVelocity()) ()
-* Box2dBody:[ApplyForce](Box2dBody:ApplyForce(force,point,wake)) (force, point, wake)
-* Box2dBody:[ApplyForceToCenter](Box2dBody:ApplyForceToCenter(force,wake)) (force, wake)
-* Box2dBody:[ApplyTorque](Box2dBody:ApplyTorque(torque,wake)) (torque, wake)
-* Box2dBody:[ApplyLinearImpulse](Box2dBody:ApplyLinearImpulse(impulse,point,wake)) (impulse, point, wake)
-* Box2dBody:[ApplyLinearImpulseToCenter](Box2dBody:ApplyLinearImpulseToCenter(impulse,wake)) (impulse, wake)
-* Box2dBody:[ApplyAngularImpulse](Box2dBody:ApplyAngularImpulse(impulse,wake)) (impulse, wake)
-* Box2dBody:[GetMass](Box2dBody:GetMass()) ()
-* Box2dBody:[GetInertia](Box2dBody:GetInertia()) ()
-* Box2dBody:[ResetMassData](Box2dBody:ResetMassData()) ()
-* Box2dBody:[GetMassData](Box2dBody:GetMassData()) ()
-* Box2dBody:[SetMassData](Box2dBody:SetMassData(data)) (data)
-* Box2dBody:[GetWorldPoint](Box2dBody:GetWorldPoint(localPoint)) (localPoint)
-* Box2dBody:[GetWorldVector](Box2dBody:GetWorldVector(localVector)) (localVector)
-* Box2dBody:[GetLocalPoint](Box2dBody:GetLocalPoint(worldPoint)) (worldPoint)
-* Box2dBody:[GetLocalVector](Box2dBody:GetLocalVector(worldVector)) (worldVector)
-* Box2dBody:[GetLinearVelocityFromWorldPoint](Box2dBody:GetLinearVelocityFromWorldPoint(worldPoint)) (worldPoint)
-* Box2dBody:[GetLinearVelocityFromLocalPoint](Box2dBody:GetLinearVelocityFromLocalPoint(localPoint)) (localPoint)
-* Box2dBody:[SetLinearDamping](Box2dBody:SetLinearDamping(linearDamping)) (linearDamping)
-* Box2dBody:[GetLinearDamping](Box2dBody:GetLinearDamping()) ()
-* Box2dBody:[SetAngularDamping](Box2dBody:SetAngularDamping(angularDamping)) (angularDamping)
-* Box2dBody:[GetAngularDamping](Box2dBody:GetAngularDamping()) ()
-* Box2dBody:[SetGravityScale](Box2dBody:SetGravityScale(scale)) (scale)
-* Box2dBody:[GetGravityScale](Box2dBody:GetGravityScale()) ()
-* Box2dBody:[SetType](Box2dBody:SetType(type)) (type)
-* Box2dBody:[GetType](Box2dBody:GetType()) ()
-* Box2dBody:[SetBullet](Box2dBody:SetBullet(flag)) (flag)
-* Box2dBody:[IsBullet](Box2dBody:IsBullet()) ()
-* Box2dBody:[SetSleepingAllowed](Box2dBody:SetSleepingAllowed(flag)) (flag)
-* Box2dBody:[IsSleepingAllowed](Box2dBody:IsSleepingAllowed()) ()
-* Box2dBody:[SetAwake](Box2dBody:SetAwake(flag)) (flag)
-* Box2dBody:[IsAwake](Box2dBody:IsAwake()) ()
-* Box2dBody:[SetEnabled](Box2dBody:SetEnabled(flag)) (flag)
-* Box2dBody:[IsEnabled](Box2dBody:IsEnabled()) ()
-* Box2dBody:[SetFixedRotation](Box2dBody:SetFixedRotation(flag)) (flag)
-* Box2dBody:[IsFixedRotation](Box2dBody:IsFixedRotation()) ()
-* Box2dBody:[GetNext](Box2dBody:GetNext()) ()
-* Box2dBody:[GetFixtureList](Box2dBody:GetFixtureList()) ()
-* Box2dBody:[GetUserData](Box2dBody:GetUserData()) ()
-* Box2dBody:[SetUserData](Box2dBody:SetUserData(data)) (data)
-* Box2dBody:[GetWorld](Box2dBody:GetWorld()) ()
-* Box2dBody:[Dump](Box2dBody:Dump()) ()
+* Box2dBody:[CreateFixture](#box2dbodycreatefixturedef) (def)
+* Box2dBody:[CreateFixture](#box2dbodycreatefixtureshape-density) (shape, density)
+* Box2dBody:[DestroyFixture](#box2dbodydestroyfixturefixture) (fixture)
+* Box2dBody:[SetTransform](#box2dbodysettransformposition-angle) (position, angle)
+* Box2dBody:[GetTransform](#box2dbodygettransform) ()
+* Box2dBody:[GetPosition](#box2dbodygetposition) ()
+* Box2dBody:[GetAngle](#box2dbodygetangle) ()
+* Box2dBody:[GetWorldCenter](#box2dbodygetworldcenter) ()
+* Box2dBody:[GetLocalCenter](#box2dbodygetlocalcenter) ()
+* Box2dBody:[SetLinearVelocity](#box2dbodysetlinearvelocityvelocity) (velocity)
+* Box2dBody:[GetLinearVelocity](#box2dbodygetlinearvelocity) ()
+* Box2dBody:[SetAngularVelocity](#box2dbodysetangularvelocityomega) (omega)
+* Box2dBody:[GetAngularVelocity](#box2dbodygetangularvelocity) ()
+* Box2dBody:[ApplyForce](#box2dbodyapplyforceforce-point-wake) (force, point, wake)
+* Box2dBody:[ApplyForceToCenter](#box2dbodyapplyforcetocenterforce-wake) (force, wake)
+* Box2dBody:[ApplyTorque](#box2dbodyapplytorquetorque-wake) (torque, wake)
+* Box2dBody:[ApplyLinearImpulse](#box2dbodyapplylinearimpulseimpulse-point-wake) (impulse, point, wake)
+* Box2dBody:[ApplyLinearImpulseToCenter](#box2dbodyapplylinearimpulsetocenterimpulse-wake) (impulse, wake)
+* Box2dBody:[ApplyAngularImpulse](#box2dbodyapplyangularimpulseimpulse-wake) (impulse, wake)
+* Box2dBody:[GetMass](#box2dbodygetmass) ()
+* Box2dBody:[GetInertia](#box2dbodygetinertia) ()
+* Box2dBody:[ResetMassData](#box2dbodyresetmassdata) ()
+* Box2dBody:[GetMassData](#box2dbodygetmassdata) ()
+* Box2dBody:[SetMassData](#box2dbodysetmassdatadata) (data)
+* Box2dBody:[GetWorldPoint](#box2dbodygetworldpointlocalpoint) (localPoint)
+* Box2dBody:[GetWorldVector](#box2dbodygetworldvectorlocalvector) (localVector)
+* Box2dBody:[GetLocalPoint](#box2dbodygetlocalpointworldpoint) (worldPoint)
+* Box2dBody:[GetLocalVector](#box2dbodygetlocalvectorworldvector) (worldVector)
+* Box2dBody:[GetLinearVelocityFromWorldPoint](#box2dbodygetlinearvelocityfromworldpointworldpoint) (worldPoint)
+* Box2dBody:[GetLinearVelocityFromLocalPoint](#box2dbodygetlinearvelocityfromlocalpointlocalpoint) (localPoint)
+* Box2dBody:[SetLinearDamping](#box2dbodysetlineardampinglineardamping) (linearDamping)
+* Box2dBody:[GetLinearDamping](#box2dbodygetlineardamping) ()
+* Box2dBody:[SetAngularDamping](#box2dbodysetangulardampingangulardamping) (angularDamping)
+* Box2dBody:[GetAngularDamping](#box2dbodygetangulardamping) ()
+* Box2dBody:[SetGravityScale](#box2dbodysetgravityscalescale) (scale)
+* Box2dBody:[GetGravityScale](#box2dbodygetgravityscale) ()
+* Box2dBody:[SetType](#box2dbodysettypetype) (type)
+* Box2dBody:[GetType](#box2dbodygettype) ()
+* Box2dBody:[SetBullet](#box2dbodysetbulletflag) (flag)
+* Box2dBody:[IsBullet](#box2dbodyisbullet) ()
+* Box2dBody:[SetSleepingAllowed](#box2dbodysetsleepingallowedflag) (flag)
+* Box2dBody:[IsSleepingAllowed](#box2dbodyissleepingallowed) ()
+* Box2dBody:[SetAwake](#box2dbodysetawakeflag) (flag)
+* Box2dBody:[IsAwake](#box2dbodyisawake) ()
+* Box2dBody:[SetEnabled](#box2dbodysetenabledflag) (flag)
+* Box2dBody:[IsEnabled](#box2dbodyisenabled) ()
+* Box2dBody:[SetFixedRotation](#box2dbodysetfixedrotationflag) (flag)
+* Box2dBody:[IsFixedRotation](#box2dbodyisfixedrotation) ()
+* Box2dBody:[GetNext](#box2dbodygetnext) ()
+* Box2dBody:[GetFixtureList](#box2dbodygetfixturelist) ()
+* Box2dBody:[GetUserData](#box2dbodygetuserdata) ()
+* Box2dBody:[SetUserData](#box2dbodysetuserdatadata) (data)
+* Box2dBody:[GetWorld](#box2dbodygetworld) ()
+* Box2dBody:[Dump](#box2dbodydump) ()
 
 #### Box2dBody:CreateFixture(def)
 Creates a fixture and attach it to this body. Use this function if you need
@@ -81,10 +81,10 @@ Contacts are not created until the next time step.
 _Warning:_ This function is locked during callbacks.
 
 _ARGUMENTS_
-* __def__ <kbd>Box2dFixtureDef</kbd> -
+* __def__ [`Box2dFixtureDef`](doc/FixtureDef.md)
 
 _RETURNS_
-* <kbd>Box2dFixture</kbd>
+* [`Box2dFixture`](doc/Fixture.md)
 
 #### Box2dBody:CreateFixture(shape, density)
 Creates a fixture from a shape and attach it to this body.
@@ -94,11 +94,11 @@ If the density is non-zero, this function automatically updates the mass of the 
 _Warning:_ This function is locked during callbacks.
 
 _ARGUMENTS_
-* __shape__ <kbd>Box2dShape</kbd> -
+* __shape__ [`Box2dShape`](doc/Shape.md) -
 * __density__ <kbd>number</kbd> - The shape density (set to zero for static bodies)
 
 _RETURNS_
-* <kbd>Box2dFixture</kbd>
+* [`Box2dFixture`](doc/Fixture.md)
 
 #### Box2dBody:DestroyFixture(fixture)
 Destroy a fixture. This removes the fixture from the broad-phase and
@@ -109,7 +109,7 @@ All fixtures attached to a body are implicitly destroyed when the body is destro
 _Warning:_ This function is locked during callbacks.
 
 _ARGUMENTS_
-* __fixture__ <kbd>Box2dFixture</kbd> -
+* __fixture__ [`Box2dFixture`](doc/Fixture.md) -
 
 #### Box2dBody:SetTransform(position, angle)
 Set the position of the body's origin and rotation.
@@ -245,7 +245,7 @@ the mass and you later want to reset the mass.
 Get the mass data of the body.
 
 _RETURNS_
-* <kbd>Box2dMassData</kbd> - A struct containing the mass, inertia and center of ### bod
+* [`Box2dMassData`](doc/Box2dMassData.md) - A struct containing the mass, inertia and center of ### bod
 
 #### Box2dBody:SetMassData(data)
 Set the mass properties to override the mass properties of the fixtures.
@@ -254,7 +254,7 @@ Note that creating or destroying fixtures can also alter the mass.
 This function has no effect if the body isn't dynamic.
 
 _ARGUMENTS_
-* __data__ <kbd>Box2dMassData</kbd> - The mass properties.
+* __data__ [`Box2dMassData`](doc/Box2dMassData.md) - The mass properties.
 
 #### Box2dBody:GetWorldPoint(localPoint)
 Get the world coordinates of a point given the local coordinates.
@@ -436,13 +436,13 @@ _RETURNS_
 Get the next body in the world's body list.
 
 _RETURNS_
-* <kbd>Box2dBody</kbd>
+* [`Box2dBody`](doc/Body.md)
 
 #### Box2dBody:GetFixtureList()
 Get the first fixture in list of all fixtures attached to this body or nil
 
 _RETURNS_
-* <kbd>Box2dFixture|nil</kbd>
+* [`Box2dFixture`](doc/Fixture.md)|<kbd>nil</kbd>
 
 #### Box2dBody:GetUserData()
 Get the user data table. Use this to store your application specific data.
@@ -460,7 +460,7 @@ _ARGUMENTS_
 Get the parent world of this body.
 
 _RETURNS_
-* <kbd>Box2dWorld</kbd>
+* [`Box2dWorld`](doc/World.md)
 
 #### Box2dBody:Dump()
 Dump this body to a file

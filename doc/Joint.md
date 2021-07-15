@@ -16,7 +16,7 @@ This may cause the connected bodies to cease colliding.
 _Warning:_ This function is locked during callbacks.
 
 _ARGUMENTS_
-* __def__ <kbd>Box2dJointDef</kbd> -
+* __def__ [`Box2dJointDef`](doc/Joint.md) -
 
 #### JointDef
 ```lua
@@ -45,7 +45,7 @@ local Box2dJointDef = {
 ```
 
 _RETURNS_
-* <kbd>Box2dJoint</kbd>
+* [`Box2dJoint`](doc/Joint.md)
 
 ## Methods
 
@@ -74,13 +74,13 @@ _RETURNS_
 Get the first body attached to this joint.
 
 _RETURNS_
-* <kbd>Box2dBody</kbd> - BodyA
+* [`Box2dBody`](doc/Body.md) - BodyA
 
 #### Box2dJoint:GetBodyA()
 Get the second body attached to this joint.
 
 _RETURNS_
-* <kbd>Box2dBody</kbd> - BodyB
+* [`Box2dBody`](doc/Body.md) - BodyB
 
 #### Box2dJoint:GetAnchorA()
 Get the anchor point on bodyA in world coordinates.
@@ -116,7 +116,7 @@ _RETURNS_
 Get the next joint the world joint list.
 
 _RETURNS_
-* <kbd>Box2dJoint|nil</kbd>
+* [`Box2dJoint`](doc/Joint.md)|<kbd>nil</kbd>
 
 #### Box2dJoint:GetUserData()
 Get the user data.

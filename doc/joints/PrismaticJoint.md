@@ -12,11 +12,10 @@ This may cause the connected bodies to cease colliding.
 _Warning:_ This function is locked during callbacks.
 
 _ARGUMENTS_
-* __def__ <kbd>Box2dJointDef</kbd> -
+* __def__ [`Box2dJointDef`](doc/Joint.md) - Prismatic joint definition.
 
 _RETURNS_
-* <kbd>Box2dJoint</kbd>
-Friction joint definition.
+* [`Box2dJoint`](doc/Joint.md)
 
 #### JointDef
 Prismatic joint definition. This requires defining a line of
