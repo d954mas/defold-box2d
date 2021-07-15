@@ -31,29 +31,34 @@ box2d.NewDebugDraw({
 * Box2dDebugDraw:[ClearFlags](#box2ddebugdrawclearflagsflags) (flags)
 * Box2dDebugDraw:[Destroy](#box2ddebugdrawdestroy) ()
 
+---
 ### Box2dDebugDraw:SetFlags(flags)
 Set the drawing flags.
 
 **PARAMETERS**
 * `flags` (number) -
 
+---
 ### Box2dDebugDraw:GetFlags()
 Get the drawing flags.
 
 **RETURN**
 * (number)
 
+---
 ### Box2dDebugDraw:AppendFlags(flags)
 Append flags to the current flags.
 
 **PARAMETERS**
 * `flags` (number) -
 
+---
 ### Box2dDebugDraw:ClearFlags(flags)
 Clear flags from the current flags.
 
 **PARAMETERS**
 * `flags` (number) -
 
+---
 ### Box2dDebugDraw:Destroy()
 Destroy, free memory.

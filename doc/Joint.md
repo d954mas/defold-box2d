@@ -64,36 +64,42 @@ local Box2dJointDef = {
 * Box2dJoint:[Dump](#box2djointdump) ()
 * Box2dJoint:[ShiftOrigin](#box2djointshiftoriginneworigin) (newOrigin)
 
+---
 ### Box2dJoint:GetType()
 Get the type of the concrete joint.
 
 **RETURN**
 * (number) - Box2d.b2JointType
 
+---
 ### Box2dJoint:GetBodyA()
 Get the first body attached to this joint.
 
 **RETURN**
 * [(Box2dBody)](Body.md) - BodyA
 
+---
 ### Box2dJoint:GetBodyA()
 Get the second body attached to this joint.
 
 **RETURN**
 * [(Box2dBody)](Body.md) - BodyB
 
+---
 ### Box2dJoint:GetAnchorA()
 Get the anchor point on bodyA in world coordinates.
 
 **RETURN**
 * (vector3)
 
+---
 ### Box2dJoint:GetAnchorB()
 Get the anchor point on bodyB in world coordinates.
 
 **RETURN**
 * (vector3)
 
+---
 ### Box2dJoint:GetReactionForce(inv_dt)
 Get the reaction force on bodyB at the joint anchor in Newtons.
 
@@ -103,6 +109,7 @@ Get the reaction force on bodyB at the joint anchor in Newtons.
 **RETURN**
 * (vector3)
 
+---
 ### Box2dJoint:GetReactionTorque(inv_dt)
 Get the reaction torque on bodyB in N*m.
 
@@ -112,12 +119,14 @@ Get the reaction torque on bodyB in N*m.
 **RETURN**
 * (vector3)
 
+---
 ### Box2dJoint:GetNext()
 Get the next joint the world joint list.
 
 **RETURN**
 * [(Box2dJoint)](Joint.md)|(nil)
 
+---
 ### Box2dJoint:GetUserData()
 Get the user data.
 Use this to store your application specific data.
@@ -125,6 +134,7 @@ Use this to store your application specific data.
 **RETURN**
 * (table|nil)
 
+---
 ### Box2dJoint:SetUserData(userdata)
 Set the user data.
 Use this to store your application specific data.
@@ -132,12 +142,14 @@ Use this to store your application specific data.
 **PARAMETERS**
 * `userdata` (table|nil) -
 
+---
 ### Box2dJoint:IsEnabled()
 Short-cut function to determine if either body is enabled.
 
 **RETURN**
 * (boolean)
 
+---
 ### Box2dJoint:GetCollideConnected()
 Get collide connected.
 Note: modifying the collide connect flag won't work correctly because
@@ -146,9 +158,11 @@ the flag is only checked when fixture AABBs begin to overlap.
 **RETURN**
 * (boolean)
 
+---
 ### Box2dJoint:Dump()
 Dump this joint to the log file.
 
+---
 ### Box2dJoint:ShiftOrigin(newOrigin)
 Shift the origin for any points stored in world coordinates.
 

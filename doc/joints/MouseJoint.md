@@ -59,45 +59,53 @@ local Box2dMouseJointDef = {
 * Box2dMouseJoint:[SetDamping](#box2dmousejointsetdampingdamping) (damping)
 * Box2dMouseJoint:[GetDamping](#box2dmousejointgetdamping) ()
 
+---
 ### Box2dMouseJoint:SetTarget(target)
 Use this to update the target point.
 
 **PARAMETERS**
 * `target` (vector3) -
 
+---
 ### Box2dMouseJoint:GetTarget()
 
 **RETURN**
 * (vector3)
 
+---
 ### Box2dMouseJoint:SetMaxForce(force)
 Set/get the maximum force in Newtons.
 
 **PARAMETERS**
 * `force` (number) -
 
+---
 ### Box2dMouseJoint:GetMaxForce()
 
 **RETURN**
 * (number)
 
+---
 ### Box2dMouseJoint:SetStiffness(stiffness)
 Set/get the linear stiffness in N/m
 
 **PARAMETERS**
 * `stiffness` (number) -
 
+---
 ### Box2dMouseJoint:GetStiffness()
 
 **RETURN**
 * (number)
 
+---
 ### Box2dMouseJoint:SetDamping(damping)
 Set/get linear damping in N*s/m
 
 **PARAMETERS**
 * `damping` (number) -
 
+---
 ### Box2dMouseJoint:GetDamping()
 
 **RETURN**

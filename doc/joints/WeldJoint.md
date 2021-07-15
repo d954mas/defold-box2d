@@ -62,41 +62,48 @@ local Box2WeldJointDef = {
 * Box2dWeldJoint:[SetDamping](#box2dweldjointsetdampingdamping) (damping)
 * Box2dWeldJoint:[GetDamping](#box2dweldjointgetdamping) ()
 
+---
 ### Box2dWeldJoint:GetLocalAnchorA()
 The local anchor point relative to bodyA's origin.
 
 **RETURN**
 * (vector3)
 
+---
 ### Box2dWeldJoint:GetLocalAnchorB()
 The local anchor point relative to bodyB's origin.
 
 **RETURN**
 * (vector3)
 
+---
 ### Box2dWeldJoint:GetReferenceAngle()
 Get the reference angle.
 
 **RETURN**
 * (number)
 
+---
 ### Box2dWeldJoint:SetStiffness(hz)
 Set/get stiffness in N*m
 
 **PARAMETERS**
 * `hz` (number) -
 
+---
 ### Box2dWeldJoint:GetStiffness()
 
 **RETURN**
 * (number)
 
+---
 ### Box2dWeldJoint:SetDamping(damping)
 Set/get damping in N*m*s
 
 **PARAMETERS**
 * `damping` (number) -
 
+---
 ### Box2dWeldJoint:GetDamping()
 
 **RETURN**

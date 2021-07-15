@@ -95,72 +95,84 @@ Suspension damping. Typically in units of N*s/m.
 * Box2dWheelJoint:[SetDamping](#box2dwheeljointsetdampingdamping) (damping)
 * Box2dWheelJoint:[GetDamping](#box2dwheeljointgetdamping) ()
 
+---
 ### Box2dWheelJoint:GetLocalAnchorA()
 The local anchor point relative to bodyA's origin.
 
 **RETURN**
 * (vector3)
 
+---
 ### Box2dWheelJoint:GetLocalAnchorB()
 The local anchor point relative to bodyB's origin.
 
 **RETURN**
 * (vector3)
 
+---
 ### Box2dWheelJoint:GetLocalAxisA()
 The local joint axis relative to bodyA.
 
 **RETURN**
 * (vector3)
 
+---
 ### Box2dWheelJoint:GetJointTranslation()
 Get the current joint translation, usually in meters.
 
 **RETURN**
 * (number)
 
+---
 ### Box2dWheelJoint:GetJointLinearSpeed()
 Get the current joint linear speed, usually in meters per second.
 
 **RETURN**
 * (number)
 
+---
 ### Box2dWheelJoint:GetJointAngle()
 Get the current joint angle in radians.
 
 **RETURN**
 * (number)
 
+---
 ### Box2dWheelJoint:GetJointAngularSpeed()
 Get the current joint angular speed in radians per second.
 
 **RETURN**
 * (number)
 
+---
 ### Box2dWheelJoint:IsLimitEnabled()
 Is the joint limit enabled?
 
 **RETURN**
 * (boolean)
 
+---
 ### Box2dWheelJoint:EnableLimit(flag)
 Enable/disable the joint translation limit.
 
 **PARAMETERS**
 * `flag` (boolean) -
 
+---
 ### Box2dWheelJoint:GetLowerLimit()
 Get the lower joint translation limit, usually in meters.
 
 **RETURN**
 * (number)
 
+---
 ### Box2dWheelJoint:GetUpperLimit()
 Get the upper joint translation limit, usually in meters.
 
 **RETURN**
 * (number)
 
+---
 ### Box2dWheelJoint:SetLimits(lower, upper)
 Set the joint translation limits, usually in meters.
 
@@ -168,41 +180,48 @@ Set the joint translation limits, usually in meters.
 * `lower` (number) -
 * `upper` (number) -
 
+---
 ### Box2dWheelJoint:IsMotorEnabled()
 Is the joint motor enabled?
 
 **RETURN**
 * (boolean)
 
+---
 ### Box2dWheelJoint:EnableMotor(flag)
 Enable/disable the joint motor.
 
 **PARAMETERS**
 * `flag` (boolean) -
 
+---
 ### Box2dWheelJoint:SetMotorSpeed(speed)
 Set the motor speed, usually in radians per second.
 
 **PARAMETERS**
 * `speed` (number) -
 
+---
 ### Box2dWheelJoint:GetMotorSpeed()
 Get the motor speed, usually in radians per second.
 
 **RETURN**
 * (number)
 
+---
 ### Box2dWheelJoint:SetMaxMotorTorque(torque)
 Set/Get the maximum motor force, usually in N-m.
 
 **PARAMETERS**
 * `torque` (number) -
 
+---
 ### Box2dWheelJoint:GetMaxMotorTorque()
 
 **RETURN**
 * (number)
 
+---
 ### Box2dWheelJoint:GetMotorTorque(inv_dt)
 Get the current motor torque given the inverse time step, usually in N-m.
 
@@ -212,23 +231,27 @@ Get the current motor torque given the inverse time step, usually in N-m.
 **RETURN**
 * (number)
 
+---
 ### Box2dWheelJoint:SetStiffness(stiffness)
 Access spring stiffness
 
 **PARAMETERS**
 * `stiffness` (number) -
 
+---
 ### Box2dWheelJoint:GetStiffness()
 
 **RETURN**
 * (number)
 
+---
 ### Box2dWheelJoint:SetDamping(damping)
 Access damping
 
 **PARAMETERS**
 * `damping` (number) -
 
+---
 ### Box2dWheelJoint:GetDamping()
 
 **RETURN**

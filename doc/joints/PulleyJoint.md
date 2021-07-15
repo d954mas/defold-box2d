@@ -74,42 +74,49 @@ local Box2dPulleyJointDef = {
 * Box2dPulleyJoint:[GetCurrentLengthA](#box2dpulleyjointgetcurrentlengtha) ()
 * Box2dPulleyJoint:[GetCurrentLengthB](#box2dpulleyjointgetcurrentlengthb) ()
 
+---
 ### Box2dPulleyJoint:GetGroundAnchorA()
 Get the first ground anchor.
 
 **RETURN**
 * (vector3)
 
+---
 ### Box2dPulleyJoint:GetGroundAnchorA()
 Get the second ground anchor.
 
 **RETURN**
 * (vector3)
 
+---
 ### Box2dPulleyJoint:GetGroundAnchorA()
 Get the current length of the segment attached to bodyA.
 
 **RETURN**
 * (number)
 
+---
 ### Box2dPulleyJoint:GetGroundAnchorA()
 Get the current length of the segment attached to bodyB.
 
 **RETURN**
 * (number)
 
+---
 ### Box2dPulleyJoint:GetGroundAnchorA()
 Get the pulley ratio.
 
 **RETURN**
 * (number)
 
+---
 ### Box2dPulleyJoint:GetGroundAnchorA()
 Get the current length of the segment attached to bodyA.
 
 **RETURN**
 * (number)
 
+---
 ### Box2dPulleyJoint:GetGroundAnchorA()
 Get the current length of the segment attached to bodyB.
 

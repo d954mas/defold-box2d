@@ -58,56 +58,66 @@ local Box2MotorJointDef = {
 * Box2dMotorJoint:[SetCorrectionFactor](#box2dmotorjointsetcorrectionfactorfactor) (factor)
 * Box2dMotorJoint:[GetCorrectionFactor](#box2dmotorjointgetcorrectionfactor) ()
 
+---
 ### Box2dMotorJoint:SetLinearOffset(linearOffset)
 Set/get the target linear offset, in frame A, in meters.
 * `linearOffset` (vector3) -
 
+---
 ### Box2dMotorJoint:GetLinearOffset()
 
 **RETURN**
 * (vector3)
 
+---
 ### Box2dMotorJoint:SetAngularOffset(angularOffset)
 Set/get the target angular offset, in radians.
 
 **PARAMETERS**
 * `angularOffset` (number) -
 
+---
 ### Box2dMotorJoint:GetAngularOffset()
 
 **RETURN**
 * (number)
 
+---
 ### Box2dMotorJoint:SetMaxForce(force)
 Set the maximum friction force in N.
 
 **PARAMETERS**
 * `force` (number) -
 
+---
 ### Box2dMotorJoint:GetMaxForce()
 Get the maximum friction force in N.
 
 **RETURN**
 * (number)
 
+---
 ### Box2dMotorJoint:SetMaxTorque(torque)
 Set the maximum friction torque in N*m.
 
 **PARAMETERS**
 * `torque` (number) -
 
+---
 ### Box2dMotorJoint:GetMaxTorque()
 Get the maximum friction torque in N*m.
 
 **RETURN**
 * (number)
 
+---
 ### Box2dMotorJoint:SetCorrectionFactor(factor)
 Set the position correction factor in the range [0,1].
 
 **PARAMETERS**
 * `factor` (number) -
 
+---
 ### Box2dMotorJoint:GetCorrectionFactor()
 Get the position correction factor in the range [0,1].
 

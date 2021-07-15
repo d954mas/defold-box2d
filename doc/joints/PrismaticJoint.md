@@ -90,66 +90,77 @@ local Box2dPrismaticJointDef = {
 * Box2dPrismaticJoint:[GetMaxMotorForce](#box2dprismaticjointgetmaxmotorforce) ()
 * Box2dPrismaticJoint:[GetMotorForce](#box2dprismaticjointgetmotorforceinvdt) (inv_dt)
 
+---
 ### Box2dPrismaticJoint:GetLocalAnchorA()
 The local anchor point relative to bodyA's origin.
 
 **RETURN**
 * (vector3)
 
+---
 ### Box2dPrismaticJoint:GetLocalAnchorB()
 The local anchor point relative to bodyB's origin.
 
 **RETURN**
 * (vector3)
 
+---
 ### Box2dPrismaticJoint:GetLocalAxisA()
 The local joint axis relative to bodyA.
 
 **RETURN**
 * (vector3)
 
+---
 ### Box2dPrismaticJoint:GetReferenceAngle()
 Get the reference angle.
 
 **RETURN**
 * (number)
 
+---
 ### Box2dPrismaticJoint:GetJointTranslation()
 Get the current joint translation, usually in meters.
 
 **RETURN**
 * (number)
 
+---
 ### Box2dPrismaticJoint:GetJointSpeed()
 Get the current joint translation speed, usually in meters per second.
 
 **RETURN**
 * (number)
 
+---
 ### Box2dPrismaticJoint:IsLimitEnabled()
 Is the joint limit enabled?
 
 **RETURN**
 * (boolean)
 
+---
 ### Box2dPrismaticJoint:EnableLimit(flag)
 Enable/disable the joint limit.
 
 **PARAMETERS**
 * `flag` (boolean) -
 
+---
 ### Box2dPrismaticJoint:GetLowerLimit()
 Get the lower joint limit, usually in meters.
 
 **RETURN**
 * (number)
 
+---
 ### Box2dPrismaticJoint:GetUpperLimit()
 Get the upper joint limit, usually in meters.
 
 **RETURN**
 * (number)
 
+---
 ### Box2dPrismaticJoint:SetLimits(lower, upper)
 Set the joint limits, usually in meters.
 
@@ -157,41 +168,48 @@ Set the joint limits, usually in meters.
 * `lower` (number) -
 * `upper` (number) -
 
+---
 ### Box2dPrismaticJoint:IsMotorEnabled()
 Is the joint motor enabled?
 
 **RETURN**
 * (boolean)
 
+---
 ### Box2dPrismaticJoint:EnableMotor(flag)
 Enable/disable the joint motor.
 
 **PARAMETERS**
 * `flag` (boolean) -
 
+---
 ### Box2dPrismaticJoint:SetMotorSpeed(speed)
 Set the motor speed, usually in meters per second.
 
 **PARAMETERS**
 * `speed` (number) -
 
+---
 ### Box2dPrismaticJoint:GetMotorSpeed()
 Get the motor speed, usually in meters per second.
 
 **RETURN**
 * (number)
 
+---
 ### Box2dPrismaticJoint:SetMaxMotorForce(force)
 Set the maximum motor force, usually in N.
 
 **PARAMETERS**
 * `force` (number) -
 
+---
 ### Box2dPrismaticJoint:GetMaxMotorForce()
 
 **RETURN**
 * (number)
 
+---
 ### Box2dPrismaticJoint:GetMotorForce(inv_dt)
 Get the current motor force given the inverse time step, usually in N.
 

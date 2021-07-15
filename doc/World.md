@@ -52,6 +52,7 @@ Destroy the world with world:Destroy() when you do not need it any more.
 * Box2dWorld:[Dump](#box2dworlddump) ()
 * Box2dWorld:[Destroy](#box2dworlddestroy) ()
 
+---
 ### Box2dWorld:SetContactListener(listener)
 Register a contact event listener.
 
@@ -68,6 +69,7 @@ listener = {
 ```
 _See also:_ [Contact](Contact.md)
 
+---
 ### Box2dWorld:SetDebugDraw(draw)
 Register a routine for debug drawing. The debug draw functions are called
 inside with b2World:DebugDraw method. The debug draw object is owned
@@ -76,6 +78,7 @@ by you and must remain in scope.
 **PARAMETERS**
 * `draw` [(Box2dDebugDraw)](DebugDraw.md)|(nil) -
 
+---
 ### Box2dWorld:CreateBody(bodyDef)
 Create a rigid body given a definition.
 _Warning:_ This function is locked during callbacks.
@@ -86,6 +89,7 @@ _Warning:_ This function is locked during callbacks.
 **RETURN**
 * [(Box2dBody)](Body.md)
 
+---
 ### Box2dWorld:DestroyBody(body)
 Destroy a rigid body given a definition.
 _Warning:_ This automatically deletes all associated shapes and joints.
@@ -94,6 +98,7 @@ _Warning:_ This function is locked during callbacks.
 **PARAMETERS**
 * `body` [(Box2dBody)](Body.md) -
 
+---
 ### Box2dWorld:CreateJoint(def)
 Create a joint to constrain bodies together.
 This may cause the connected bodies to cease colliding.
@@ -105,6 +110,7 @@ _Warning:_ This function is locked during callbacks.
 **RETURN**
 * [(Box2dJoint)](Joint.md)
 
+---
 ### Box2dWorld:DestroyJoint(joint)
 Destroy a joint. This may cause the connected bodies to begin colliding.
 _Warning:_ This function is locked during callbacks.
@@ -112,6 +118,7 @@ _Warning:_ This function is locked during callbacks.
 **PARAMETERS**
 * `joint` [(Box2dJoint)](Joint.md) -
 
+---
 ### Box2dWorld:Step(timeStep, velocityIterations, positionIterations)
 Take a time step. This performs collision detection, integration,
 and constraint solution.
@@ -121,6 +128,7 @@ and constraint solution.
 * `velocityIterations` (number) - For the velocity constraint solver. Suggested value: 8.
 * `positionIterations` (number) - For the position constraint solver. Suggested value: 3.
 
+---
 ### Box2dWorld:ClearForces()
 Manually clear the force buffer on all bodies. By default, forces are cleared automatically
 after each call to Step. The default behavior is modified by calling SetAutoClearForces.
@@ -130,9 +138,11 @@ When you perform sub-stepping you will disable auto clearing of forces and inste
 ClearForces after all sub-steps are complete in one pass of your game loop.
 @see SetAutoClearForces
 
+---
 ### Box2dWorld:DebugDraw()
 Call this to draw shapes and other debug draw data. This is intentionally non-const.
 
+---
 ### Box2dWorld:GetBodyList()
 Get the world body list. With the returned body, use b2Body:GetNext() to get the next body in the world list.
 A nil body indicates the end of the list.
@@ -140,6 +150,7 @@ A nil body indicates the end of the list.
 **RETURN**
 * [(Box2dBody)](Body.md)|(nil) - The head of the world body list.
 
+---
 ### Box2dWorld:RayCast(callback, point1, point2)
 Ray-cast the world for all fixtures in the path of the ray. Your callback
 controls whether you get the closest point, any point, or n-points.
@@ -150,6 +161,7 @@ The ray-cast ignores shapes that contain the starting point.
 * `point1` (vector3) - Ray starting point.
 * `point2` (vector3) - Ray ending point.
 
+---
 ### Box2dWorld:QueryAABB(callback, aabb)
 Query the world for all fixtures that potentially overlap the
 provided AABB.
@@ -158,6 +170,7 @@ provided AABB.
 * `callback` (function) - function(fixture)
 * `aabb` (table) - The query box. { lowerBound = vmath.vector3(0), upperBound = vmath.vector3(0) }
 
+---
 ### Box2dWorld:GetJointList()
 Get the world joint list. With the returned joint, use b2Joint:GetNext() to get the next joint in the world list.
 A nil joint indicates the end of the list.
@@ -165,69 +178,84 @@ A nil joint indicates the end of the list.
 **RETURN**
 * [(Box2dJoint)](Joint.md)|(nil) - The head of the world joint list.
 
+---
 ### Box2dWorld:SetAllowSleeping(flag)
 Enable/disable sleep.
 
+---
 ### Box2dWorld:GetAllowSleeping()
 
 **RETURN**
 * (boolean)
 
+---
 ### Box2dWorld:SetWarmStarting(flag)
 Enable/disable warm starting. For testing.
 
+---
 ### Box2dWorld:GetWarmStarting()
 
 **RETURN**
 * (boolean)
 
+---
 ### Box2dWorld:SetContinuousPhysics(flag)
 Enable/disable continuous physics. For testing.
 
+---
 ### Box2dWorld:GetContinuousPhysics()
 
 **RETURN**
 * (boolean)
 
+---
 ### Box2dWorld:SetSubStepping(flag)
 Enable/disable single stepped continuous physics. For testing.
 
+---
 ### Box2dWorld:GetSubStepping()
 
 **RETURN**
 * (boolean)
 
 
+---
 ### Box2dWorld:GetProxyCount()
 
 **RETURN**
 * (number) - The number of broad-phase proxies.
 
+---
 ### Box2dWorld:GetBodyCount()
 
 **RETURN**
 * (number) - The number of bodies.
 
+---
 ### Box2dWorld:GetJointCount()
 
 **RETURN**
 * (number) - The number of joints
 
+---
 ### Box2dWorld:GetContactCount()
 
 **RETURN**
 * (number) - The number of contacts (each may have 0 or more contact ###
 
+---
 ### Box2dWorld:GetTreeHeight()
 
 **RETURN**
 * (number) - The height of the dynamic tree.
 
+---
 ### Box2dWorld:GetTreeBalance()
 
 **RETURN**
 * (number) - The balance of the dynamic tree.
 
+---
 ### Box2dWorld:GetTreeQuality()
 Get the quality metric of the dynamic tree. The smaller the better.
 The minimum is 1.
@@ -235,44 +263,53 @@ The minimum is 1.
 **RETURN**
 * (number)
 
+---
 ### Box2dWorld:SetGravity()
 Change the global gravity vector.
 
+---
 ### Box2dWorld:GetGravity()
 Get the global gravity vector.
 
 **RETURN**
 * (vector3)
 
+---
 ### Box2dWorld:IsLocked()
 Is the world locked (in the middle of a time step).
 
 **RETURN**
 * (boolean)
 
+---
 ### Box2dWorld:SetAutoClearForces(flag)
 Set flag to control automatic clearing of forces after each time step.
 
+---
 ### Box2dWorld:GetAutoClearForces()
  Get the flag that controls automatic clearing of forces after each time step.
 
 **RETURN**
 * (boolean)
 
+---
 ### Box2dWorld:ShiftOrigin(newOrigin)
 Shift the world origin. Useful for large worlds.
 The body shift formula is: position -= newOrigin
 * `newOrigin` (vector3) - The new origin with respect to the old origin
 
+---
 ### Box2dWorld:GetProfile()
 Get the current profile.
 
 **RETURN**
 * [(Box2dProfile)](Box2dProfile.md)
 
+---
 ### Box2dWorld:Dump()
 Dump the world into the log file.
 _Warning:_ this should be called outside of a time step.
 
+---
 ### Box2dWorld:Destroy()
 Destroy the world.

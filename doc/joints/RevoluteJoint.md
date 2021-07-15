@@ -92,18 +92,21 @@ local Box2dRevoluteJointDef = {
 * Box2dRevoluteJoint:[GetMaxMotorTorque](#box2drevolutejointgetmaxmotortorque) ()
 * Box2dRevoluteJoint:[GetMotorTorque](#box2drevolutejointgetmotortorqueinvdt) (inv_dt)
 
+---
 ### Box2dRevoluteJoint:GetLocalAnchorA()
 The local anchor point relative to bodyA's origin.
 
 **RETURN**
 * (vector3)
 
+---
 ### Box2dRevoluteJoint:GetLocalAnchorB()
 The local anchor point relative to bodyB's origin.
 
 **RETURN**
 * (vector3)
 
+---
 ### Box2dRevoluteJoint:GetReferenceAngle()
 Get the reference angle.
 
@@ -116,36 +119,42 @@ Get the current joint angle in radians.
 **RETURN**
 * (float)
 
+---
 ### Box2dRevoluteJoint:GetJointSpeed()
 Get the current joint angle speed in radians per second.
 
 **RETURN**
 * (float)
 
+---
 ### Box2dRevoluteJoint:IsLimitEnabled()
 Is the joint limit enabled?
 
 **RETURN**
 * (boolean)
 
+---
 ### Box2dRevoluteJoint:EnableLimit(flag)
 Enable/disable the joint limit.
 
 **PARAMETERS**
 * `flag` (boolean) -
 
+---
 ### Box2dRevoluteJoint:GetLowerLimit()
 Get the lower joint limit in radians.
 
 **RETURN**
 * (float)
 
+---
 ### Box2dRevoluteJoint:GetUpperLimit()
 Get the upper joint limit in radians.
 
 **RETURN**
 * (float)
 
+---
 ### Box2dRevoluteJoint:SetLimits(lower, upper)
 Set the joint limits in radians.
 
@@ -153,41 +162,48 @@ Set the joint limits in radians.
 * `lower` (number) -
 * `upper` (number) -
 
+---
 ### Box2dRevoluteJoint:IsMotorEnabled()
 Is the joint motor enabled?
 
 **RETURN**
 * (boolean)
 
+---
 ### Box2dRevoluteJoint:EnableMotor(flag)
 Enable/disable the joint motor.
 
 **PARAMETERS**
 * `flag` (boolean) -
 
+---
 ### Box2dRevoluteJoint:SetMotorSpeed(speed)
 Set the motor speed in radians per second.
 
 **PARAMETERS**
 * `speed` (number) -
 
+---
 ### Box2dRevoluteJoint:GetMotorSpeed()
 Get the motor speed in radians per second.
 
 **RETURN**
 * (float)
 
+---
 ### Box2dRevoluteJoint:SetMaxMotorTorque(torque)
 Set the maximum motor torque, usually in N-m.
 
 **PARAMETERS**
 * `torque` (number) -
 
+---
 ### Box2dRevoluteJoint:GetMaxMotorTorque()
 
 **RETURN**
 * (float)
 
+---
 ### Box2dRevoluteJoint:GetMotorTorque(inv_dt)
 Get the current motor torque given the inverse time step.
 Unit is N*m.

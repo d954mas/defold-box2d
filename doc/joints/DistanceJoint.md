@@ -74,24 +74,28 @@ local Box2dDistanceJointDef = {
 * Box2dDistanceJoint:[SetDamping](#box2ddistancejointsetdampingdamping) (damping)
 * Box2dDistanceJoint:[GetDamping](#box2ddistancejointgetdamping) ()
 
+---
 ### Box2dDistanceJoint:GetLocalAnchorA()
 The local anchor point relative to bodyA's origin.
 
 **RETURN**
 * (vector3)
 
+---
 ### Box2dDistanceJoint:GetLocalAnchorB()
 The local anchor point relative to bodyB's origin.
 
 **RETURN**
 * (vector3)
 
+---
 ### Box2dDistanceJoint:GetLength()
 Get the rest length
 
 **RETURN**
 * (number)
 
+---
 ### Box2dDistanceJoint:SetLength(length)
 Set the rest length
 
@@ -101,12 +105,14 @@ Set the rest length
 **RETURN**
 * (number) - Clamped rest length
 
+---
 ### Box2dDistanceJoint:GetMinLength()
 Get the minimum length
 
 **RETURN**
 * (number)
 
+---
 ### Box2dDistanceJoint:SetMinLength(minLength)
 Set the minimum length
 
@@ -116,12 +122,14 @@ Set the minimum length
 **RETURN**
 * (number) - The clamped minimum length
 
+---
 ### Box2dDistanceJoint:GetMaxLength()
 Get the maximum length
 
 **RETURN**
 * (number)
 
+---
 ### Box2dDistanceJoint:SetMaxLength(maxLength)
 Set the maximum length
 
@@ -131,29 +139,34 @@ Set the maximum length
 **RETURN**
 * (number) - The clamped maximum length
 
+---
 ### Box2dDistanceJoint:GetCurrentLength()
 Get the current length
 
 **RETURN**
 * (number)
 
+---
 ### Box2dDistanceJoint:SetStiffness(stiffness)
 Set/get the linear stiffness in N/m
 
 **PARAMETERS**
 * `stiffness` (number) -
 
+---
 ### Box2dDistanceJoint:GetStiffness()
 
 **RETURN**
 * (number)
 
+---
 ### Box2dDistanceJoint:SetDamping(damping)
 Set/get linear damping in N*s/m
 
 **PARAMETERS**
 * `damping` (number) -
 
+---
 ### Box2dDistanceJoint:GetDamping()
 
 **RETURN**

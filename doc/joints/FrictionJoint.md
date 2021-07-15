@@ -50,36 +50,42 @@ local Box2FrictionJointDef = {
 * Box2FrictionJoint:[SetMaxTorque](#box2frictionjointsetmaxtorquetorque) (torque)
 * Box2FrictionJoint:[GetMaxTorque](#box2frictionjointgetmaxtorque) ()
 
+---
 ### Box2FrictionJoint:GetLocalAnchorA()
 The local anchor point relative to bodyA's origin.
 
 **RETURN**
 * (vector3)
 
+---
 ### Box2FrictionJoint:GetLocalAnchorB()
 The local anchor point relative to bodyB's origin.
 
 **RETURN**
 * (vector3)
 
+---
 ### Box2FrictionJoint:SetMaxForce(force)
 Set the maximum friction force in N.
 
 **PARAMETERS**
 * `force` (number) -
 
+---
 ### Box2FrictionJoint:GetMaxForce()
 Get the maximum friction force in N.
 
 **RETURN**
 * (number)
 
+---
 ### Box2FrictionJoint:SetMaxTorque(torque)
 Set the maximum friction torque in N*m.
 
 **PARAMETERS**
 * `torque` (number) -
 
+---
 ### Box2FrictionJoint:GetMaxTorque()
 Get the maximum friction torque in N*m.
 

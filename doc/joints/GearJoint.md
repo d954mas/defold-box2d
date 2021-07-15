@@ -54,24 +54,28 @@ local Box2dGearJointDef = {
 * Box2dGearJoint:[SetRatio](#box2dgearjointsetratioratio) (ratio)
 * Box2dGearJoint:[GetRatio](#box2dgearjointgetratio) ()
 
+---
 ### Box2dGearJoint:GetJoint1()
 Get the first joint.
 
 **RETURN**
 * [(Box2dJoint)](../Joint.md)
 
+---
 ### Box2dGearJoint:GetJoint2()
 Get the second joint.
 
 **RETURN**
 * [(Box2dJoint)](../Joint.md)
 
+---
 ### Box2dGearJoint:SetRatio(ratio)
 Set/Get the gear ratio.
 
 **PARAMETERS**
 * `ratio` (number) -
 
+---
 ### Box2dGearJoint:GetRatio()
 
 **RETURN**
