@@ -33,7 +33,7 @@ local Box2dFixtureDef = {
 
     -- Contact filtering data. b2Filter
     ---@type Box2dFilter
-    -- filter = nil;
+    filter = nil;
 }
 ```
 
