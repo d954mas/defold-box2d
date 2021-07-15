@@ -25,7 +25,7 @@ _FIELDS_
 * `localPoint` (vector3) - Usage depends on manifold type.
 * `localNormal` (vector3) - Not use for Type::e_points.
 * `pointCount` (number) - The number of manifold points.
-* `points` <kbd>Box2dManifoldPoint[]</kbd> - The points of contact.
+* `points` (Box2dManifoldPoint[]) - The points of contact.
 
 ## Box2dManifoldPoint
 A manifold point is a contact point belonging to a contact

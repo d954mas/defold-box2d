@@ -45,6 +45,7 @@ box2d.b2Manifold_Type = {
 * box2d.[b2LinearStiffness](#box2db2linearstiffnessfrequencyhertz-dampingratio-bodya-bodyb) (frequencyHertz, dampingRatio, bodyA, bodyB)
 * box2d.[b2AngularStiffness](#box2db2angularstiffnessfrequencyhertz-dampingratio-bodya-bodyb) (frequencyHertz, dampingRatio, bodyA, bodyB)
 
+---
 ### box2d.NewWorld(gravity)
 
 **PARAMETERS**
@@ -53,6 +54,7 @@ box2d.b2Manifold_Type = {
 **RETURN**
 * [(Box2dWorld)](World.md)
 
+---
 ### box2d.NewDebugDraw(data)
 
 **PARAMETERS**
@@ -61,6 +63,7 @@ box2d.b2Manifold_Type = {
 **RETURN**
 * [(Box2dWorld)](DebugDraw.md)
 
+---
 ### box2d.b2LinearStiffness(frequencyHertz, dampingRatio, bodyA, bodyB)
 Utility to compute linear stiffness values from frequency and damping ratio
 
@@ -74,6 +77,7 @@ Utility to compute linear stiffness values from frequency and damping ratio
 * (table) - Stiffness
 * (table) - Damping
 
+---
 ### box2d.b2AngularStiffness(frequencyHertz, dampingRatio, bodyA, bodyB)
 Utility to compute rotational stiffness values from frequency and damping ratio
 

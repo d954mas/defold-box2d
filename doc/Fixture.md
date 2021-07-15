@@ -60,7 +60,7 @@ _Warning:_ This function is locked during callbacks.
 ### Box2dFixture:GetType()
 
 **RETURN**
-* <kbd>number(box2d.b2Shape)</kbd> -
+* (number(box2d.b2Shape)) -
 
 ---
 ### Box2dFixture:SetSensor(sensor)
