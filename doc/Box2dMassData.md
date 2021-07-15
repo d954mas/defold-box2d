@@ -1,5 +1,4 @@
-
-### Box2dMassData <kbd>table</kbd>
+# Box2dMassData
 This holds the mass data computed for a shape. Returned by Box2dBody:GetMassData().
 
 _FIELDS_

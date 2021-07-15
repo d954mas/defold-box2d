@@ -1,4 +1,4 @@
-### Box2dProfile <kbd>table</kbd>
+# Box2dProfile
 Profiling data. Times are in milliseconds.
 Returned by world:GetProfile().
 

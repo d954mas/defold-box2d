@@ -23,6 +23,7 @@ Try the demo: https://d954mas.github.io/defold-box2d/
     + [Extension](doc/base.md)
     + [World](doc/World.md)
     + [DebugDraw](doc/DebugDraw.md)
+    + [Contact](doc/Contact.md)
     + [Shape](doc/Shape.md)
     + [FixtureDef](doc/FixtureDef.md)
     + [Fixture](doc/Fixture.md)
@@ -39,6 +40,9 @@ Try the demo: https://d954mas.github.io/defold-box2d/
       - [WeldJoint](doc/joints/WeldJoint.md)
       - [FrictionJoint](doc/joints/FrictionJoint.md)
       - [MotorJoint](doc/joints/MotorJoint.md)
+    + [Box2dManifold](doc/Box2dManifold.md)
+    + [Box2dWorldManifold](Box2dWorldManifold.md)
+    + [Box2dFilter](Box2dFilter.md)
     + [Box2dProfile](doc/Box2dProfile.md)
     + [Box2dMassData](doc/Box2dMassData.md)
 
@@ -74,18 +78,12 @@ __4)__ No binding for some b2World functions.
 
 	void SetDestructionListener(b2DestructionListener* listener);
 	void SetContactFilter(b2ContactFilter* filter);
-	void SetContactListener(b2ContactListener* listener);
-	void QueryAABB(b2QueryCallback* callback, const b2AABB& aabb) const;
-	void RayCast(b2RayCastCallback* callback, const b2Vec2& point1, const b2Vec2& point2) const;
 	b2Contact* GetContactList();
 	const b2ContactManager& GetContactManager() const;
 
 __5)__ No binding for some b2Fixture functions.
 
-	not support filter in fixture def.
 	b2Shape* GetShape();
-	void SetFilterData(const b2Filter& filter);
-	const b2Filter& GetFilterData() const;
 	bool RayCast(b2RayCastOutput* output, const b2RayCastInput& input, int32 childIndex) const;
 	const b2AABB& GetAABB(int32 childIndex) const;
 
@@ -97,3 +95,7 @@ __6)__ No binding for some b2Body functions.
 __7)__ No binding for some b2Joint functions.
 
 	virtual void Draw(b2Draw* draw) const;
+
+__8)__ No binding some b2Contact functions.
+
+	b2Contact* GetNext();

@@ -14,6 +14,7 @@ _RETURNS_
 
 ## Methods
 
+* Box2dWorld:[SetContactListener](#box2dworldsetcontactlistenerlistener) (listener)
 * Box2dWorld:[SetDebugDraw](#box2dworldsetdebugdrawdraw) (draw)
 * Box2dWorld:[CreateBody](#box2dworldcreatebodybodydef) (bodyDef)
 * Box2dWorld:[DestroyBody](#box2dworlddestroybodybody) (body)
@@ -23,6 +24,8 @@ _RETURNS_
 * Box2dWorld:[ClearForces](#box2dworldclearforces) ()
 * Box2dWorld:[DebugDraw](#box2dworlddebugdraw) ()
 * Box2dWorld:[GetBodyList](#box2dworldgetbodylist) ()
+* Box2dWorld:[RayCast](#box2dworldraycastcallback-point1-point2) (callback, point1, point2)
+* Box2dWorld:[QueryAABB](#box2dworldqueryaabbcallback-aabb) (callback, aabb)
 * Box2dWorld:[GetJointList](#box2dworldgetjointlist) ()
 * Box2dWorld:[SetAllowSleeping](#box2dworldsetallowsleepingflag) (flag)
 * Box2dWorld:[GetAllowSleeping](#box2dworldgetallowsleeping) ()
@@ -48,6 +51,21 @@ _RETURNS_
 * Box2dWorld:[GetProfile](#box2dworldgetprofile) ()
 * Box2dWorld:[Dump](#box2dworlddump) ()
 * Box2dWorld:[Destroy](#box2dworlddestroy) ()
+
+#### Box2dWorld:SetContactListener(listener)
+Register a contact event listener.
+
+_ARGUMENTS_
+* __listener__ <kbd>table|nil</kbd>
+
+```lua
+listener = {
+   BeginContact = function (contact) end,
+   EndContact = function(contact) end,
+   PreSolve = function(contact, old_manifold) end,
+   PostSolve = function(contact,impulse) end
+}
+```
 
 #### Box2dWorld:SetDebugDraw(draw)
 Register a routine for debug drawing. The debug draw functions are called
@@ -120,6 +138,24 @@ A nil body indicates the end of the list.
 
 _RETURNS_
 * [`Box2dBody`](Body.md)|<kbd>nil</kbd> - The head of the world body list.
+
+#### Box2dWorld:RayCast(callback, point1, point2)
+Ray-cast the world for all fixtures in the path of the ray. Your callback
+controls whether you get the closest point, any point, or n-points.
+The ray-cast ignores shapes that contain the starting point.
+
+_ARGUMENTS_
+* __callback__ <kbd>function</kbd> - function(Box2dFixture fixture, vector3 point, vector3 normal, float fraction)
+* __point1__ <kbd>vector3</kbd> - Ray starting point.
+* __point2__ <kbd>vector3</kbd> - Ray ending point.
+
+#### Box2dWorld:QueryAABB(callback, aabb)
+Query the world for all fixtures that potentially overlap the
+provided AABB.
+
+_ARGUMENTS_
+* __callback__ <kbd>function</kbd> - function(fixture)
+* __aabb__ <kbd>table</kbd> - The query box. { lowerBound = vmath.vector3(0), upperBound = vmath.vector3(0) }
 
 #### Box2dWorld:GetJointList()
 Get the world joint list. With the returned joint, use b2Joint:GetNext() to get the next joint in the world list.
