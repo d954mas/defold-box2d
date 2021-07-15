@@ -31,6 +31,11 @@ function init(self)
         btn_velocity_minus =  function() SCENE_HELPER.cfg_velocity_iterations_add(-1) end,
         btn_reset_changes =  function() SCENE_HELPER.reset() end,
         btn_restart =  function() MONARCH.show(MONARCH.top(), { reload = true }) end,
+        btn_profiler =  function()
+            self.profiler_enabled = not self.profiler_enabled
+            profiler.enable_ui(self.profiler_enabled)
+
+        end,
     }
     self.delay_step_time_update = 0
     reset_gui(self)
@@ -52,7 +57,7 @@ function update(self,dt)
     self.delay_step_time_update = self.delay_step_time_update - dt
     if(self.delay_step_time_update<0)then
         self.delay_step_time_update = 10/60
-        gui.set_text(self.vh.lbl_world_step_time,string.format("World step:\n %f ms",SCENE_HELPER.world_step_time*1000))
+        gui.set_text(self.vh.lbl_world_step_time,string.format("World step:\n%f ms",SCENE_HELPER.world_step_time*1000))
     end
 
 
@@ -70,5 +75,6 @@ function on_input(self, action_id, action)
     GOOEY.button("btn_velocity_minus/bg", action_id, action, self.gui_functions.btn_velocity_minus, gui_refresh_scale)
     DIRTY_LARRY.button("btn_reset_changes", action_id, action, self.gui_functions.btn_reset_changes)
     DIRTY_LARRY.button("btn_restart", action_id, action, self.gui_functions.btn_restart, gui_refresh_scale)
+    DIRTY_LARRY.button("btn_profiler", action_id, action, self.gui_functions.btn_profiler, gui_refresh_scale)
 end
 
