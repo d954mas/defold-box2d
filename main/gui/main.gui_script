@@ -6,7 +6,7 @@ local MONARCH = require "monarch.monarch"
 local gui_refresh_scale = function(button)
     button.initial_scale = button.initial_scale or gui.get_scale(button.node)
     if button.pressed then
-        gui.set_scale(button.node,  button.initial_scale * 0.8)
+        gui.set_scale(button.node, button.initial_scale * 0.8)
     else
         gui.set_scale(button.node, button.initial_scale)
     end
@@ -14,6 +14,11 @@ end
 
 local function reset_gui(self)
     gui.set_text(self.vh.lbl_title, "Scene:" .. tostring(SCENE_HELPER.scene_config.name))
+    DIRTY_LARRY.checkbox("checkbox_shape").set_checked(bit.band(SCENE_HELPER.debug_draw.flags, box2d.b2Draw.e_shapeBit) ~= 0)
+    DIRTY_LARRY.checkbox("checkbox_joint").set_checked(bit.band(SCENE_HELPER.debug_draw.flags, box2d.b2Draw.e_jointBit) ~= 0)
+    DIRTY_LARRY.checkbox("checkbox_aabb").set_checked(bit.band(SCENE_HELPER.debug_draw.flags, box2d.b2Draw.e_aabbBit) ~= 0)
+    DIRTY_LARRY.checkbox("checkbox_pair").set_checked(bit.band(SCENE_HELPER.debug_draw.flags, box2d.b2Draw.e_pairBit) ~= 0)
+    DIRTY_LARRY.checkbox("checkbox_center_of_mass").set_checked(bit.band(SCENE_HELPER.debug_draw.flags, box2d.b2Draw.e_centerOfMassBit) ~= 0)
 end
 
 function init(self)
@@ -25,16 +30,35 @@ function init(self)
         lbl_world_step_time = gui.get_node("lbl_world_step_time"),
     }
     self.gui_functions = {
-        btn_pos_plus =  function() SCENE_HELPER.cfg_position_iterations_add(1) end,
-        btn_pos_minus =  function() SCENE_HELPER.cfg_position_iterations_add(-1) end,
-        btn_velocity_plus =  function() SCENE_HELPER.cfg_velocity_iterations_add(1) end,
-        btn_velocity_minus =  function() SCENE_HELPER.cfg_velocity_iterations_add(-1) end,
-        btn_reset_changes =  function() SCENE_HELPER.reset() end,
-        btn_restart =  function() MONARCH.show(MONARCH.top(), { reload = true }) end,
-        btn_profiler =  function()
+        btn_pos_plus = function() SCENE_HELPER.cfg_position_iterations_add(1) end,
+        btn_pos_minus = function() SCENE_HELPER.cfg_position_iterations_add(-1) end,
+        btn_velocity_plus = function() SCENE_HELPER.cfg_velocity_iterations_add(1) end,
+        btn_velocity_minus = function() SCENE_HELPER.cfg_velocity_iterations_add(-1) end,
+        btn_reset_changes = function() SCENE_HELPER.reset() end,
+        btn_restart = function() MONARCH.show(MONARCH.top(), { reload = true }) end,
+        btn_profiler = function()
             self.profiler_enabled = not self.profiler_enabled
             profiler.enable_ui(self.profiler_enabled)
-
+        end,
+        checkbox_shape = function(checkbox)
+            local f = checkbox.checked and SCENE_HELPER.debug_draw_add_flag or SCENE_HELPER.debug_draw_remove_flag
+            f(box2d.b2Draw.e_shapeBit)
+        end,
+        checkbox_joint = function(checkbox)
+            local f = checkbox.checked and SCENE_HELPER.debug_draw_add_flag or SCENE_HELPER.debug_draw_remove_flag
+            f(box2d.b2Draw.e_jointBit)
+        end,
+        checkbox_aabb = function(checkbox)
+            local f = checkbox.checked and SCENE_HELPER.debug_draw_add_flag or SCENE_HELPER.debug_draw_remove_flag
+            f(box2d.b2Draw.e_aabbBit)
+        end,
+        checkbox_pair = function(checkbox)
+            local f = checkbox.checked and SCENE_HELPER.debug_draw_add_flag or SCENE_HELPER.debug_draw_remove_flag
+            f(box2d.b2Draw.e_pairBit)
+        end,
+        checkbox_center_of_mass = function(checkbox)
+            local f = checkbox.checked and SCENE_HELPER.debug_draw_add_flag or SCENE_HELPER.debug_draw_remove_flag
+            f(box2d.b2Draw.e_centerOfMassBit)
         end,
     }
     self.delay_step_time_update = 0
@@ -45,19 +69,19 @@ function final(self)
     msg.post(".", "release_input_focus")
 end
 
-function update(self,dt)
-    if(SCENE_HELPER.dirty)then
+function update(self, dt)
+    if (SCENE_HELPER.dirty) then
         SCENE_HELPER.dirty = false
         reset_gui(self)
     end
-    gui.set_text(self.vh.lbl_position_number,SCENE_HELPER.scene_config.positionIterations)
-    gui.set_text(self.vh.lbl_velocity_number,SCENE_HELPER.scene_config.velocityIterations)
+    gui.set_text(self.vh.lbl_position_number, SCENE_HELPER.scene_config.positionIterations)
+    gui.set_text(self.vh.lbl_velocity_number, SCENE_HELPER.scene_config.velocityIterations)
 
     --update every 10 frame. Or too fast to read it
     self.delay_step_time_update = self.delay_step_time_update - dt
-    if(self.delay_step_time_update<0)then
-        self.delay_step_time_update = 10/60
-        gui.set_text(self.vh.lbl_world_step_time,string.format("World step:\n%f ms",SCENE_HELPER.world_step_time*1000))
+    if (self.delay_step_time_update < 0) then
+        self.delay_step_time_update = 10 / 60
+        gui.set_text(self.vh.lbl_world_step_time, string.format("World step:\n%f ms", SCENE_HELPER.world_step_time * 1000))
     end
 
 
@@ -67,7 +91,6 @@ function on_message(self, message_id, message, sender)
 
 end
 
-
 function on_input(self, action_id, action)
     GOOEY.button("btn_pos_plus/bg", action_id, action, self.gui_functions.btn_pos_plus, gui_refresh_scale)
     GOOEY.button("btn_pos_minus/bg", action_id, action, self.gui_functions.btn_pos_minus, gui_refresh_scale)
@@ -76,5 +99,11 @@ function on_input(self, action_id, action)
     DIRTY_LARRY.button("btn_reset_changes", action_id, action, self.gui_functions.btn_reset_changes)
     DIRTY_LARRY.button("btn_restart", action_id, action, self.gui_functions.btn_restart, gui_refresh_scale)
     DIRTY_LARRY.button("btn_profiler", action_id, action, self.gui_functions.btn_profiler, gui_refresh_scale)
+
+    DIRTY_LARRY.checkbox("checkbox_shape", action_id, action, self.gui_functions.checkbox_shape)
+    DIRTY_LARRY.checkbox("checkbox_joint", action_id, action, self.gui_functions.checkbox_joint)
+    DIRTY_LARRY.checkbox("checkbox_pair", action_id, action, self.gui_functions.checkbox_pair)
+    DIRTY_LARRY.checkbox("checkbox_aabb", action_id, action, self.gui_functions.checkbox_aabb)
+    DIRTY_LARRY.checkbox("checkbox_center_of_mass", action_id, action, self.gui_functions.checkbox_center_of_mass)
 end
 
