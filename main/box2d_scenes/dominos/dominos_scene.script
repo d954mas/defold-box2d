@@ -1,4 +1,4 @@
-local BOX2D_SCENE_UTILS = require "main.box2d_scenes.utils"
+local SCENE_HELPER = require "main.gui.scene_helper"
 
 ---@class SelfDominosScene
 
@@ -7,8 +7,8 @@ local function create_physics(self)
     local shape = {
         shape = box2d.b2Shape.e_edge,
         edge_two_sided = true,
-        edge_v1 = vmath.vector3(-40, 0,0),
-        edge_v2 = vmath.vector3(40, 0,0),
+        edge_v1 = vmath.vector3(-40, 0, 0),
+        edge_v2 = vmath.vector3(40, 0, 0),
     }
     local b1 = self.world:CreateBody()
     b1:CreateFixture(shape, 0)
@@ -88,10 +88,9 @@ local function create_physics(self)
     b3:CreateFixture(shape, 10.0)
 
     ---@type Box2dRevoluteJointDef
-    local jd = box2d.InitializeRevoluteJointDef(b1,b3, vmath.vector3(-2,1,0))
+    local jd = box2d.InitializeRevoluteJointDef(b1, b3, vmath.vector3(-2, 1, 0))
     jd.collideConnected = true
     self.world:CreateJoint(jd)
-
 
     shape = {
         shape = box2d.b2Shape.e_polygon,
@@ -101,24 +100,22 @@ local function create_physics(self)
     }
     bd = {
         type = box2d.b2BodyType.b2_dynamicBody,
-        position = vmath.vector3(-10.0, 15.0,0);
+        position = vmath.vector3(-10.0, 15.0, 0);
     }
     local b4 = self.world:CreateBody(bd);
     b4:CreateFixture(shape, 10.0);
 
-
-    jd = box2d.InitializeRevoluteJointDef(b2,b4,vmath.vector3(-7.0, 15.0,0))
+    jd = box2d.InitializeRevoluteJointDef(b2, b4, vmath.vector3(-7.0, 15.0, 0))
     jd.collideConnected = true
     self.world:CreateJoint(jd);
 
-
     bd = {
         type = box2d.b2BodyType.b2_dynamicBody;
-        position = vmath.vector3(6.5, 3.0,0);
+        position = vmath.vector3(6.5, 3.0, 0);
     }
     local b5 = self.world:CreateBody(bd);
 
-    shape = {shape = box2d.b2Shape.e_polygon}
+    shape = { shape = box2d.b2Shape.e_polygon }
     shape.box = true
 
     fd = {}
@@ -127,26 +124,24 @@ local function create_physics(self)
     fd.density = 10.0;
     fd.friction = 0.1;
 
-
     shape.box_hx, shape.box_hy = 1, 0.1
-    shape.box_center = vmath.vector3(0,-0.9,0)
+    shape.box_center = vmath.vector3(0, -0.9, 0)
     shape.box_angle = 0
 
     b5:CreateFixture(fd);
 
     shape.box_hx, shape.box_hy = 0.1, 1
-    shape.box_center = vmath.vector3(-0.9,0,0)
+    shape.box_center = vmath.vector3(-0.9, 0, 0)
     b5:CreateFixture(fd);
 
     shape.box_hx, shape.box_hy = 0.1, 1
-    shape.box_center = vmath.vector3(0.9,0,0)
+    shape.box_center = vmath.vector3(0.9, 0, 0)
     b5:CreateFixture(fd);
 
-    jd = box2d.InitializeRevoluteJointDef(b1,b5,vmath.vector3(6.0, 2.0,0))
+    jd = box2d.InitializeRevoluteJointDef(b1, b5, vmath.vector3(6.0, 2.0, 0))
     jd.collideConnected = true
 
     self.world:CreateJoint(jd);
-
 
     shape = {
         shape = box2d.b2Shape.e_polygon,
@@ -155,21 +150,19 @@ local function create_physics(self)
         box_hy = 0.1
     }
 
-
     bd = {}
     bd.type = box2d.b2BodyType.b2_dynamicBody;
-    bd.position = vmath.vector3(6.5, 4.1,0);
+    bd.position = vmath.vector3(6.5, 4.1, 0);
 
-    local  b6 = self.world:CreateBody(bd);
+    local b6 = self.world:CreateBody(bd);
     b6:CreateFixture(shape, 30.0);
 
     jd.bodyA = b5
     jd.bodyB = b6
 
-    jd = box2d.InitializeRevoluteJointDef(b5,b6,vmath.vector3(7.5, 4.0,0))
+    jd = box2d.InitializeRevoluteJointDef(b5, b6, vmath.vector3(7.5, 4.0, 0))
     jd.collideConnected = true
     self.world:CreateJoint(jd);
-
 
     shape = {
         shape = box2d.b2Shape.e_polygon,
@@ -180,7 +173,7 @@ local function create_physics(self)
 
     bd = {}
     bd.type = box2d.b2BodyType.b2_dynamicBody;
-    bd.position = vmath.vector3(7.4, 1.0,0);
+    bd.position = vmath.vector3(7.4, 1.0, 0);
 
     local b7 = self.world:CreateBody(bd);
     b7:CreateFixture(shape, 10.0);
@@ -190,8 +183,8 @@ local function create_physics(self)
     djd.type = box2d.b2JointType.e_distanceJoint
     djd.bodyA = b3;
     djd.bodyB = b7;
-    djd.localAnchorA = vmath.vector3(6.0, 0.0,0);
-    djd.localAnchorB = vmath.vector3(0, -1,0);
+    djd.localAnchorA = vmath.vector3(6.0, 0.0, 0);
+    djd.localAnchorB = vmath.vector3(0, -1, 0);
 
     local d = djd.bodyB:GetWorldPoint(djd.localAnchorB) - djd.bodyA:GetWorldPoint(djd.localAnchorA);
     djd.length = vmath.length(d);
@@ -205,10 +198,10 @@ local function create_physics(self)
         shape = box2d.b2Shape.e_circle,
         circle_radius = radius
     }
-    for i=0,3 do
+    for i = 0, 3 do
         bd = {}
         bd.type = box2d.b2BodyType.b2_dynamicBody;
-        bd.position = vmath.vector3(5.9 + 2.0 * radius * i, 2.4,0);
+        bd.position = vmath.vector3(5.9 + 2.0 * radius * i, 2.4, 0);
         local body = self.world:CreateBody(bd);
         body:CreateFixture(shape, 10.0);
     end
@@ -217,30 +210,18 @@ end
 
 ---@param self SelfDominosScene
 function init(self)
-    self.world = box2d.NewWorld(vmath.vector3(0,-10,0));
-    self.world:SetDebugDraw(assert(BOX2D_SCENE_UTILS.get_debug_draw()))
+    self.world = box2d.NewWorld(vmath.vector3(0, -10, 0));
     create_physics(self)
+
+    SCENE_HELPER.scene_new({
+        name = "Dominos",
+        world = self.world
+    })
 end
 
 function final(self)
     self.world:Destroy()
-end
----@param self SelfDominosScene
-function update(self, dt)
-    self.world:Step(1 / 60, 8, 3)
-    self.world:DebugDraw()
-end
-
-function on_message(self, message_id, message, sender)
-
-end
-
-function on_input(self, action_id, action)
-
-end
-
-function on_reload(self)
-
+    SCENE_HELPER.scene_final()
 end
 
 

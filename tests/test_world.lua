@@ -148,8 +148,6 @@ return function()
             end })
             local status, value = pcall(w.Step, w, 1 / 60, 3, 5)
             assert_false(status)
-            pprint("ERROR")
-            pprint(value)
             UTILS.test_error(value,"error")
 
             w:SetContactListener({ PreSolve = function()

@@ -1,49 +1,14 @@
 local TESTS = require "tests.tests"
-
-local monarch = require "monarch.monarch"
+local MONARCH = require "monarch.monarch"
+local SCENE_HELPER = require "main.gui.scene_helper"
 
 function init(self)
     TESTS.run()
-    timer.delay(2, false, function()
-        monarch.show(hash("dominos"))
+    timer.delay(0, false, function()
+        MONARCH.show(hash("dominos"))
     end)
-
-    -- msg.post("@system:", "exit", {code = 0})
-end
-
-function final(self)
-    -- Add finalization code here
-    -- Learn more: https://defold.com/manuals/script/
-    -- Remove this function if not needed
 end
 
 function update(self, dt)
-
-    -- Add update code here
-    -- Learn more: https://defold.com/manuals/script/
-    -- Remove this function if not needed
-end
-
-function on_message(self, message_id, message, sender)
-    -- Add message-handling code here
-    -- Learn more: https://defold.com/manuals/message-passing/
-    -- Remove this function if not needed
-end
-
-function on_input(self, action_id, action)
-    -- Add input-handling code here. The game object this script is attached to
-    -- must have acquired input focus:
-    --
-    --    msg.post(".", "acquire_input_focus")
-    --
-    -- All mapped input bindings will be received. Mouse and touch input will
-    -- be received regardless of where on the screen it happened.
-    -- Learn more: https://defold.com/manuals/input/
-    -- Remove this function if not needed
-end
-
-function on_reload(self)
-    -- Add reload-handling code here
-    -- Learn more: https://defold.com/manuals/hot-reload/
-    -- Remove this function if not needed
+    SCENE_HELPER.update(dt)
 end
