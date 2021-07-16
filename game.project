@@ -26,4 +26,7 @@ app_manifest = /box2d/manifest.appmanifest
 [library]
 include_dirs = box2d
 
+[html5]
+htmlfile = /platform/engine_template.html
+scale_mode = fit
 
