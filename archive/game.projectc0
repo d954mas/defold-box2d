@@ -142,12 +142,13 @@ localizations = en
 [html5]
 custom_heap_size = 0
 heap_size = 256
-htmlfile = /builtins/manifests/web/engine_template.html
+htmlfile = /platform/engine_template.html
 cssfile = /builtins/manifests/web/light_theme.css
 archive_location_prefix = archive
 show_fullscreen_button = 1
 show_made_with_defold = 1
-scale_mode = downscale_fit
+show_console_banner = 1
+scale_mode = fit
 
 [particle_fx]
 max_count = 64

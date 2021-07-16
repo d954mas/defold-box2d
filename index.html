@@ -158,11 +158,13 @@
 	<script id='engine-loader' type='text/javascript' src="dmloader.js"></script>
 	<!-- -->
 	<script id='engine-setup' type='text/javascript'>
+	var engine_arguments = []
+		engine_arguments.push("--verify-graphics-calls=false")
 	var extra_params = {
 		archive_location_filter: function( path ) {
 			return ("archive" + path + "");
 		},
-		engine_arguments: [],
+		engine_arguments:engine_arguments,
 		custom_heap_size: 268435456,
 		full_screen_container: "#canvas-container",
 		disable_context_menu: true
@@ -211,27 +213,21 @@
 		var targetRatio = width / height;
 		var actualRatio = innerWidth / innerHeight;
 	
-		//Downscale fit
-		if (innerWidth < width || innerHeight < height) {
-			if (actualRatio > targetRatio) {
-				width = innerHeight * targetRatio;
-				height = innerHeight;
-				app_container.style.marginLeft = ((innerWidth - width) / 2) + "px";
-				app_container.style.marginTop = "0px";
-			}
-			else {
-				width = innerWidth;
-				height = innerWidth / targetRatio;
-				app_container.style.marginLeft = "0px";
-				app_container.style.marginTop = ((innerHeight - height) / 2) + "px";
-			}
+	
+	
+		//Fit
+		if (actualRatio > targetRatio) {
+			width = innerHeight * targetRatio;
+			height = innerHeight;
+			app_container.style.marginLeft = ((innerWidth - width) / 2) + "px";
+			app_container.style.marginTop = "0px";
 		}
 		else {
-			app_container.style.marginLeft = ((innerWidth - width) / 2) + "px";
+			width = innerWidth;
+			height = innerWidth / targetRatio;
+			app_container.style.marginLeft = "0px";
 			app_container.style.marginTop = ((innerHeight - height) / 2) + "px";
 		}
-	
-	
 	
 	
 		app_container.style.width = width + "px";
