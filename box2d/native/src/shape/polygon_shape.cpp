@@ -1,0 +1,94 @@
+#include "shape/polygon_shape.h"
+#include "utils.h"
+#include "extra_utils.h"
+
+#define META_NAME "Box2d::PolygonShapeClass"
+
+namespace box2dDefoldNE {
+
+static PolygonShape* PolygonShape_get_userdata(lua_State* L, int index){
+    if(luaL_checkudata(L, index, META_NAME) == NULL){
+        utils::error(L,"not polygon shape");
+    }
+    PolygonShape *shape =  *static_cast<PolygonShape**>(luaL_checkudata(L, index, META_NAME));
+    return shape;
+}
+
+static int PolygonShape_destroy(lua_State* L){
+    delete *static_cast<PolygonShape**>(luaL_checkudata(L, 1, META_NAME));
+    return 0;
+}
+
+//region BASE METHODS
+
+static int GetType(lua_State* L){
+    utils::check_arg_count(L, 1);
+    PolygonShape *shape =  PolygonShape_get_userdata(L,1);
+    lua_pushnumber(L, shape->shape.GetType());
+    return 1;
+}
+
+static int GetRadius(lua_State* L){
+    utils::check_arg_count(L, 1);
+    PolygonShape *shape =  PolygonShape_get_userdata(L,1);
+    lua_pushnumber(L, shape->shape.m_radius);
+    return 1;
+}
+
+
+static int Clone(lua_State* L){
+    utils::check_arg_count(L, 1);
+    PolygonShape *shape =  PolygonShape_get_userdata(L,1);
+    b2PolygonShape_push(L,shape->shape);
+    return 1;
+}
+
+static int GetChildCount(lua_State* L){
+    utils::check_arg_count(L, 1);
+    PolygonShape *shape =  PolygonShape_get_userdata(L,1);
+    lua_pushnumber(L, shape->shape.GetChildCount());
+    return 1;
+}
+
+static int TestPoint(lua_State* L){
+    utils::check_arg_count(L, 3);
+    PolygonShape *shape =  PolygonShape_get_userdata(L,1);
+    b2Transform transform = extra_utils::get_b2Transform_safe(L,2,"not transform");
+    b2Vec2 point = extra_utils::get_b2vec_safe(L,3,"point not vector3");
+    lua_pushboolean(L, shape->shape.TestPoint(transform, point));
+    return 1;
+}
+
+//endregion
+
+PolygonShape* b2PolygonShape_push(lua_State *L, b2PolygonShape b2Shape){
+    PolygonShape *shape = new PolygonShape(b2Shape);
+    *static_cast<PolygonShape**>(lua_newuserdata(L, sizeof(PolygonShape*))) = shape;
+    if(luaL_newmetatable(L, META_NAME)){
+        static const luaL_Reg functions[] =
+        {
+            {"GetType", GetType},
+            {"GetRadius", GetRadius},
+            {"Clone", Clone},
+            {"GetChildCount", GetChildCount},
+            {"TestPoint", TestPoint},
+            {"__gc", PolygonShape_destroy},
+            {0, 0}
+        };
+        luaL_register(L, NULL,functions);
+        lua_pushvalue(L, -1);
+        lua_setfield(L, -1, "__index");
+    }
+    lua_setmetatable(L, -2);
+    return shape;
+}
+
+PolygonShape::PolygonShape(b2PolygonShape shape){
+    this->shape = shape;
+}
+
+PolygonShape::~PolygonShape() {
+}
+
+
+}

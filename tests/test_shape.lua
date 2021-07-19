@@ -198,6 +198,16 @@ return function()
             local shape = box2d.NewPolygonShape()
             assert_equal(shape:GetType(),box2d.b2Shape.e_polygon)
 
+            assert_equal_float(shape:GetRadius(),0.01)
+
+            local shape_clone = shape:Clone()
+            --change
+            assert_not_equal(shape,shape_clone)
+
+            assert_equal(shape:GetChildCount(),1)
+
+            shape:TestPoint({p=vmath.vector3(0),q = 1},vmath.vector3(0))
+
 
             w:Destroy()
         end)

@@ -39,6 +39,24 @@ namespace extra_utils {
         return vec2;
 	}
 
+	b2Transform get_b2Transform_safe(lua_State *L,int index, const char *error){
+        b2Transform transform;
+        if (lua_istable(L, index)) {
+            lua_pushvalue(L,index);
+
+            transform.p = table_get_b2vec_safe(L,"p","p not vector3");
+
+            lua_getfield(L, -1, "q");
+            b2Rot rot = b2Rot(luaL_checknumber(L,-1));
+            lua_pop(L,1);
+            
+            lua_pop(L,1);
+        }else{
+            utils::error(L,"b2Transform not table");
+    	}
+    	return transform;
+    }
+
 	void massData_to_table(lua_State *L, const b2MassData& massData){
         lua_newtable(L);
             lua_pushstring(L, "center");
