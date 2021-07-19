@@ -144,9 +144,20 @@ b2Shape* b2Shape_from_table(lua_State *L, int index){
     }
 }
 
+
 static int b2PolygonShape_destroy(lua_State* L){
     delete *static_cast<PolygonShape**>(luaL_checkudata(L, 1, "Box2d::PolygonShapeClass"));
     return 0;
+}
+
+static int b2PolygonShape_GetType(lua_State* L){
+    utils::check_arg_count(L, 1);
+    if(luaL_checkudata(L, 1, "Box2d::PolygonShapeClass") == NULL){
+        utils::error(L,"not polygon shape");
+    }
+    PolygonShape *shape =  *static_cast<PolygonShape**>(luaL_checkudata(L, 1, "Box2d::PolygonShapeClass"));
+    lua_pushnumber(L, shape->shape.GetType());
+    return 1;
 }
 
 PolygonShape* b2PolygonShape_push(lua_State *L, b2PolygonShape b2Shape){
@@ -155,6 +166,7 @@ PolygonShape* b2PolygonShape_push(lua_State *L, b2PolygonShape b2Shape){
     if(luaL_newmetatable(L, "Box2d::PolygonShapeClass")){
         static const luaL_Reg functions[] =
         {
+            {"GetType", b2PolygonShape_GetType},
             {"__gc", b2PolygonShape_destroy},
             {0, 0}
         };

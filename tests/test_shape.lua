@@ -196,6 +196,7 @@ return function()
             local w = box2d.NewWorld()
 
             local shape = box2d.NewPolygonShape()
+            assert_equal(shape:GetType(),box2d.b2Shape.e_polygon)
 
 
             w:Destroy()

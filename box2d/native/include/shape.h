@@ -11,9 +11,8 @@ b2Shape* b2Shape_from_table(lua_State *L, int index);
 
 
 class PolygonShape {
-private:
-    b2PolygonShape shape;
 public:
+    b2PolygonShape shape;
     PolygonShape(b2PolygonShape shape);
     ~PolygonShape();
 };
