@@ -142,7 +142,36 @@ b2Shape* b2Shape_from_table(lua_State *L, int index){
     }else{
         utils::error(L,"b2Shape should be table");
     }
-
 }
+
+static int b2PolygonShape_destroy(lua_State* L){
+    delete *static_cast<PolygonShape**>(luaL_checkudata(L, 1, "Box2d::PolygonShapeClass"));
+    return 0;
+}
+
+PolygonShape* b2PolygonShape_push(lua_State *L, b2PolygonShape b2Shape){
+    PolygonShape *shape = new PolygonShape(b2Shape);
+    *static_cast<PolygonShape**>(lua_newuserdata(L, sizeof(PolygonShape*))) = shape;
+    if(luaL_newmetatable(L, "Box2d::PolygonShapeClass")){
+        static const luaL_Reg functions[] =
+        {
+            {"__gc", b2PolygonShape_destroy},
+            {0, 0}
+        };
+        luaL_register(L, NULL,functions);
+        lua_pushvalue(L, -1);
+        lua_setfield(L, -1, "__index");
+    }
+    lua_setmetatable(L, -2);
+    return shape;
+}
+
+PolygonShape::PolygonShape(b2PolygonShape shape){
+    this->shape = shape;
+}
+
+PolygonShape::~PolygonShape() {
+}
+
 
 }

@@ -191,6 +191,15 @@ return function()
 
             w:Destroy()
         end)
+
+        test("polygon", function()
+            local w = box2d.NewWorld()
+
+            local shape = box2d.NewPolygonShape()
+
+
+            w:Destroy()
+        end)
     end)
 
 end
