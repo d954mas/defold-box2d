@@ -57,6 +57,77 @@ namespace extra_utils {
     	return transform;
     }
 
+    b2AABB get_b2AABB_safe(lua_State *L,int index, const char *error){
+        b2AABB aabb;
+        if (lua_istable(L, index)) {
+            lua_pushvalue(L,index);
+           aabb.lowerBound = extra_utils::table_get_b2vec_safe(L,"lowerBound","lowerBound not vector3");
+           aabb.upperBound = extra_utils::table_get_b2vec_safe(L,"upperBound","upperBound not vector3");
+           lua_pop(L,1);
+        }else{
+            utils::error(L,"b2AABB not table");
+        }
+        return aabb;
+    }
+
+   b2MassData get_b2MassData_safe(lua_State *L,int index, const char *error){
+        b2MassData massData;
+        if (lua_istable(L, index)) {
+            lua_pushvalue(L,index);
+            lua_getfield(L, -1, "mass");
+            if (lua_isnumber(L, -1)) {
+                massData.mass = lua_tonumber(L, -1);
+                lua_pop(L, 1);
+            }else{
+                utils::error(L,"mass not number");
+            }
+
+            lua_getfield(L, -1, "I");
+            if (lua_isnumber(L, -1)) {
+                massData.I = lua_tonumber(L, -1);
+                lua_pop(L, 1);
+            }else{
+                utils::error(L,"I not number");
+            }
+
+
+            lua_getfield(L, -1, "center");
+            if (lua_istable(L, -1)) {
+                lua_getfield(L, -1, "x");
+                if (lua_isnumber(L, -1)) {
+                    massData.center.x = lua_tonumber(L, -1);
+                    lua_pop(L, 1);
+                }else{
+                    utils::error(L,"x not number");
+                }
+
+                lua_getfield(L, -1, "y");
+                if (lua_isnumber(L, -1)) {
+                    massData.center.y = lua_tonumber(L, -1);
+                    lua_pop(L, 1);
+                }else{
+                     utils::error(L,"y not number");
+                }
+                lua_pop(L, 1);
+            }else{
+                utils::error(L,"center not table");
+            }
+
+        }else{
+            utils::error(L,"b2MassData not table");
+        }
+        return massData;
+    }
+
+    void b2AABB_push(lua_State *L, b2AABB aabb){
+        lua_newtable(L);
+        utils::push_vector(L, aabb.lowerBound.x, aabb.lowerBound.y, 0);
+        lua_setfield(L, -2, "lowerBound");
+        utils::push_vector(L, aabb.upperBound.x, aabb.upperBound.y, 0);
+        lua_setfield(L, -2, "upperBound");
+    }
+
+
 	void massData_to_table(lua_State *L, const b2MassData& massData){
         lua_newtable(L);
             lua_pushstring(L, "center");

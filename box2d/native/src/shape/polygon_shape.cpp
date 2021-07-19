@@ -59,6 +59,34 @@ static int TestPoint(lua_State* L){
     return 1;
 }
 
+static int RayCast(lua_State* L){
+    utils::check_arg_count(L, 3,4);
+    PolygonShape *shape =  PolygonShape_get_userdata(L,1);
+    b2Transform transform = extra_utils::get_b2Transform_safe(L,3,"not transform");
+    lua_pushnil(L);
+    return 1;
+}
+
+static int ComputeAABB(lua_State* L){
+    utils::check_arg_count(L, 2, 3);
+    PolygonShape *shape =  PolygonShape_get_userdata(L,1);
+    b2Transform transform = extra_utils::get_b2Transform_safe(L,2,"not transform");
+    b2AABB aabb;
+    shape->shape.ComputeAABB(&aabb,transform,0);
+    extra_utils::b2AABB_push(L,aabb);
+    return 1;
+}
+
+static int ComputeMass(lua_State* L){
+    utils::check_arg_count(L, 2);
+    PolygonShape *shape =  PolygonShape_get_userdata(L,1);
+    float density =  luaL_checknumber(L,2);
+    b2MassData massData;
+    shape->shape.ComputeMass(&massData,density);
+    extra_utils::massData_to_table(L,massData);
+    return 1;
+}
+
 //endregion
 
 PolygonShape* b2PolygonShape_push(lua_State *L, b2PolygonShape b2Shape){
@@ -72,6 +100,9 @@ PolygonShape* b2PolygonShape_push(lua_State *L, b2PolygonShape b2Shape){
             {"Clone", Clone},
             {"GetChildCount", GetChildCount},
             {"TestPoint", TestPoint},
+            {"RayCast", RayCast},
+            {"ComputeAABB", ComputeAABB},
+            {"ComputeMass", ComputeMass},
             {"__gc", PolygonShape_destroy},
             {0, 0}
         };

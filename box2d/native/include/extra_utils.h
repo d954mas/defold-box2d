@@ -10,7 +10,10 @@ namespace extra_utils {
 	b2Vec2 get_b2vec_safe(lua_State *L,int index, const char *error);
 	b2Vec2 get_b2vec(lua_State *L,int index);
     void massData_to_table(lua_State *L, const b2MassData& massData);
+    b2MassData get_b2MassData_safe(lua_State *L,int index, const char *error);
     b2Transform get_b2Transform_safe(lua_State *L,int index, const char *error);
+    b2AABB get_b2AABB_safe(lua_State *L,int index, const char *error);
+    void b2AABB_push(lua_State *L, b2AABB aabb);
 }
 
 #endif
