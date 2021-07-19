@@ -14,6 +14,8 @@ namespace extra_utils {
     b2Transform get_b2Transform_safe(lua_State *L,int index, const char *error);
     b2AABB get_b2AABB_safe(lua_State *L,int index, const char *error);
     void b2AABB_push(lua_State *L, b2AABB aabb);
+    void b2RayCastOutput_push(lua_State *L, b2RayCastOutput output);
+    b2RayCastInput get_b2RayCastInput_safe(lua_State *L, int index);
 }
 
 #endif

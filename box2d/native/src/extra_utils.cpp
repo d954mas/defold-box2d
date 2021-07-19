@@ -61,16 +61,16 @@ namespace extra_utils {
         b2AABB aabb;
         if (lua_istable(L, index)) {
             lua_pushvalue(L,index);
-           aabb.lowerBound = extra_utils::table_get_b2vec_safe(L,"lowerBound","lowerBound not vector3");
-           aabb.upperBound = extra_utils::table_get_b2vec_safe(L,"upperBound","upperBound not vector3");
-           lua_pop(L,1);
+            aabb.lowerBound = extra_utils::table_get_b2vec_safe(L,"lowerBound","lowerBound not vector3");
+            aabb.upperBound = extra_utils::table_get_b2vec_safe(L,"upperBound","upperBound not vector3");
+            lua_pop(L,1);
         }else{
             utils::error(L,"b2AABB not table");
         }
         return aabb;
     }
 
-   b2MassData get_b2MassData_safe(lua_State *L,int index, const char *error){
+    b2MassData get_b2MassData_safe(lua_State *L,int index, const char *error){
         b2MassData massData;
         if (lua_istable(L, index)) {
             lua_pushvalue(L,index);
@@ -127,6 +127,28 @@ namespace extra_utils {
         lua_setfield(L, -2, "upperBound");
     }
 
+    void b2RayCastOutput_push(lua_State *L, b2RayCastOutput output){
+        lua_newtable(L);
+        utils::push_vector(L, output.normal.x, output.normal.y, 0);
+        lua_setfield(L, -2, "normal");
+        lua_pushnumber(L, output.fraction);
+        lua_setfield(L, -2, "fraction");
+    }
+
+
+    b2RayCastInput get_b2RayCastInput_safe(lua_State *L, int index){
+        b2RayCastInput input;
+        if (lua_istable(L, index)) {
+            lua_pushvalue(L,index);
+            input.p1 = extra_utils::table_get_b2vec_safe(L,"p1","b2RayCastInput.p1 not vector3");
+            input.p2 = extra_utils::table_get_b2vec_safe(L,"p2","b2RayCastInput.p2 not vector3");
+            input.maxFraction = utils::table_get_double_safe(L,"maxFraction","b2RayCastInput.maxFraction not number");
+            lua_pop(L,1);
+        }else{
+            utils::error(L,"b2RayCastInput not table");
+        }
+        return input;
+    }
 
 	void massData_to_table(lua_State *L, const b2MassData& massData){
         lua_newtable(L);

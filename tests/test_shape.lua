@@ -207,13 +207,18 @@ return function()
 
             shape:TestPoint({ p = vmath.vector3(0), q = 1 }, vmath.vector3(0))
 
-            shape:RayCast({}, { p = vmath.vector3(0), q = 1 })
+            local raycast = shape:RayCast({ p1 = vmath.vector3(0, 0, 0), p2 = vmath.vector3(1, 0, 0),
+                                            maxFraction = 1 }, { p = vmath.vector3(0), q = 1 })
+            pprint(raycast)
+            assert_not_nil(raycast)
+            assert_not_nil(raycast.normal)
+            assert_not_nil(raycast.fraction)
 
-            pprint("HERE")
             local aabb = shape:ComputeAABB({ p = vmath.vector3(0), q = 1 })
-            pprint(aabb)
+            assert_not_nil(aabb.lowerBound)
+            assert_not_nil(aabb.upperBound)
 
-         --   local massData = shape:ComputeMass(1)
+            --   local massData = shape:ComputeMass(1)
 
             w:Destroy()
         end)

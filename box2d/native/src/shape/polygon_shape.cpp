@@ -62,8 +62,14 @@ static int TestPoint(lua_State* L){
 static int RayCast(lua_State* L){
     utils::check_arg_count(L, 3,4);
     PolygonShape *shape =  PolygonShape_get_userdata(L,1);
+    b2RayCastInput  input = extra_utils::get_b2RayCastInput_safe(L,2);
     b2Transform transform = extra_utils::get_b2Transform_safe(L,3,"not transform");
-    lua_pushnil(L);
+    b2RayCastOutput output;
+    output.fraction = -1;
+    output.normal.x = 0;
+    output.normal.y = 0;
+    shape->shape.RayCast(&output,input,transform,0);
+    extra_utils::b2RayCastOutput_push(L,output);
     return 1;
 }
 
