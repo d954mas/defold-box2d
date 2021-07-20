@@ -220,6 +220,8 @@ return function()
 
             --   local massData = shape:ComputeMass(1)
 
+            shape:Set({ vmath.vector3(0, 0, 0), vmath.vector3(1, 0, 0), vmath.vector3(1, 1, 0) })
+
             w:Destroy()
         end)
     end)

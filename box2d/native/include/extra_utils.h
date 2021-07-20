@@ -16,6 +16,7 @@ namespace extra_utils {
     void b2AABB_push(lua_State *L, b2AABB aabb);
     void b2RayCastOutput_push(lua_State *L, b2RayCastOutput output);
     b2RayCastInput get_b2RayCastInput_safe(lua_State *L, int index);
+    b2Vec2* parse_vertices(lua_State *L, int index, int* b2vecSize);
 }
 
 #endif

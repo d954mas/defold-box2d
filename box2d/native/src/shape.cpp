@@ -6,42 +6,14 @@ namespace box2dDefoldNE {
 
 b2Vec2* parse_vertices(lua_State *L, const char* key,const char* error,int* b2vecSize){
     lua_getfield(L, -1, key);
+    b2Vec2* vertices = NULL;
     if(lua_istable(L,-1)){
-        int size = lua_objlen(L,-1);
-        b2Vec2* vertices = new b2Vec2[size];
-        *b2vecSize = size;
-        for (int idx = 1; idx <= size; idx++) {
-            lua_pushinteger(L, idx);
-            lua_gettable(L, -2);
-
-            //if (lua_isnil(L, -1)){
-            //    printf("bread idx:%d\n",idx);
-            //    lua_pop(L, 1);
-            //    break;
-          //  }
-            if (lua_isuserdata(L, -1)) {
-                if(dmScript::IsVector3(L,  -1)){
-                    Vectormath::Aos::Vector3 *value = dmScript::ToVector3(L, -1);
-                    b2Vec2 v;
-                    v.x = value->getX();
-                    v.y = value->getY();
-                    vertices[idx-1] = v;
-                }else{
-                    delete[] vertices;
-                    utils::error(L,"vertex not vector3");
-                }
-            }else{
-                delete[] vertices;
-                utils::error(L,"vertex not vector3");
-            }
-            lua_pop(L, 1);
-        }
-        lua_pop(L,1);
-        return vertices;
+        vertices = extra_utils::parse_vertices(L,-1,b2vecSize);
     }else{
-       utils::error(L,error);
+        utils::error(L,error);
     }
     lua_pop(L,1);
+    return vertices;
 }
 
 

@@ -92,6 +92,17 @@ static int ComputeMass(lua_State* L){
     extra_utils::massData_to_table(L,massData);
     return 1;
 }
+//endregion
+
+//region functions
+static int Set(lua_State* L){
+    utils::check_arg_count(L, 2);
+    PolygonShape *shape =  PolygonShape_get_userdata(L,1);
+    int verticesSize = 0;
+    b2Vec2* vertices = extra_utils::parse_vertices(L,2,&verticesSize);
+    shape->shape.Set(vertices,verticesSize);
+    return 0;
+}
 
 //endregion
 
@@ -109,6 +120,7 @@ PolygonShape* b2PolygonShape_push(lua_State *L, b2PolygonShape b2Shape){
             {"RayCast", RayCast},
             {"ComputeAABB", ComputeAABB},
             {"ComputeMass", ComputeMass},
+            {"Set", Set},
             {"__gc", PolygonShape_destroy},
             {0, 0}
         };

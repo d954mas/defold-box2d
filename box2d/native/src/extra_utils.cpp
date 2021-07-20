@@ -170,4 +170,37 @@ namespace extra_utils {
             lua_pushnumber(L,massData.I);
             lua_settable(L,-3);
 	}
+
+	b2Vec2* parse_vertices(lua_State *L, int index, int* b2vecSize){
+        if(lua_istable(L,index)){
+            lua_pushvalue(L,index);
+            int size = lua_objlen(L,-1);
+            b2Vec2* vertices = new b2Vec2[size];
+            *b2vecSize = size;
+            for (int idx = 1; idx <= size; idx++) {
+                lua_pushinteger(L, idx);
+                lua_gettable(L, -2);
+                if (lua_isuserdata(L, -1)) {
+                    if(dmScript::IsVector3(L,  -1)){
+                        Vectormath::Aos::Vector3 *value = dmScript::ToVector3(L, -1);
+                        b2Vec2 v;
+                        v.x = value->getX();
+                        v.y = value->getY();
+                        vertices[idx-1] = v;
+                    }else{
+                        delete[] vertices;
+                        utils::error(L,"vertex not vector3");
+                    }
+                }else{
+                    delete[] vertices;
+                    utils::error(L,"vertex not vector3");
+                }
+                lua_pop(L, 1);
+            }
+            lua_pop(L,1);
+            return vertices;
+        }else{
+           utils::error(L,"vertices not table");
+        }
+    }
 }
