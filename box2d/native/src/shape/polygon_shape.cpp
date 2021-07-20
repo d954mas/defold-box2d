@@ -68,10 +68,7 @@ static int RayCast(lua_State* L){
     output.fraction = -1;
     output.normal.x = 0;
     output.normal.y = 0;
-    printf("input: %f %f %f %f %f\n",input.p1.x, input.p1.y, input.p2.x, input.p2.y, input.maxFraction);
-    printf("transform: %f %f %f\n",transform.p.x, transform.p.y, transform.q.GetAngle());
     bool result = shape->shape.RayCast(&output,input,transform,0);
-    printf("result: %d\n",result);
     if(result){
         extra_utils::b2RayCastOutput_push(L,output);
     }else{
@@ -115,7 +112,7 @@ static int SetAsBox(lua_State* L){
     int count = lua_gettop(L);
     utils::check_arg_count(L, 3,5);
     if (count != 3 && count != 5) {
-        luaL_error(L, "SetAsBox requires 3 or 5 arguments. Got %d.");
+        luaL_error(L, "SetAsBox requires 3 or 5 arguments. Got %d.", count);
     }
 
     PolygonShape *shape =  PolygonShape_get_userdata(L,1);

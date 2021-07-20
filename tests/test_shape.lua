@@ -243,7 +243,6 @@ return function()
 
             assert_not_nil(shape:GetCentroid())
             assert_equal(#shape:GetVertices(),3)
-            pprint(shape:GetVertices())
             assert_equal_v3(shape:GetVertices()[1],vmath.vector3(1,0,0))
             assert_equal(#shape:GetNormals(),3)
             assert_equal(shape:GetCount(),3)
