@@ -585,13 +585,13 @@ function Box2dShape:TestPoint(xf, p) end
 --- Cast a ray against a child shape.
 --- @param input Box2dRayCastInput the ray-cast input parameters.
 --- @param transform Box2dTransform transform to be applied to the shape.
---- @param childIndex number the child shape index
+--- @param childIndex number|nil the child shape index
 ---@return Box2dRayCastOutput|nil
 function Box2dShape:RayCast(input, transform, childIndex) end
 
 --- Given a transform, compute the associated axis aligned bounding box for a child shape.
 --- @param xf Box2dTransform the world transform of the shape.
---- @param childIndex number the child shape index
+--- @param childIndex number|nil the child shape index
 ---@return Box2dAABB
 function Box2dShape:ComputeAABB(xf, childIndex) end
 
@@ -615,17 +615,6 @@ local Box2dPolygonShape = {}
 --- Clone the concrete shape using the provided allocator
 ---@return Box2dPolygonShape
 function Box2dPolygonShape:Clone() end
-
---- Cast a ray against a child shape.
---- @param input Box2dRayCastInput the ray-cast input parameters.
---- @param transform Box2dTransform transform to be applied to the shape.
----@return Box2dRayCastOutput|nil
-function Box2dPolygonShape:RayCast(input, transform) end
-
---- Given a transform, compute the associated axis aligned bounding box for a child shape.
---- @param xf Box2dTransform the world transform of the shape.
----@return Box2dAABB
-function Box2dPolygonShape:ComputeAABB(xf) end
 
 --- Create a convex hull from the given array of local points.
 --- The count must be in the range [3, b2_maxPolygonVertices].
@@ -659,22 +648,49 @@ local Box2dCircleShape = {}
 ---@return Box2dCircleShape
 function Box2dCircleShape:Clone() end
 
---- Cast a ray against a child shape.
---- @param input Box2dRayCastInput the ray-cast input parameters.
---- @param transform Box2dTransform transform to be applied to the shape.
----@return Box2dRayCastOutput|nil
-function Box2dCircleShape:RayCast(input, transform) end
-
---- Given a transform, compute the associated axis aligned bounding box for a child shape.
---- @param xf Box2dTransform the world transform of the shape.
----@return Box2dAABB
-function Box2dCircleShape:ComputeAABB(xf) end
-
 ---@param position vector3
 function Box2dCircleShape:SetPosition(position) end
 
 ---@return vector3
 function Box2dCircleShape:GetPosition() end
+
+---@class Box2dEdgeShape:Box2dShape
+local Box2dEdgeShape = {}
+
+--- Clone the concrete shape using the provided allocator
+---@return Box2dEdgeShape
+function Box2dEdgeShape:Clone() end
+
+--- Set this as a part of a sequence. Vertex v0 precedes the edge and vertex v3
+--- follows. These extra vertices are used to provide smooth movement
+--- across junctions. This also makes the collision one-sided. The edge
+--- normal points to the right looking from v1 to v2.
+---@param v0 vector3
+---@param v1 vector3
+---@param v2 vector3
+---@param v3 vector3
+function Box2dEdgeShape:SetOneSided(v0,v1,v2,v3) end
+
+--- Set this as an isolated edge. Collision is two-sided.
+---@param v1 vector3
+---@param v2 vector3
+function Box2dEdgeShape:SetTwoSided(v1,v2) end
+
+---@return vector3
+function Box2dEdgeShape:GetVertex0() end
+
+---@return vector3
+function Box2dEdgeShape:GetVertex1() end
+
+---@return vector3
+function Box2dEdgeShape:GetVertex2() end
+
+---@return vector3
+function Box2dEdgeShape:GetVertex3() end
+
+---@return boolean
+function Box2dEdgeShape:IsOneSided() end
+
 
 
 

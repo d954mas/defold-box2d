@@ -35,6 +35,13 @@ static int GetRadius(lua_State* L){
     return 1;
 }
 
+static int SetRadius(lua_State* L){
+    utils::check_arg_count(L, 2);
+    EdgeShape *shape =  EdgeShape_get_userdata(L,1);
+    shape->shape.m_radius = luaL_checknumber(L,2);
+    return 0;
+}
+
 
 static int Clone(lua_State* L){
     utils::check_arg_count(L, 1);
@@ -100,6 +107,64 @@ static int ComputeMass(lua_State* L){
 
 //region functions
 
+static int SetOneSided(lua_State* L){
+    utils::check_arg_count(L, 5);
+    EdgeShape *shape =  EdgeShape_get_userdata(L,1);
+    b2Vec2 v0 = extra_utils::get_b2vec_safe(L,2,"v0 not vector3");
+    b2Vec2 v1 = extra_utils::get_b2vec_safe(L,3,"v1 not vector3");
+    b2Vec2 v2 = extra_utils::get_b2vec_safe(L,4,"v2 not vector3");
+    b2Vec2 v3 = extra_utils::get_b2vec_safe(L,5,"v3 not vector3");
+    shape->shape.SetOneSided(v0,v1,v2,v3);
+    return 0;
+}
+
+static int SetTwoSided(lua_State* L){
+    utils::check_arg_count(L, 3);
+    EdgeShape *shape =  EdgeShape_get_userdata(L,1);
+    b2Vec2 v1 = extra_utils::get_b2vec_safe(L,2,"v1 not vector3");
+    b2Vec2 v2 = extra_utils::get_b2vec_safe(L,3,"v2 not vector3");
+    shape->shape.SetTwoSided(v1,v2);
+    return 0;
+}
+
+static int GetVertex0(lua_State* L){
+    utils::check_arg_count(L, 1);
+    EdgeShape *shape =  EdgeShape_get_userdata(L,1);
+    b2Vec2 vertex = shape->shape.m_vertex0;
+    utils::push_vector(L, vertex.x, vertex.y, 0);
+    return 1;
+}
+
+static int GetVertex1(lua_State* L){
+    utils::check_arg_count(L, 1);
+    EdgeShape *shape =  EdgeShape_get_userdata(L,1);
+    b2Vec2 vertex = shape->shape.m_vertex1;
+    utils::push_vector(L, vertex.x, vertex.y, 0);
+    return 1;
+}
+
+static int GetVertex2(lua_State* L){
+    utils::check_arg_count(L, 1);
+    EdgeShape *shape =  EdgeShape_get_userdata(L,1);
+    b2Vec2 vertex = shape->shape.m_vertex2;
+    utils::push_vector(L, vertex.x, vertex.y, 0);
+    return 1;
+}
+
+static int GetVertex3(lua_State* L){
+    utils::check_arg_count(L, 1);
+    EdgeShape *shape =  EdgeShape_get_userdata(L,1);
+    b2Vec2 vertex = shape->shape.m_vertex3;
+    utils::push_vector(L, vertex.x, vertex.y, 0);
+    return 1;
+}
+
+static int IsOneSided(lua_State* L){
+    utils::check_arg_count(L, 1);
+    EdgeShape *shape =  EdgeShape_get_userdata(L,1);
+    lua_pushboolean(L, shape->shape.m_oneSided);
+    return 1;
+}
 
 
 //endregion
@@ -112,12 +177,20 @@ EdgeShape* b2EdgeShape_push(lua_State *L, b2EdgeShape b2Shape){
         {
             {"GetType", GetType},
             {"GetRadius", GetRadius},
+            {"SetRadius", SetRadius},
             {"Clone", Clone},
             {"GetChildCount", GetChildCount},
             {"TestPoint", TestPoint},
             {"RayCast", RayCast},
             {"ComputeAABB", ComputeAABB},
             {"ComputeMass", ComputeMass},
+            {"SetOneSided", SetOneSided},
+            {"SetTwoSided", SetTwoSided},
+            {"GetVertex0", GetVertex0},
+            {"GetVertex1", GetVertex1},
+            {"GetVertex2", GetVertex2},
+            {"GetVertex3", GetVertex3},
+            {"IsOneSided", IsOneSided},
             {"__gc", EdgeShape_destroy},
             {0, 0}
         };
