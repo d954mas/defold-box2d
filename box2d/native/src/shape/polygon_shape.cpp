@@ -104,6 +104,73 @@ static int Set(lua_State* L){
     return 0;
 }
 
+static int SetAsBox(lua_State* L){
+    int count = lua_gettop(L);
+    utils::check_arg_count(L, 3,5);
+    if (count != 3 && count != 5) {
+        luaL_error(L, "SetAsBox requires 3 or 5 arguments. Got %d.");
+    }
+
+    PolygonShape *shape =  PolygonShape_get_userdata(L,1);
+    float hx = luaL_checknumber(L,2);
+    float hy = luaL_checknumber(L,3);
+    if(count == 3){
+        shape->shape.SetAsBox(hx,hy);
+    }else{
+        b2Vec2 center = extra_utils::get_b2vec_safe(L,4,"center not vector3");
+        float angle = luaL_checknumber(L,5);
+        shape->shape.SetAsBox(hx,hy,center,angle);
+    }
+    return 0;
+}
+
+static int Validate(lua_State* L){
+    utils::check_arg_count(L, 1);
+    PolygonShape *shape =  PolygonShape_get_userdata(L,1);
+    lua_pushboolean(L,shape->shape.Validate());
+    return 1;
+}
+
+static int GetCentroid(lua_State* L){
+    utils::check_arg_count(L, 1);
+    PolygonShape *shape =  PolygonShape_get_userdata(L,1);
+    b2Vec2 centroid = shape->shape.m_centroid;
+    utils::push_vector(L, centroid.x, centroid.y, 0);
+    return 1;
+}
+
+static int GetVertices(lua_State* L){
+    utils::check_arg_count(L, 1);
+    PolygonShape *shape =  PolygonShape_get_userdata(L,1);
+    lua_newtable(L);
+    for (int32 i = 0; i < shape->shape.m_count; ++i){
+        b2Vec2 vertex = shape->shape.m_vertices[i];
+        utils::push_vector(L, vertex.x, vertex.y, 0);
+        lua_rawseti(L, -2, i+1);
+    }
+    return 1;
+}
+
+static int GetNormals(lua_State* L){
+    utils::check_arg_count(L, 1);
+    PolygonShape *shape =  PolygonShape_get_userdata(L,1);
+    lua_newtable(L);
+    for (int32 i = 0; i < shape->shape.m_count; ++i){
+        b2Vec2 normal = shape->shape.m_normals[i];
+        utils::push_vector(L, normal.x, normal.y, 0);
+        lua_rawseti(L, -2, i+1);
+    }
+    return 1;
+}
+
+static int GetCount(lua_State* L){
+    utils::check_arg_count(L, 1);
+    PolygonShape *shape =  PolygonShape_get_userdata(L,1);
+    lua_pushnumber(L,shape->shape.m_count);
+    return 1;
+}
+
+
 //endregion
 
 PolygonShape* b2PolygonShape_push(lua_State *L, b2PolygonShape b2Shape){
@@ -121,6 +188,12 @@ PolygonShape* b2PolygonShape_push(lua_State *L, b2PolygonShape b2Shape){
             {"ComputeAABB", ComputeAABB},
             {"ComputeMass", ComputeMass},
             {"Set", Set},
+            {"SetAsBox", SetAsBox},
+            {"Validate", Validate},
+            {"GetCentroid", GetCentroid},
+            {"GetVertices", GetVertices},
+            {"GetNormals", GetNormals},
+            {"GetCount", GetCount},
             {"__gc", PolygonShape_destroy},
             {0, 0}
         };

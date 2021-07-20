@@ -195,6 +195,7 @@ return function()
             local w = box2d.NewWorld()
 
             local shape = box2d.NewPolygonShape()
+            shape:SetAsBox(1,1)
             assert_equal(shape:GetType(), box2d.b2Shape.e_polygon)
 
             assert_equal_float(shape:GetRadius(), 0.01)
@@ -202,6 +203,10 @@ return function()
             local shape_clone = shape:Clone()
             --change
             assert_not_equal(shape, shape_clone)
+            assert_equal(shape:GetCount(),shape_clone:GetCount())
+
+            shape_clone:Set({ vmath.vector3(0, 0, 0), vmath.vector3(1, 0, 0), vmath.vector3(1, 1, 0) })
+            assert_not_equal(shape:GetCount(),shape_clone:GetCount())
 
             assert_equal(shape:GetChildCount(), 1)
 
@@ -209,7 +214,6 @@ return function()
 
             local raycast = shape:RayCast({ p1 = vmath.vector3(0, 0, 0), p2 = vmath.vector3(1, 0, 0),
                                             maxFraction = 1 }, { p = vmath.vector3(0), q = 1 })
-            pprint(raycast)
             assert_not_nil(raycast)
             assert_not_nil(raycast.normal)
             assert_not_nil(raycast.fraction)
@@ -218,9 +222,24 @@ return function()
             assert_not_nil(aabb.lowerBound)
             assert_not_nil(aabb.upperBound)
 
-            --   local massData = shape:ComputeMass(1)
+            local massData = shape:ComputeMass(1)
+            assert_equal(type(massData),"table")
 
             shape:Set({ vmath.vector3(0, 0, 0), vmath.vector3(1, 0, 0), vmath.vector3(1, 1, 0) })
+
+            shape:SetAsBox(1,1)
+            shape:SetAsBox(1,1,vmath.vector3(0,0,0),10)
+
+            assert_true(shape:Validate())
+
+            shape:Set({ vmath.vector3(0, 0, 0), vmath.vector3(1, 0, 0), vmath.vector3(1, 1, 0) })
+
+            assert_not_nil(shape:GetCentroid())
+            assert_equal(#shape:GetVertices(),3)
+            pprint(shape:GetVertices())
+            assert_equal_v3(shape:GetVertices()[1],vmath.vector3(1,0,0))
+            assert_equal(#shape:GetNormals(),3)
+            assert_equal(shape:GetCount(),3)
 
             w:Destroy()
         end)
