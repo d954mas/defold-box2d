@@ -35,6 +35,13 @@ static int GetRadius(lua_State* L){
     return 1;
 }
 
+static int SetRadius(lua_State* L){
+    utils::check_arg_count(L, 2);
+    CircleShape *shape =  CircleShape_get_userdata(L,1);
+    shape->shape.m_radius = luaL_checknumber(L,2);
+    return 0;
+}
+
 
 static int Clone(lua_State* L){
     utils::check_arg_count(L, 1);
@@ -99,13 +106,6 @@ static int ComputeMass(lua_State* L){
 //endregion
 
 //region functions
-static int SetRadius(lua_State* L){
-    utils::check_arg_count(L, 2);
-    CircleShape *shape =  CircleShape_get_userdata(L,1);
-    shape->shape.m_radius = luaL_checknumber(L,2);
-    return 0;
-}
-
 static int SetPosition(lua_State* L){
     utils::check_arg_count(L, 2);
     CircleShape *shape = CircleShape_get_userdata(L,1);

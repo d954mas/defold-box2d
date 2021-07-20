@@ -35,6 +35,12 @@ static int GetRadius(lua_State* L){
     return 1;
 }
 
+static int SetRadius(lua_State* L){
+    utils::check_arg_count(L, 2);
+    PolygonShape *shape =  PolygonShape_get_userdata(L,1);
+    shape->shape.m_radius = luaL_checknumber(L,2);
+    return 0;
+}
 
 static int Clone(lua_State* L){
     utils::check_arg_count(L, 1);
@@ -185,6 +191,7 @@ PolygonShape* b2PolygonShape_push(lua_State *L, b2PolygonShape b2Shape){
         {
             {"GetType", GetType},
             {"GetRadius", GetRadius},
+            {"SetRadius", SetRadius},
             {"Clone", Clone},
             {"GetChildCount", GetChildCount},
             {"TestPoint", TestPoint},

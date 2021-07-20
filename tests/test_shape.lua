@@ -198,7 +198,12 @@ return function()
             shape:SetAsBox(1,1)
             assert_equal(shape:GetType(), box2d.b2Shape.e_polygon)
 
+            shape:SetRadius(2)
+            assert_equal_float(shape:GetRadius(),2)
+            shape:SetRadius(0.01)
             assert_equal_float(shape:GetRadius(), 0.01)
+
+
 
             local shape_clone = shape:Clone()
             --change

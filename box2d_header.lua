@@ -606,6 +606,9 @@ function Box2dShape:ComputeMass(density) end
 ---@return number
 function Box2dShape:GetRadius() end
 
+---@param radius number
+function Box2dShape:SetRadius(radius) end
+
 ---@class Box2dPolygonShape:Box2dShape
 local Box2dPolygonShape = {}
 
@@ -666,9 +669,6 @@ function Box2dCircleShape:RayCast(input, transform) end
 --- @param xf Box2dTransform the world transform of the shape.
 ---@return Box2dAABB
 function Box2dCircleShape:ComputeAABB(xf) end
-
----@param radius number
-function Box2dCircleShape:SetRadius(radius) end
 
 ---@param position vector3
 function Box2dCircleShape:SetPosition(position) end
