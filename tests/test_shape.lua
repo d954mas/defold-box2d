@@ -212,11 +212,13 @@ return function()
 
             shape:TestPoint({ p = vmath.vector3(0), q = 1 }, vmath.vector3(0))
 
+            shape:Set({ vmath.vector3(0, 0, 0), vmath.vector3(1, 0, 0), vmath.vector3(1, 1, 0) })
+
             local raycast = shape:RayCast({ p1 = vmath.vector3(0, 0, 0), p2 = vmath.vector3(1, 0, 0),
                                             maxFraction = 1 }, { p = vmath.vector3(0), q = 1 })
             assert_nil(raycast)
 
-            raycast = shape:RayCast({ p1 = vmath.vector3(-0.5, -0.5, 0), p2 = vmath.vector3(0.7, 1.4, 0),
+            raycast = shape:RayCast({ p1 = vmath.vector3(-0.5, -0.5, 0), p2 = vmath.vector3(1.4, 0.7, 0),
                                             maxFraction = 1 }, { p = vmath.vector3(0), q = 0 })
 
             assert_not_nil(raycast)
