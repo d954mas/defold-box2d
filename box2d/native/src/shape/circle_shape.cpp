@@ -99,8 +99,27 @@ static int ComputeMass(lua_State* L){
 //endregion
 
 //region functions
+static int SetRadius(lua_State* L){
+    utils::check_arg_count(L, 2);
+    CircleShape *shape =  CircleShape_get_userdata(L,1);
+    shape->shape.m_radius = luaL_checknumber(L,2);
+    return 0;
+}
 
+static int SetPosition(lua_State* L){
+    utils::check_arg_count(L, 2);
+    CircleShape *shape = CircleShape_get_userdata(L,1);
+    shape->shape.m_p = extra_utils::get_b2vec_safe(L,2, "position not vector");
+    return 0;
+}
 
+static int GetPosition(lua_State* L){
+    utils::check_arg_count(L, 1);
+    CircleShape *shape = CircleShape_get_userdata(L,1);
+    b2Vec2 position = shape->shape.m_p;
+    utils::push_vector(L, position.x, position.y, 0);
+    return 1;
+}
 
 //endregion
 
@@ -118,6 +137,9 @@ CircleShape* b2CircleShape_push(lua_State *L, b2CircleShape b2Shape){
             {"RayCast", RayCast},
             {"ComputeAABB", ComputeAABB},
             {"ComputeMass", ComputeMass},
+            {"SetRadius", SetRadius},
+            {"SetPosition", SetPosition},
+            {"GetPosition", GetPosition},
             {"__gc", CircleShape_destroy},
             {0, 0}
         };

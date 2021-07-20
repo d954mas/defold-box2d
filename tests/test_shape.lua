@@ -249,6 +249,54 @@ return function()
 
             w:Destroy()
         end)
+
+        test("circle", function()
+            local w = box2d.NewWorld()
+
+            local shape = box2d.NewCircleShape()
+            assert_equal(shape:GetType(), box2d.b2Shape.e_circle)
+
+            assert_equal_float(shape:GetRadius(), 0.0)
+
+            local shape_clone = shape:Clone()
+            --change
+            assert_not_equal(shape, shape_clone)
+            assert_equal(shape:GetRadius(),shape_clone:GetRadius())
+
+            shape_clone:SetRadius(1)
+            assert_not_equal(shape:GetRadius(),shape_clone:GetRadius())
+
+            assert_equal(shape:GetChildCount(), 1)
+
+            shape:TestPoint({ p = vmath.vector3(0), q = 1 }, vmath.vector3(0))
+
+
+            local raycast = shape:RayCast({ p1 = vmath.vector3(2, 0, 0), p2 = vmath.vector3(1, 0, 0),
+                                            maxFraction = 1 }, { p = vmath.vector3(0), q = 1 })
+            assert_nil(raycast)
+
+            raycast = shape:RayCast({ p1 = vmath.vector3(-1.2,0, 0), p2 = vmath.vector3(1.2, 0, 0),
+                                      maxFraction = 1 }, { p = vmath.vector3(0), q = 0 })
+
+            assert_not_nil(raycast)
+            assert_not_nil(raycast.normal)
+            assert_not_nil(raycast.fraction)
+
+            local aabb = shape:ComputeAABB({ p = vmath.vector3(0), q = 1 })
+            assert_not_nil(aabb.lowerBound)
+            assert_not_nil(aabb.upperBound)
+
+            local massData = shape:ComputeMass(1)
+            assert_equal(type(massData),"table")
+
+            shape:SetRadius(2)
+            assert_equal(shape:GetRadius(),2)
+
+            shape:SetPosition(vmath.vector3(2,5,0))
+            assert_equal_v3(shape:GetPosition(),vmath.vector3(2,5,0))
+
+            w:Destroy()
+        end)
     end)
 
 end

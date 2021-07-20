@@ -648,6 +648,36 @@ function Box2dPolygonShape:SetAsBox(hx, hy, center, angle) end
 ---@return boolean true if valid
 function Box2dPolygonShape:Validate() end
 
+
+---@class Box2dCircleShape:Box2dShape
+local Box2dCircleShape = {}
+
+--- Clone the concrete shape using the provided allocator
+---@return Box2dCircleShape
+function Box2dCircleShape:Clone() end
+
+--- Cast a ray against a child shape.
+--- @param input Box2dRayCastInput the ray-cast input parameters.
+--- @param transform Box2dTransform transform to be applied to the shape.
+---@return Box2dRayCastOutput|nil
+function Box2dCircleShape:RayCast(input, transform) end
+
+--- Given a transform, compute the associated axis aligned bounding box for a child shape.
+--- @param xf Box2dTransform the world transform of the shape.
+---@return Box2dAABB
+function Box2dCircleShape:ComputeAABB(xf) end
+
+---@param radius number
+function Box2dCircleShape:SetRadius(radius) end
+
+---@param position vector3
+function Box2dCircleShape:SetPosition(position) end
+
+---@return vector3
+function Box2dCircleShape:GetPosition() end
+
+
+
 --endregion
 
 --region Box2dFixtureDef
