@@ -568,7 +568,7 @@ function Box2dShape:GetChildCount() end
 ---@param xf Box2dTransform
 ---@param p vector3
 ---@return boolean
-function Box2dShape:TestPoint(xf,p) end
+function Box2dShape:TestPoint(xf, p) end
 
 --- Cast a ray against a child shape.
 --- @param input Box2dRayCastInput the ray-cast input parameters.
@@ -581,14 +581,13 @@ function Box2dShape:RayCast(input, transform, childIndex) end
 --- @param xf Box2dTransform the world transform of the shape.
 --- @param childIndex number the child shape index
 ---@return Box2dAABB
-function Box2dShape:ComputeAABB(xf, childIndex)end
+function Box2dShape:ComputeAABB(xf, childIndex) end
 
 --- Compute the mass properties of this shape using its dimensions and density.
 --- The inertia tensor is computed about the local origin.
 --- @param density number the density in kilograms per meter squared.
 ---@return Box2dMassData the mass data for this shape.
 function Box2dShape:ComputeMass(density) end
-
 
 --- Radius of a shape. For polygonal shapes this must be b2_polygonRadius. There is no support for
 --- making rounded polygons.
@@ -597,6 +596,46 @@ function Box2dShape:GetRadius() end
 
 ---@class Box2dPolygonShape:Box2dShape
 local Box2dPolygonShape = {}
+
+--- Clone the concrete shape using the provided allocator
+---@return Box2dPolygonShape
+function Box2dPolygonShape:Clone() end
+
+--- Cast a ray against a child shape.
+--- @param input Box2dRayCastInput the ray-cast input parameters.
+--- @param transform Box2dTransform transform to be applied to the shape.
+---@return Box2dRayCastOutput|nil
+function Box2dPolygonShape:RayCast(input, transform) end
+
+--- Given a transform, compute the associated axis aligned bounding box for a child shape.
+--- @param xf Box2dTransform the world transform of the shape.
+---@return Box2dAABB
+function Box2dPolygonShape:ComputeAABB(xf) end
+
+--- Create a convex hull from the given array of local points.
+--- The count must be in the range [3, b2_maxPolygonVertices].
+--- @warning the points may be re-ordered, even if they form a convex polygon
+--- @warning collinear points are handled but not removed. Collinear points
+--- may lead to poor stacking behavior.
+---@param points vector3[]
+function Box2dPolygonShape:Set(points) end
+
+--- Build vertices to represent an axis-aligned box centered on the local origin.
+---@param hx number the half-width.
+---@param hy number the half-height.
+function Box2dPolygonShape:SetAsBox(hx, hy) end
+
+--- Build vertices to represent an oriented box.
+---@param hx number the half-width.
+---@param hy number the half-height.
+---@param center vector3 the center of the box in local coordinates.
+---@param angle float the rotation of the box in local coordinates.
+function Box2dPolygonShape:SetAsBox(hx, hy, center, angle) end
+
+--- Validate convexity. This is a very time consuming operation.
+---@return boolean true if valid
+function Box2dPolygonShape:Validate() end
+
 --endregion
 
 --region Box2dFixtureDef
@@ -630,7 +669,7 @@ local Box2dFixtureDef = {
 
     -- Contact filtering data. b2Filter
     ---@type Box2dFilter
-     filter = nil
+    filter = nil
 }
 --endregion
 
@@ -1830,7 +1869,6 @@ function Box2dDebugDraw:ClearFlags(flags) end
 ---Destroy, free memory
 function Box2dDebugDraw:Destroy() end
 
-
 ---@class Box2dContact
 local Box2dContact = {}
 
@@ -1866,7 +1904,7 @@ function Box2dContact:GetChildIndexA() end
 
 --- Get fixture B in this contact.
 ---@return Box2dFixture
- function Box2dContact:GetFixtureB() end
+function Box2dContact:GetFixtureB() end
 
 --- Get the child primitive index for fixture B.
 ---@return number
@@ -1955,7 +1993,7 @@ function Box2dContact:GetTangentSpeed() end
 ---@class Box2dManifoldPoint
 ---@field localPoint vector3 usage depends on manifold type
 ---@field normalImpulse number the non-penetration impulse
----@field tangentImpulse number	the friction impulse
+---@field tangentImpulse number    the friction impulse
 ---@field id Box2dContactID uniquely identifies a contact point between two shapes
 
 --- Contact ids to facilitate warm starting.
@@ -1972,9 +2010,9 @@ function Box2dContact:GetTangentSpeed() end
 --	};
 ---@class Box2dContactFeature
 ---@field indexA number Feature index on shapeA
----@field indexB number	Feature index on shapeB
----@field typeA number	The feature type on shapeA
----@field typeB number	The feature type on shapeB
+---@field indexB number    Feature index on shapeB
+---@field typeA number    The feature type on shapeA
+---@field typeB number    The feature type on shapeB
 
 --- This is used to compute the current state of a contact manifold.
 ---@class Box2dWorldManifold

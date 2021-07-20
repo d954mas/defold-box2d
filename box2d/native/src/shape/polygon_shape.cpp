@@ -68,8 +68,15 @@ static int RayCast(lua_State* L){
     output.fraction = -1;
     output.normal.x = 0;
     output.normal.y = 0;
-    shape->shape.RayCast(&output,input,transform,0);
-    extra_utils::b2RayCastOutput_push(L,output);
+    printf("input: %f %f %f %f %f\n",input.p1.x, input.p1.y, input.p2.x, input.p2.y, input.maxFraction);
+    printf("transform: %f %f %f\n",transform.p.x, transform.p.y, transform.q.GetAngle());
+    bool result = shape->shape.RayCast(&output,input,transform,0);
+    printf("result: %d\n",result);
+    if(result){
+        extra_utils::b2RayCastOutput_push(L,output);
+    }else{
+        lua_pushnil(L);
+    }
     return 1;
 }
 

@@ -214,6 +214,11 @@ return function()
 
             local raycast = shape:RayCast({ p1 = vmath.vector3(0, 0, 0), p2 = vmath.vector3(1, 0, 0),
                                             maxFraction = 1 }, { p = vmath.vector3(0), q = 1 })
+            assert_nil(raycast)
+
+            raycast = shape:RayCast({ p1 = vmath.vector3(-0.5, -0.5, 0), p2 = vmath.vector3(0.7, 1.4, 0),
+                                            maxFraction = 1 }, { p = vmath.vector3(0), q = 0 })
+
             assert_not_nil(raycast)
             assert_not_nil(raycast.normal)
             assert_not_nil(raycast.fraction)

@@ -47,7 +47,7 @@ namespace extra_utils {
             transform.p = table_get_b2vec_safe(L,"p","p not vector3");
 
             lua_getfield(L, -1, "q");
-            b2Rot rot = b2Rot(luaL_checknumber(L,-1));
+            transform.q = b2Rot(luaL_checknumber(L,-1));
             lua_pop(L,1);
             
             lua_pop(L,1);
