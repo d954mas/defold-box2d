@@ -640,7 +640,6 @@ function Box2dPolygonShape:SetAsBox(hx, hy, center, angle) end
 ---@return boolean true if valid
 function Box2dPolygonShape:Validate() end
 
-
 ---@class Box2dCircleShape:Box2dShape
 local Box2dCircleShape = {}
 
@@ -669,12 +668,12 @@ function Box2dEdgeShape:Clone() end
 ---@param v1 vector3
 ---@param v2 vector3
 ---@param v3 vector3
-function Box2dEdgeShape:SetOneSided(v0,v1,v2,v3) end
+function Box2dEdgeShape:SetOneSided(v0, v1, v2, v3) end
 
 --- Set this as an isolated edge. Collision is two-sided.
 ---@param v1 vector3
 ---@param v2 vector3
-function Box2dEdgeShape:SetTwoSided(v1,v2) end
+function Box2dEdgeShape:SetTwoSided(v1, v2) end
 
 ---@return vector3
 function Box2dEdgeShape:GetVertex0() end
@@ -691,6 +690,39 @@ function Box2dEdgeShape:GetVertex3() end
 ---@return boolean
 function Box2dEdgeShape:IsOneSided() end
 
+---@class Box2dChainShape:Box2dShape
+local Box2dChainShape = {}
+
+--- Clone the concrete shape using the provided allocator
+---@return Box2dChainShape
+function Box2dChainShape:Clone() end
+
+--- Clear all data.
+function Box2dChainShape:Clear() end
+
+--- Create a loop. This automatically adjusts connectivity.
+---@param vertices vector3[] an array of vertices, these are copied
+function Box2dChainShape:CreateLoop(vertices) end
+
+--- Create a chain with ghost vertices to connect multiple chains together.
+---@param vertices vector3[] an array of vertices, these are copied
+---@param prevVertex vector3 previous vertex from chain that connects to the start
+---@param nextVertex vector3 next vertex from chain that connects to the end
+function Box2dChainShape:CreateChain(vertices, prevVertex, nextVertex) end
+
+---Get a child edge.
+---@param index number
+---@return Box2dEdgeShape edge
+function Box2dChainShape:GetChildEdge(index) end
+
+---@return vector3[]
+function Box2dChainShape:GetVertices() end
+
+---@return vector3
+function Box2dChainShape:GetNextVertex() end
+
+---@return vector3
+function Box2dChainShape:GetPrevVertex() end
 
 
 
