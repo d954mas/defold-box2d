@@ -41,6 +41,18 @@ function box2d.NewWorld(gravity) end
 ---@return Box2dDebugDraw
 function box2d.NewDebugDraw(data) end
 
+---@return Box2dPolygonShape
+function box2d.NewPolygonShape() end
+
+---@return Box2dCircleShape
+function box2d.NewCircleShape() end
+
+---@return Box2dChainShape
+function box2d.NewChainShape() end
+
+---@return Box2dEdgeShape
+function box2d.NewEdgeShape() end
+
 --- Utility to compute linear stiffness values from frequency and damping ratio
 ---@param frequencyHertz number
 ---@param dampingRatio number

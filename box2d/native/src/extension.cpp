@@ -207,9 +207,28 @@ static int InitializeMotorJointDef(lua_State *L) {
 static int NewPolygonShape(lua_State *L) {
     utils::check_arg_count(L, 0);
     b2PolygonShape shape;
-
     b2PolygonShape_push(L,shape);
+	return 1;
+}
 
+static int NewCircleShape(lua_State *L) {
+    utils::check_arg_count(L, 0);
+    b2CircleShape shape;
+    b2CircleShape_push(L,shape);
+	return 1;
+}
+
+static int NewChainShape(lua_State *L) {
+    utils::check_arg_count(L, 0);
+    b2ChainShape shape;
+    b2ChainShape_push(L,shape);
+	return 1;
+}
+
+static int NewEdgeShape(lua_State *L) {
+    utils::check_arg_count(L, 0);
+    b2EdgeShape shape;
+    b2EdgeShape_push(L,shape);
 	return 1;
 }
 
@@ -217,6 +236,9 @@ static const luaL_reg lua_functions[] = {
     {"NewWorld", extension_new_world},
     {"NewDebugDraw", extension_new_debug_draw},
     {"NewPolygonShape", NewPolygonShape},
+    {"NewCircleShape", NewCircleShape},
+    {"NewChainShape", NewChainShape},
+    {"NewEdgeShape", NewEdgeShape},
     {"b2LinearStiffness", b2LinearStiffnessLua},
     {"b2AngularStiffness", b2AngularStiffnessLua},
     {"InitializeRevoluteJointDef", InitializeRevoluteJointDef},
