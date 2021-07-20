@@ -551,6 +551,52 @@ local Box2dShape = {
     chain_prev_vertex = vmath.vector3(0, 0, 0),
     chain_next_vertex = vmath.vector3(0, 0, 0)
 }
+
+--- Clone the concrete shape using the provided allocator
+---@return Box2dShape
+function Box2dShape:Clone() end
+
+--- Get the type of this shape. You can use this to down cast to the concrete shape.
+---@return number box2d.b2Shape
+function Box2dShape:GetType() end
+
+--- Get the number of child primitives.
+---@return number
+function Box2dShape:GetChildCount() end
+
+--- Test a point for containment in this shape. This only works for convex shapes.
+---@param xf Box2dTransform
+---@param p vector3
+---@return boolean
+function Box2dShape:TestPoint(xf,p) end
+
+--- Cast a ray against a child shape.
+--- @param input Box2dRayCastInput the ray-cast input parameters.
+--- @param transform Box2dTransform transform to be applied to the shape.
+--- @param childIndex number the child shape index
+---@return Box2dRayCastOutput|nil
+function Box2dShape:RayCast(input, transform, childIndex) end
+
+--- Given a transform, compute the associated axis aligned bounding box for a child shape.
+--- @param xf Box2dTransform the world transform of the shape.
+--- @param childIndex number the child shape index
+---@return Box2dAABB
+function Box2dShape:ComputeAABB(xf, childIndex)end
+
+--- Compute the mass properties of this shape using its dimensions and density.
+--- The inertia tensor is computed about the local origin.
+--- @param density number the density in kilograms per meter squared.
+---@return Box2dMassData the mass data for this shape.
+function Box2dShape:ComputeMass(density) end
+
+
+--- Radius of a shape. For polygonal shapes this must be b2_polygonRadius. There is no support for
+--- making rounded polygons.
+---@return number
+function Box2dShape:GetRadius() end
+
+---@class Box2dPolygonShape:Box2dShape
+local Box2dPolygonShape = {}
 --endregion
 
 --region Box2dFixtureDef
@@ -733,7 +779,7 @@ function Box2dWorld:RayCast(callback, point1, point2) end
 --- Query the world for all fixtures that potentially overlap the
 --- provided AABB.
 ---@param callback function(Box2dFixture fixture)
----@param aabb table the query box. {lowerBound = vmath.vector3(0), upperBound = vmath.vector3(0)}
+---@param aabb Box2dAABB the query box.
 function Box2dWorld:QueryAABB(callback, aabb) end
 
 ---Get the world joint list. With the returned joint, use b2Joint:GetNext() to get the next joint in the world list.
@@ -1948,6 +1994,25 @@ function Box2dContact:GetTangentSpeed() end
 --- filtering always wins against the mask bits.
 ---@field groupIndex  number
 
+---@class Box2dAABB
+---@field lowerBound
+---@field upperBound
+
+---@class Box2dTransform
+---@field p vector3 position
+---@field q float angle
+
+--- Ray-cast input data. The ray extends from p1 to p1 + maxFraction * (p2 - p1).
+---@class Box2dRayCastInput
+---@field p1 vector3
+---@field p2 vector3
+---@field maxFriction number
+
+--- Ray-cast output data. The ray hits at p1 + fraction * (p2 - p1), where p1 and p2
+--- come from b2RayCastInput.
+---@class Box2dRayCastOutput
+---@field normal vector3
+---@field fraction number
 
 ---@class Box2dProfile
 ---@field step number
@@ -1963,3 +2028,4 @@ function Box2dContact:GetTangentSpeed() end
 ---@field mass number
 ---@field center vector3
 ---@field I number
+
