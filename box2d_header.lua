@@ -272,7 +272,7 @@ function Box2dBody:CreateFixture(def) end
 --- like friction, restitution, user data, or filtering.
 --- If the density is non-zero, this function automatically updates the mass of the body.
 --- warning This function is locked during callbacks.
----@param shape Box2dShape
+---@param shape Box2dShape|Box2dShapeTable
 ---@param density number the shape density (set to zero for static bodies)
 ---@return Box2dFixture
 function Box2dBody:CreateFixture(shape, density) end
@@ -533,8 +533,8 @@ function Box2dBody:Dump() end
 
 --region Box2dShape
 --Not b2Shape. Table that have field
----@class Box2dShape
-local Box2dShape = {
+---@class Box2dShapeTable
+local Box2dShapeTable = {
     --box2d.b2Shape e_circle, e_edge, e_polygon, e_chain
     shape = 0,
     --circle
@@ -564,6 +564,11 @@ local Box2dShape = {
     chain_next_vertex = vmath.vector3(0, 0, 0)
 }
 
+
+---@class Box2dShape
+local Box2dShape = {
+
+}
 --- Clone the concrete shape using the provided allocator
 ---@return Box2dShape
 function Box2dShape:Clone() end
@@ -750,7 +755,7 @@ function Box2dChainShape:GetCount() end
 ---@class Box2dFixtureDef
 local Box2dFixtureDef = {
     -- The shape, this must be set.
-    ---@type Box2dShape
+    ---@type Box2dShape|Box2dShapeTable
     shape = { shape = box2d.b2Shape.e_circle, circle_radius = 1, circle_position = vmath.vector3(0) },
 
     -- Use this to store application specific fixture data.

@@ -8,7 +8,7 @@ You can reuse fixture definitions safely.
 ```lua
 local Box2dFixtureDef = {
     -- The shape, this must be set.
-    ---@type Box2dShape
+    ---@type Box2dShape|Box2dShapeTable
     shape = { shape = box2d.b2Shape.e_circle, circle_radius = 1, circle_position = vmath.vector3(0) },
 
     -- Use this to store application specific fixture data.
