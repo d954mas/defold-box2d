@@ -343,7 +343,15 @@ void Draw::DrawSegment(const b2Vec2& p1, const b2Vec2& p2, const b2Color& color)
         }
     }
 }
-void Draw::DrawTransform(const b2Transform& xf) {}
+void Draw::DrawTransform(const b2Transform& xf) {
+     if(DrawTransform_ref!= LUA_REFNIL){
+        lua_rawgeti(L,LUA_REGISTRYINDEX,DrawTransform_ref);
+        extra_utils::b2Transform_push(L, xf);
+        if (lua_pcall(L, 1, 0, 0) != 0){
+            dmLogError("error running DrawTransform: %s",lua_tostring(L, -1));
+        }
+    }
+}
 void Draw::DrawPoint(const b2Vec2& p, float size, const b2Color& color){}
 
 void Draw::Push(lua_State *L) {

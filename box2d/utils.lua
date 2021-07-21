@@ -4,6 +4,11 @@ local POS_START = vmath.vector3()
 local POS_END = vmath.vector3()
 local COLOR = vmath.vector4()
 
+local COLOR_AXIS_X = vmath.vector4(1,0,0,1)
+local COLOR_AXIS_Y = vmath.vector4(0,1,0,1)
+local V3_AXIS_X = vmath.vector3()
+local V3_AXIS_Y = vmath.vector3()
+
 local message = {
     start_point = POS_START,
     end_point = POS_END,
@@ -72,6 +77,45 @@ local function __draw_circle(physics_scale,center,radius,axis,color)
     end
 end
 
+---@param transform Box2dTransform
+local function __draw_transform(physics_scale,transform)
+    local position = transform.p
+    position.x = position.x / physics_scale
+    position.y = position.y / physics_scale
+
+    local axis_x = V3_AXIS_X
+    axis_x.x = 1
+    axis_x.y = 0
+
+    local axis_y =V3_AXIS_Y
+    axis_y.x = 0
+    axis_y.y = 1
+
+    if(transform.q ~= 0)then
+        local cos_q = math.cos(transform.q)
+        local sin_q = math.sin(transform.q)
+        axis_x.x = cos_q -- x * cos_q - y * sin_q
+        axis_x.y = sin_q -- x * sin_q + y * cos_q
+
+        axis_y.x = - sin_q -- x * cos_q - y * sin_q
+        axis_y.y = cos_q -- x * sin_q + y * cos_q
+    end
+
+    local size = 0.4 / physics_scale
+
+    message.start_point.x, message.start_point.y = position.x, position.y
+    message.end_point.x, message.end_point.y = position.x + axis_x.x * size, position.y + axis_x.y * size
+    message.color.x, message.color.y = COLOR_AXIS_X.x, COLOR_AXIS_X.y
+    message.color.z, message.color.w = COLOR_AXIS_X.z, COLOR_AXIS_X.w
+    msg.post("@render:", MSG_DRAW_LINE, message)
+
+    message.end_point.x, message.end_point.y = position.x + axis_y.x * size, position.y + axis_y.y * size
+    message.color.x, message.color.y = COLOR_AXIS_Y.x, COLOR_AXIS_Y.y
+    message.color.z, message.color.w = COLOR_AXIS_Y.z, COLOR_AXIS_Y.w
+    msg.post("@render:", MSG_DRAW_LINE, message)
+end
+
+
 function M.create_debug_draw(physics_scale)
     return box2d.NewDebugDraw({
         DrawPolygon = function(vertices,color) __draw_polygon(physics_scale,vertices,color) end,
@@ -79,6 +123,7 @@ function M.create_debug_draw(physics_scale)
         DrawCircle = function(center,radius,color) __draw_circle(physics_scale,center,radius,nil,color) end,
         DrawSolidCircle = function(center,radius,axis,color) __draw_circle(physics_scale,center,radius,axis,color) end,
         DrawSegment = function(p1,p2,color) __draw_segment(physics_scale,p1,p2,color) end,
+        DrawTransform = function(transform) __draw_transform(physics_scale,transform) end,
     })
 end
 
