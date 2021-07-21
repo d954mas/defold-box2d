@@ -111,6 +111,7 @@ static int Set(lua_State* L){
     int verticesSize = 0;
     b2Vec2* vertices = extra_utils::parse_vertices(L,2,&verticesSize);
     shape->shape.Set(vertices,verticesSize);
+    delete[] vertices;
     return 0;
 }
 

@@ -640,6 +640,18 @@ function Box2dPolygonShape:SetAsBox(hx, hy, center, angle) end
 ---@return boolean true if valid
 function Box2dPolygonShape:Validate() end
 
+---@return vector3
+function Box2dPolygonShape:GetCentroid() end
+
+---@return vector3[]
+function Box2dPolygonShape:GetVertices() end
+
+---@return vector3[]
+function Box2dPolygonShape:GetNormals() end
+
+---@return number
+function Box2dPolygonShape:GetCount() end
+
 ---@class Box2dCircleShape:Box2dShape
 local Box2dCircleShape = {}
 
@@ -723,6 +735,10 @@ function Box2dChainShape:GetNextVertex() end
 
 ---@return vector3
 function Box2dChainShape:GetPrevVertex() end
+
+---@return vector3 vertices count
+function Box2dChainShape:GetCount() end
+
 
 
 

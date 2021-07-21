@@ -1,4 +1,5 @@
 #include "shape/chain_shape.h"
+#include "shape/edge_shape.h"
 #include "utils.h"
 #include "extra_utils.h"
 
@@ -60,15 +61,16 @@ static int TestPoint(lua_State* L){
 }
 
 static int RayCast(lua_State* L){
-    utils::check_arg_count(L, 3,4);
+    utils::check_arg_count(L, 4);
     ChainShape *shape =  ChainShape_get_userdata(L,1);
     b2RayCastInput  input = extra_utils::get_b2RayCastInput_safe(L,2);
     b2Transform transform = extra_utils::get_b2Transform_safe(L,3,"not transform");
+    int childIndex = luaL_checknumber(L,4);
     b2RayCastOutput output;
     output.fraction = -1;
     output.normal.x = 0;
     output.normal.y = 0;
-    bool result = shape->shape.RayCast(&output,input,transform,0);
+    bool result = shape->shape.RayCast(&output,input,transform,childIndex);
     if(result){
         extra_utils::b2RayCastOutput_push(L,output);
     }else{
@@ -78,11 +80,12 @@ static int RayCast(lua_State* L){
 }
 
 static int ComputeAABB(lua_State* L){
-    utils::check_arg_count(L, 2, 3);
+    utils::check_arg_count(L, 3);
     ChainShape *shape =  ChainShape_get_userdata(L,1);
     b2Transform transform = extra_utils::get_b2Transform_safe(L,2,"not transform");
+    int childIndex = luaL_checknumber(L,3);
     b2AABB aabb;
-    shape->shape.ComputeAABB(&aabb,transform,0);
+    shape->shape.ComputeAABB(&aabb,transform,childIndex);
     extra_utils::b2AABB_push(L,aabb);
     return 1;
 }
@@ -100,7 +103,81 @@ static int ComputeMass(lua_State* L){
 
 //region functions
 
+static int Clear(lua_State* L){
+    utils::check_arg_count(L, 1);
+    ChainShape *shape =  ChainShape_get_userdata(L,1);
+    shape->shape.Clear();
+    return 0;
+}
 
+static int CreateLoop(lua_State* L){
+    utils::check_arg_count(L, 2);
+    ChainShape *shape =  ChainShape_get_userdata(L,1);
+    int verticesSize = 0;
+    b2Vec2* vertices = extra_utils::parse_vertices(L,2,&verticesSize);
+    shape->shape.CreateLoop(vertices,verticesSize);
+    delete[] vertices;
+    return 0;
+}
+
+static int CreateChain(lua_State* L){
+    utils::check_arg_count(L, 4);
+    ChainShape *shape =  ChainShape_get_userdata(L,1);
+    int verticesSize = 0;
+    b2Vec2* vertices = extra_utils::parse_vertices(L,2,&verticesSize);
+    b2Vec2 prevVertex = extra_utils::get_b2vec_safe(L,3,"prevVertex not vector3");
+    b2Vec2 nextVertex = extra_utils::get_b2vec_safe(L,4,"nextVertex not vector3");
+
+    shape->shape.CreateChain(vertices,verticesSize,prevVertex,nextVertex);
+    delete[] vertices;
+    return 0;
+}
+
+/// Get a child edge.
+static int GetChildEdge(lua_State* L){
+    utils::check_arg_count(L, 2);
+    ChainShape *shape =  ChainShape_get_userdata(L,1);
+    int childIndex = luaL_checknumber(L,2);
+    b2EdgeShape edge;
+    shape->shape.GetChildEdge(&edge,childIndex);
+    b2EdgeShape_push(L, edge);
+    return 1;
+}
+
+static int GetVertices(lua_State* L){
+    utils::check_arg_count(L, 1);
+    ChainShape *shape =  ChainShape_get_userdata(L,1);
+    lua_newtable(L);
+    for (int32 i = 0; i < shape->shape.m_count; ++i){
+        b2Vec2 vertex = shape->shape.m_vertices[i];
+        utils::push_vector(L, vertex.x, vertex.y, 0);
+        lua_rawseti(L, -2, i+1);
+    }
+    return 1;
+}
+
+static int GetNextVertex(lua_State* L){
+    utils::check_arg_count(L, 1);
+    ChainShape *shape =  ChainShape_get_userdata(L,1);
+    b2Vec2 vertex = shape->shape.m_nextVertex;
+    utils::push_vector(L, vertex.x, vertex.y, 0);
+    return 1;
+}
+
+static int GetPrevVertex(lua_State* L){
+    utils::check_arg_count(L, 1);
+    ChainShape *shape =  ChainShape_get_userdata(L,1);
+    b2Vec2 vertex = shape->shape.m_prevVertex;
+    utils::push_vector(L, vertex.x, vertex.y, 0);
+    return 1;
+}
+
+static int GetCount(lua_State* L){
+    utils::check_arg_count(L, 1);
+    ChainShape *shape =  ChainShape_get_userdata(L,1);
+    lua_pushnumber(L,shape->shape.m_count);
+    return 1;
+}
 
 //endregion
 
@@ -118,6 +195,14 @@ ChainShape* b2ChainShape_push(lua_State *L, b2ChainShape b2Shape){
             {"RayCast", RayCast},
             {"ComputeAABB", ComputeAABB},
             {"ComputeMass", ComputeMass},
+            {"Clear", Clear},
+            {"CreateLoop", CreateLoop},
+            {"CreateChain", CreateChain},
+            {"GetChildEdge", GetChildEdge},
+            {"GetVertices", GetVertices},
+            {"GetNextVertex", GetNextVertex},
+            {"GetPrevVertex", GetPrevVertex},
+            {"GetCount", GetCount},
             {"__gc", ChainShape_destroy},
             {0, 0}
         };
