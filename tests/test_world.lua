@@ -130,11 +130,13 @@ return function()
             assert_equal(#contacts.PreSolve, 0)
             assert_equal(#contacts.PostSolve, 0)
 
+
             local b1 = w:CreateBody({ type = box2d.b2BodyType.b2_dynamicBody, position = vmath.vector3(0, 0, 0) })
             local b2 = w:CreateBody({ type = box2d.b2BodyType.b2_dynamicBody, position = vmath.vector3(1, 1, 0) })
 
             b1:CreateFixture({ shape = box2d.b2Shape.e_polygon, box = true, box_hy = 1, box_hx = 1 }, 1)
             b2:CreateFixture({ shape = box2d.b2Shape.e_polygon, box = true, box_hy = 1, box_hx = 1 }, 1)
+
 
             w:Step(1 / 60, 3, 5)
 

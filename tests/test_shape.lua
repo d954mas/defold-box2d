@@ -55,7 +55,6 @@ return function()
             shape:CreateChain({ vmath.vector3(0, 0, 0), vmath.vector3(1, 0, 0), vmath.vector3(1, 1, 0) },
                     vmath.vector3(0, 0, 0), vmath.vector3(1, 1, 0))
             createFixture(w, shape)
-
             shape = box2d.NewChainShape()
             shape:CreateLoop({ vmath.vector3(0, 0, 0), vmath.vector3(1, 0, 0), vmath.vector3(1, 1, 0)})
             createFixture(w, shape)

@@ -12,8 +12,9 @@ namespace box2dDefoldNE {
 
 b2Shape* b2Shape_from_lua(lua_State *L, int index);
 
-}
 
+
+}
 
 
 #endif
