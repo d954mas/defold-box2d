@@ -10,7 +10,7 @@
 
 namespace box2dDefoldNE {
 
-b2Shape* b2Shape_from_table(lua_State *L, int index);
+b2Shape* b2Shape_from_lua(lua_State *L, int index);
 
 }
 

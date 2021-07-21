@@ -86,7 +86,7 @@ b2ChainShape* b2ChainShape_from_table(lua_State *L){
     return shape;
 }
 
-b2Shape* b2Shape_from_table(lua_State *L, int index){
+b2Shape* b2Shape_from_lua(lua_State *L, int index){
     if (lua_istable(L, index)) {
         lua_pushvalue(L,index);
         b2Shape* result = NULL;
@@ -103,16 +103,34 @@ b2Shape* b2Shape_from_table(lua_State *L, int index){
             result = b2ChainShape_from_table(L);
         }
 
-
-
-       // b2CircleShape* circle = new ;
-       // circle.m_p.Set(2.0f, 3.0f);
-       // circle.m_radius = 0.5f;
-
        lua_pop(L,1);
        return result;
+    }else if(lua_isuserdata(L, index)){
+        if(utils::test_userdata(L, index, "Box2d::CircleShapeClass")){
+            CircleShape* shape = CircleShape_get_userdata(L,index);
+            b2CircleShape* clone = new b2CircleShape();
+            *clone = *&shape->shape;
+            return clone;
+        }else if(utils::test_userdata(L, index, "Box2d::PolygonShapeClass")){
+            PolygonShape* shape = PolygonShape_get_userdata(L,index);
+            b2PolygonShape* clone = new b2PolygonShape();
+            *clone = *&shape->shape;
+            return clone;
+        }else if(utils::test_userdata(L, index, "Box2d::EdgeShapeClass")){
+            EdgeShape* shape = EdgeShape_get_userdata(L,index);
+            b2EdgeShape* clone = new b2EdgeShape();
+            *clone = *&shape->shape;
+            return clone;
+        }else if(utils::test_userdata(L, index, "Box2d::ChainShapeClass")){
+            ChainShape* shape = ChainShape_get_userdata(L,index);
+            b2ChainShape* clone = new b2ChainShape();
+            clone->CreateChain(shape->shape.m_vertices, shape->shape.m_count, shape->shape.m_prevVertex, shape->shape.m_nextVertex);
+            return clone;
+        }else {
+              utils::error(L,"b2Shape unknown userdata");
+        }
     }else{
-        utils::error(L,"b2Shape should be table");
+        utils::error(L,"b2Shape should be table or userdata");
     }
 }
 

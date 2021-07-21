@@ -2,20 +2,20 @@
 #include "utils.h"
 #include "extra_utils.h"
 
-#define META_NAME "Box2d::PolygonShapeClass"
+#define META_NAME_POLYGON_SHAPE "Box2d::PolygonShapeClass"
 
 namespace box2dDefoldNE {
 
-static PolygonShape* PolygonShape_get_userdata(lua_State* L, int index){
-    if(luaL_checkudata(L, index, META_NAME) == NULL){
+PolygonShape* PolygonShape_get_userdata(lua_State* L, int index){
+    if(luaL_checkudata(L, index, META_NAME_POLYGON_SHAPE) == NULL){
         utils::error(L,"not polygon shape");
     }
-    PolygonShape *shape =  *static_cast<PolygonShape**>(luaL_checkudata(L, index, META_NAME));
+    PolygonShape *shape =  *static_cast<PolygonShape**>(luaL_checkudata(L, index, META_NAME_POLYGON_SHAPE));
     return shape;
 }
 
 static int PolygonShape_destroy(lua_State* L){
-    delete *static_cast<PolygonShape**>(luaL_checkudata(L, 1, META_NAME));
+    delete *static_cast<PolygonShape**>(luaL_checkudata(L, 1, META_NAME_POLYGON_SHAPE));
     return 0;
 }
 
@@ -187,7 +187,7 @@ static int GetCount(lua_State* L){
 PolygonShape* b2PolygonShape_push(lua_State *L, b2PolygonShape b2Shape){
     PolygonShape *shape = new PolygonShape(b2Shape);
     *static_cast<PolygonShape**>(lua_newuserdata(L, sizeof(PolygonShape*))) = shape;
-    if(luaL_newmetatable(L, META_NAME)){
+    if(luaL_newmetatable(L, META_NAME_POLYGON_SHAPE)){
         static const luaL_Reg functions[] =
         {
             {"GetType", GetType},

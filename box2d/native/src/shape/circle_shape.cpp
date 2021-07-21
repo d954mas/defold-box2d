@@ -2,20 +2,20 @@
 #include "utils.h"
 #include "extra_utils.h"
 
-#define META_NAME "Box2d::CircleShapeClass"
+#define META_NAME_CIRCLE_SHAPE "Box2d::CircleShapeClass"
 
 namespace box2dDefoldNE {
 
-static CircleShape* CircleShape_get_userdata(lua_State* L, int index){
-    if(luaL_checkudata(L, index, META_NAME) == NULL){
+CircleShape* CircleShape_get_userdata(lua_State* L, int index){
+    if(luaL_checkudata(L, index, META_NAME_CIRCLE_SHAPE) == NULL){
         utils::error(L,"not circle shape");
     }
-    CircleShape *shape =  *static_cast<CircleShape**>(luaL_checkudata(L, index, META_NAME));
+    CircleShape *shape =  *static_cast<CircleShape**>(luaL_checkudata(L, index, META_NAME_CIRCLE_SHAPE));
     return shape;
 }
 
 static int CircleShape_destroy(lua_State* L){
-    delete *static_cast<CircleShape**>(luaL_checkudata(L, 1, META_NAME));
+    delete *static_cast<CircleShape**>(luaL_checkudata(L, 1, META_NAME_CIRCLE_SHAPE));
     return 0;
 }
 
@@ -126,7 +126,7 @@ static int GetPosition(lua_State* L){
 CircleShape* b2CircleShape_push(lua_State *L, b2CircleShape b2Shape){
     CircleShape *shape = new CircleShape(b2Shape);
     *static_cast<CircleShape**>(lua_newuserdata(L, sizeof(CircleShape*))) = shape;
-    if(luaL_newmetatable(L, META_NAME)){
+    if(luaL_newmetatable(L, META_NAME_CIRCLE_SHAPE)){
         static const luaL_Reg functions[] =
         {
             {"GetType", GetType},

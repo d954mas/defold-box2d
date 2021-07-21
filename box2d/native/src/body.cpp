@@ -66,7 +66,7 @@ static int CreateFixture(lua_State *L){
         }
         delete def.shape;
     }else{
-        b2Shape* shape = b2Shape_from_table(L,2);
+        b2Shape* shape = b2Shape_from_lua(L,2);
         double density = lua_tonumber(L,3);
         b2Fixture* fixture = body->body->CreateFixture(shape,density);
         lua_fixture = new Fixture(fixture);

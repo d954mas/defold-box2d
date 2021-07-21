@@ -14,6 +14,6 @@ public:
 };
 
 ChainShape* b2ChainShape_push(lua_State *L, b2ChainShape b2Shape);
-
+ChainShape* ChainShape_get_userdata(lua_State* L, int index);
 }
 #endif

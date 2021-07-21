@@ -14,6 +14,6 @@ public:
 };
 
 PolygonShape* b2PolygonShape_push(lua_State *L, b2PolygonShape b2Shape);
-
+PolygonShape* PolygonShape_get_userdata(lua_State* L, int index);
 }
 #endif

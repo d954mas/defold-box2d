@@ -2,20 +2,20 @@
 #include "utils.h"
 #include "extra_utils.h"
 
-#define META_NAME "Box2d::EdgeShapeClass"
+#define META_NAME_EDGE_SHAPE "Box2d::EdgeShapeClass"
 
 namespace box2dDefoldNE {
 
-static EdgeShape* EdgeShape_get_userdata(lua_State* L, int index){
-    if(luaL_checkudata(L, index, META_NAME) == NULL){
-        utils::error(L,"not circle shape");
+EdgeShape* EdgeShape_get_userdata(lua_State* L, int index){
+    if(luaL_checkudata(L, index, META_NAME_EDGE_SHAPE) == NULL){
+        utils::error(L,"not edge shape");
     }
-    EdgeShape *shape =  *static_cast<EdgeShape**>(luaL_checkudata(L, index, META_NAME));
+    EdgeShape *shape =  *static_cast<EdgeShape**>(luaL_checkudata(L, index, META_NAME_EDGE_SHAPE));
     return shape;
 }
 
 static int EdgeShape_destroy(lua_State* L){
-    delete *static_cast<EdgeShape**>(luaL_checkudata(L, 1, META_NAME));
+    delete *static_cast<EdgeShape**>(luaL_checkudata(L, 1, META_NAME_EDGE_SHAPE));
     return 0;
 }
 
@@ -172,7 +172,7 @@ static int IsOneSided(lua_State* L){
 EdgeShape* b2EdgeShape_push(lua_State *L, b2EdgeShape b2Shape){
     EdgeShape *shape = new EdgeShape(b2Shape);
     *static_cast<EdgeShape**>(lua_newuserdata(L, sizeof(EdgeShape*))) = shape;
-    if(luaL_newmetatable(L, META_NAME)){
+    if(luaL_newmetatable(L, META_NAME_EDGE_SHAPE)){
         static const luaL_Reg functions[] =
         {
             {"GetType", GetType},

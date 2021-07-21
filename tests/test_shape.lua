@@ -17,181 +17,50 @@ return function()
 
         end)
 
-        test("circle", function()
+        test("fixture circle", function()
             local w = box2d.NewWorld()
-            local f = createFixture(w, {
-                shape = box2d.b2Shape.e_circle,
-                circle_radius = 1
-            })
-
-            f = createFixture(w, {
-                shape = box2d.b2Shape.e_circle,
-                circle_radius = 1,
-                circle_position = vmath.vector3(0)
-            })
-            w:Destroy()
-        end)
-
-        test("edge", function()
-            local w = box2d.NewWorld()
-            local f = createFixture(w, {
-                shape = box2d.b2Shape.e_edge,
-                edge_two_sided = true,
-                edge_v1 = vmath.vector3(0),
-                edge_v2 = vmath.vector3(0),
-            })
-
-            f = createFixture(w, {
-                shape = box2d.b2Shape.e_edge,
-                edge_v0 = vmath.vector3(0),
-                edge_v1 = vmath.vector3(0),
-                edge_v2 = vmath.vector3(0),
-                edge_v3 = vmath.vector3(0),
-            })
-
-            local status, error = pcall(createFixture, w, {
-                shape = box2d.b2Shape.e_edge
-            })
-            assert_false(status)
-            assert_equal(error, "edge_v1 not vector3")
-
-            status, error = pcall(createFixture, w, {
-                shape = box2d.b2Shape.e_edge,
-                edge_v1 = vmath.vector3(0),
-            })
-            assert_false(status)
-            assert_equal(error, "edge_v2 not vector3")
-
-            status, error = pcall(createFixture, w, {
-                shape = box2d.b2Shape.e_edge,
-                edge_v1 = vmath.vector3(0),
-                edge_v2 = vmath.vector3(0),
-            })
-            assert_false(status)
-            assert_equal(error, "edge_v0 not vector3")
-
-            status, error = pcall(createFixture, w, {
-                shape = box2d.b2Shape.e_edge,
-                edge_v1 = vmath.vector3(0),
-                edge_v2 = vmath.vector3(0),
-                edge_v0 = vmath.vector3(0),
-            })
-            assert_false(status)
-            assert_equal(error, "edge_v3 not vector3")
-            w:Destroy()
-        end)
-
-        test("box", function()
-            local w = box2d.NewWorld()
-
-            createFixture(w, {
-                shape = box2d.b2Shape.e_polygon,
-                box = true,
-                box_hx = 1, box_hy = 1,
-            })
-
-            local status, error = pcall(createFixture, w, {
-                shape = box2d.b2Shape.e_polygon,
-                box = true,
-                box_hx = 1
-            })
-            assert_false(status)
-            assert_equal(error, "no box_hy")
-
-            status, error = pcall(createFixture, w, {
-                shape = box2d.b2Shape.e_polygon,
-                box = true,
-                box_hy = 1
-            })
-            assert_false(status)
-            assert_equal(error, "no box_hx")
-
-            createFixture(w, {
-                shape = box2d.b2Shape.e_polygon,
-                box = true,
-                box_hx = 1, box_hy = 1,
-                box_center = vmath.vector3(0, 0, 0), box_angle = math.pi / 4
-            })
-
-            status, error = pcall(createFixture, w, {
-                shape = box2d.b2Shape.e_polygon,
-                box = true,
-                box_hx = 1, box_hy = 1,
-                box_angle = math.pi / 4
-            })
-            assert_false(status)
-            assert_equal(error, "box_angle exist but box_center not exist")
-
-            status, error = pcall(createFixture, w, {
-                shape = box2d.b2Shape.e_polygon,
-                box = true,
-                box_hx = 1, box_hy = 1,
-                box_center = vmath.vector3(0)
-            })
-            assert_false(status)
-            assert_equal(error, "box_center exist but box_angle not exist")
+            local shape = box2d.NewCircleShape()
+            shape:SetPosition(vmath.vector3(1, 1, 1))
+            shape:SetRadius(1)
+            local f = createFixture(w, shape)
 
             w:Destroy()
         end)
 
-        test("polygon", function()
+        test("fixture edge", function()
             local w = box2d.NewWorld()
+            local shape = box2d.NewEdgeShape()
+            shape:SetTwoSided(vmath.vector3(0), vmath.vector3(1, 0, 0))
+            local f = createFixture(w, shape)
 
-            createFixture(w, {
-                shape = box2d.b2Shape.e_polygon,
-                polygon_vertices = { vmath.vector3(0, 0, 0), vmath.vector3(1, 0, 0), vmath.vector3(1, 1, 0) }
-            })
+            shape:SetOneSided(vmath.vector3(0),vmath.vector3(1, 0, 0), vmath.vector3(2, 0, 0), vmath.vector3(3, 0, 0))
+            f = createFixture(w, shape)
 
             w:Destroy()
         end)
 
-        test("chain", function()
+        test("fixture polygon", function()
             local w = box2d.NewWorld()
-            createFixture(w, {
-                shape = box2d.b2Shape.e_chain,
-                chain_vertices = { vmath.vector3(0, 0, 0), vmath.vector3(1, 0, 0), vmath.vector3(1, 1, 0) },
-                chain_prev_vertex = vmath.vector3(0, 0, 0),
-                chain_next_vertex = vmath.vector3(1, 1, 0)
-            })
-
-            createFixture(w, {
-                shape = box2d.b2Shape.e_chain,
-                chain_loop = true;
-                chain_vertices = { vmath.vector3(0, 0, 0), vmath.vector3(1, 0, 0), vmath.vector3(1, 1, 0) },
-            })
-
-            local status, error = pcall(createFixture, w, {
-                shape = box2d.b2Shape.e_chain,
-            })
-            assert_false(status)
-            assert_equal(error, "no chain_vertices")
-
-            status, error = pcall(createFixture, w, {
-                shape = box2d.b2Shape.e_chain,
-                chain_loop = true;
-            })
-            assert_false(status)
-            assert_equal(error, "no chain_vertices")
-
-            status, error = pcall(createFixture, w, {
-                shape = box2d.b2Shape.e_chain,
-                chain_vertices = { vmath.vector3(0, 0, 0), vmath.vector3(1, 0, 0), vmath.vector3(1, 1, 0) },
-            })
-            assert_false(status)
-            assert_equal(error, "chain_prev_vertex not vector3")
-
-            status, error = pcall(createFixture, w, {
-                shape = box2d.b2Shape.e_chain,
-                chain_vertices = { vmath.vector3(0, 0, 0), vmath.vector3(1, 0, 0), vmath.vector3(1, 1, 0) },
-                chain_prev_vertex = vmath.vector3(0, 0, 0),
-            })
-            assert_false(status)
-            assert_equal(error, "chain_next_vertex not vector3")
-
+            local shape = box2d.NewPolygonShape()
+            shape:SetAsBox(1, 1)
+            createFixture(w, shape)
             w:Destroy()
         end)
 
-        test("polygon", function()
+        test("fixture chain", function()
+            local w = box2d.NewWorld()
+            local shape = box2d.NewChainShape()
+            shape:CreateChain({ vmath.vector3(0, 0, 0), vmath.vector3(1, 0, 0), vmath.vector3(1, 1, 0) },
+                    vmath.vector3(0, 0, 0), vmath.vector3(1, 1, 0))
+            createFixture(w, shape)
+
+            shape = box2d.NewChainShape()
+            shape:CreateLoop({ vmath.vector3(0, 0, 0), vmath.vector3(1, 0, 0), vmath.vector3(1, 1, 0)})
+            createFixture(w, shape)
+
+        end)
+
+        test("polygon shape", function()
             local w = box2d.NewWorld()
 
             local shape = box2d.NewPolygonShape()
@@ -253,7 +122,7 @@ return function()
             w:Destroy()
         end)
 
-        test("circle", function()
+        test("circle shape", function()
             local w = box2d.NewWorld()
 
             local shape = box2d.NewCircleShape()
@@ -300,7 +169,7 @@ return function()
             w:Destroy()
         end)
 
-        test("edge", function()
+        test("edge shape", function()
             local w = box2d.NewWorld()
 
             local shape = box2d.NewEdgeShape()
@@ -359,7 +228,7 @@ return function()
             w:Destroy()
         end)
 
-        test("chain", function()
+        test("chain shape", function()
             local w = box2d.NewWorld()
 
             local shape = box2d.NewChainShape()
@@ -386,13 +255,13 @@ return function()
             assert_nil(raycast)
 
             raycast = shape:RayCast({ p1 = vmath.vector3(-1, 0.5, 0), p2 = vmath.vector3(1, 0.5, 0),
-                                      maxFraction = 1 }, { p = vmath.vector3(0), q = 0 },0)
+                                      maxFraction = 1 }, { p = vmath.vector3(0), q = 0 }, 0)
 
             assert_not_nil(raycast)
             assert_not_nil(raycast.normal)
             assert_not_nil(raycast.fraction)
 
-            local aabb = shape:ComputeAABB({ p = vmath.vector3(0), q = 1 },1)
+            local aabb = shape:ComputeAABB({ p = vmath.vector3(0), q = 1 }, 1)
             assert_not_nil(aabb.lowerBound)
             assert_not_nil(aabb.upperBound)
 
@@ -403,20 +272,19 @@ return function()
             assert_equal(shape:GetRadius(), 2)
             shape:SetRadius(0.01)--]]
 
-            assert_equal(#shape:GetVertices(), 3+1)
-            
+            assert_equal(#shape:GetVertices(), 3 + 1)
+
             assert_equal_v3(shape:GetVertices()[1], vmath.vector3(0, 0, 0))
             assert_equal_v3(shape:GetVertices()[2], vmath.vector3(1, 1, 0))
             assert_equal_v3(shape:GetVertices()[3], vmath.vector3(2, 0, 0))
             assert_equal_v3(shape:GetVertices()[4], vmath.vector3(0, 0, 0))
-            assert_equal(shape:GetCount(), 3+1)
+            assert_equal(shape:GetCount(), 3 + 1)
             assert_equal(shape:GetCount(), #shape:GetVertices())
 
-
             shape:Clear()
-            assert_equal(shape:GetCount(),0)
+            assert_equal(shape:GetCount(), 0)
 
-            shape:CreateChain({ vmath.vector3(1, 1, 0), vmath.vector3(2, 2, 0)}, vmath.vector3(0,0,0), vmath.vector3(3,3,0))
+            shape:CreateChain({ vmath.vector3(1, 1, 0), vmath.vector3(2, 2, 0) }, vmath.vector3(0, 0, 0), vmath.vector3(3, 3, 0))
             assert_equal(#shape:GetVertices(), 2)
 
             assert_equal_v3(shape:GetVertices()[1], vmath.vector3(1, 1, 0))

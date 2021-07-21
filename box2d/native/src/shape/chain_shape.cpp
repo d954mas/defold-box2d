@@ -3,20 +3,20 @@
 #include "utils.h"
 #include "extra_utils.h"
 
-#define META_NAME "Box2d::ChainShapeClass"
+#define META_NAME_CHAIN_SHAPE "Box2d::ChainShapeClass"
 
 namespace box2dDefoldNE {
 
-static ChainShape* ChainShape_get_userdata(lua_State* L, int index){
-    if(luaL_checkudata(L, index, META_NAME) == NULL){
-        utils::error(L,"not circle shape");
+ChainShape* ChainShape_get_userdata(lua_State* L, int index){
+    if(luaL_checkudata(L, index, META_NAME_CHAIN_SHAPE) == NULL){
+        utils::error(L,"not chain shape");
     }
-    ChainShape *shape =  *static_cast<ChainShape**>(luaL_checkudata(L, index, META_NAME));
+    ChainShape *shape =  *static_cast<ChainShape**>(luaL_checkudata(L, index, META_NAME_CHAIN_SHAPE));
     return shape;
 }
 
 static int ChainShape_destroy(lua_State* L){
-    delete *static_cast<ChainShape**>(luaL_checkudata(L, 1, META_NAME));
+    delete *static_cast<ChainShape**>(luaL_checkudata(L, 1, META_NAME_CHAIN_SHAPE));
     return 0;
 }
 
@@ -190,7 +190,7 @@ static int GetCount(lua_State* L){
 ChainShape* b2ChainShape_push(lua_State *L, b2ChainShape b2Shape){
     ChainShape *shape = new ChainShape(b2Shape);
     *static_cast<ChainShape**>(lua_newuserdata(L, sizeof(ChainShape*))) = shape;
-    if(luaL_newmetatable(L, META_NAME)){
+    if(luaL_newmetatable(L, META_NAME_CHAIN_SHAPE)){
         static const luaL_Reg functions[] =
         {
             {"GetType", GetType},
