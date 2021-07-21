@@ -566,9 +566,8 @@ local Box2dShapeTable = {
 
 
 ---@class Box2dShape
-local Box2dShape = {
+local Box2dShape = {}
 
-}
 --- Clone the concrete shape using the provided allocator
 ---@return Box2dShape
 function Box2dShape:Clone() end
