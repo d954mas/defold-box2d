@@ -36,6 +36,13 @@ static int GetRadius(lua_State* L){
     return 1;
 }
 
+static int SetRadius(lua_State* L){
+    utils::check_arg_count(L, 2);
+    ChainShape *shape =  ChainShape_get_userdata(L,1);
+    shape->shape.m_radius = luaL_checknumber(L,2);
+    return 0;
+}
+
 
 static int Clone(lua_State* L){
     utils::check_arg_count(L, 1);
@@ -127,7 +134,6 @@ static int CreateChain(lua_State* L){
     b2Vec2* vertices = extra_utils::parse_vertices(L,2,&verticesSize);
     b2Vec2 prevVertex = extra_utils::get_b2vec_safe(L,3,"prevVertex not vector3");
     b2Vec2 nextVertex = extra_utils::get_b2vec_safe(L,4,"nextVertex not vector3");
-
     shape->shape.CreateChain(vertices,verticesSize,prevVertex,nextVertex);
     delete[] vertices;
     return 0;
@@ -189,6 +195,7 @@ ChainShape* b2ChainShape_push(lua_State *L, b2ChainShape b2Shape){
         {
             {"GetType", GetType},
             {"GetRadius", GetRadius},
+            {"SetRadius", SetRadius},
             {"Clone", Clone},
             {"GetChildCount", GetChildCount},
             {"TestPoint", TestPoint},

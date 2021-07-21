@@ -358,6 +358,73 @@ return function()
 
             w:Destroy()
         end)
+
+        test("chain", function()
+            local w = box2d.NewWorld()
+
+            local shape = box2d.NewChainShape()
+            assert_equal(shape:GetType(), box2d.b2Shape.e_chain)
+
+            shape:CreateLoop({ vmath.vector3(0, 0, 0), vmath.vector3(1, 1, 0), vmath.vector3(2, 0, 0) })
+
+            assert_equal_float(shape:GetRadius(), 0.01)
+
+            local shape_clone = shape:Clone()
+            --change
+            assert_not_equal(shape, shape_clone)
+            assert_equal(shape:GetRadius(), shape_clone:GetRadius())
+
+            shape_clone:SetRadius(1)
+            assert_not_equal(shape:GetRadius(), shape_clone:GetRadius())
+
+            assert_equal(shape:GetChildCount(), 3)
+
+            shape:TestPoint({ p = vmath.vector3(0), q = 1 }, vmath.vector3(0))
+
+            local raycast = shape:RayCast({ p1 = vmath.vector3(2, 0, 0), p2 = vmath.vector3(1, 0, 0),
+                                            maxFraction = 1 }, { p = vmath.vector3(0), q = 1 }, 0)
+            assert_nil(raycast)
+
+            raycast = shape:RayCast({ p1 = vmath.vector3(-1, 0.5, 0), p2 = vmath.vector3(1, 0.5, 0),
+                                      maxFraction = 1 }, { p = vmath.vector3(0), q = 0 },0)
+
+            assert_not_nil(raycast)
+            assert_not_nil(raycast.normal)
+            assert_not_nil(raycast.fraction)
+
+            local aabb = shape:ComputeAABB({ p = vmath.vector3(0), q = 1 },1)
+            assert_not_nil(aabb.lowerBound)
+            assert_not_nil(aabb.upperBound)
+
+            local massData = shape:ComputeMass(1)
+            assert_equal(type(massData), "table")
+
+            shape:SetRadius(2)
+            assert_equal(shape:GetRadius(), 2)
+            shape:SetRadius(0.01)--]]
+
+            assert_equal(#shape:GetVertices(), 3+1)
+            
+            assert_equal_v3(shape:GetVertices()[1], vmath.vector3(0, 0, 0))
+            assert_equal_v3(shape:GetVertices()[2], vmath.vector3(1, 1, 0))
+            assert_equal_v3(shape:GetVertices()[3], vmath.vector3(2, 0, 0))
+            assert_equal_v3(shape:GetVertices()[4], vmath.vector3(0, 0, 0))
+            assert_equal(shape:GetCount(), 3+1)
+            assert_equal(shape:GetCount(), #shape:GetVertices())
+
+
+            shape:Clear()
+            assert_equal(shape:GetCount(),0)
+
+            shape:CreateChain({ vmath.vector3(1, 1, 0), vmath.vector3(2, 2, 0)}, vmath.vector3(0,0,0), vmath.vector3(3,3,0))
+            assert_equal(#shape:GetVertices(), 2)
+
+            assert_equal_v3(shape:GetVertices()[1], vmath.vector3(1, 1, 0))
+            assert_equal_v3(shape:GetVertices()[2], vmath.vector3(2, 2, 0))
+            assert_equal(shape:GetCount(), 2)
+
+            w:Destroy()
+        end)
     end)
 
 end
