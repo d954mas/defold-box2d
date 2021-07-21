@@ -294,8 +294,7 @@ function Box2dBody:DestroyFixture(fixture) end
 function Box2dBody:SetTransform(position, angle) end
 
 --- Get the body transform for the body's origin.
----@return vector3 position
----@return number angle
+---@return Box2dTransform
 function Box2dBody:GetTransform() end
 
 --- Get the world body origin position.
