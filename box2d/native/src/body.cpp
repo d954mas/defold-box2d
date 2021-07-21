@@ -65,7 +65,7 @@ static int CreateFixture(lua_State *L){
            utils::unref(L, def.userData.pointer);
            lua_fixture->user_data_ref = ref;
         }
-        //b2Shape_free(def.shape); NEED FREE MEMORY HERE?
+        b2Shape_free((b2Shape*) def.shape);
     }else{
         b2Shape* shape = b2Shape_from_lua(L,2);
         double density = lua_tonumber(L,3);
