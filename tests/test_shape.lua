@@ -36,6 +36,8 @@ return function()
             shape:SetOneSided(vmath.vector3(0),vmath.vector3(1, 0, 0), vmath.vector3(2, 0, 0), vmath.vector3(3, 0, 0))
             f = createFixture(w, shape)
 
+            assert_equal_v3(shape:GetVertex3(),vmath.vector3(3,0,0))
+
             w:Destroy()
         end)
 
