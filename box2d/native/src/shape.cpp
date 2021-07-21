@@ -6,42 +6,14 @@ namespace box2dDefoldNE {
 
 b2Vec2* parse_vertices(lua_State *L, const char* key,const char* error,int* b2vecSize){
     lua_getfield(L, -1, key);
+    b2Vec2* vertices = NULL;
     if(lua_istable(L,-1)){
-        int size = lua_objlen(L,-1);
-        b2Vec2* vertices = new b2Vec2[size];
-        *b2vecSize = size;
-        for (int idx = 1; idx <= size; idx++) {
-            lua_pushinteger(L, idx);
-            lua_gettable(L, -2);
-
-            //if (lua_isnil(L, -1)){
-            //    printf("bread idx:%d\n",idx);
-            //    lua_pop(L, 1);
-            //    break;
-          //  }
-            if (lua_isuserdata(L, -1)) {
-                if(dmScript::IsVector3(L,  -1)){
-                    Vectormath::Aos::Vector3 *value = dmScript::ToVector3(L, -1);
-                    b2Vec2 v;
-                    v.x = value->getX();
-                    v.y = value->getY();
-                    vertices[idx-1] = v;
-                }else{
-                    delete[] vertices;
-                    utils::error(L,"vertex not vector3");
-                }
-            }else{
-                delete[] vertices;
-                utils::error(L,"vertex not vector3");
-            }
-            lua_pop(L, 1);
-        }
-        lua_pop(L,1);
-        return vertices;
+        vertices = extra_utils::parse_vertices(L,-1,b2vecSize);
     }else{
-       utils::error(L,error);
+        utils::error(L,error);
     }
     lua_pop(L,1);
+    return vertices;
 }
 
 
@@ -114,7 +86,7 @@ b2ChainShape* b2ChainShape_from_table(lua_State *L){
     return shape;
 }
 
-b2Shape* b2Shape_from_table(lua_State *L, int index){
+b2Shape* b2Shape_from_lua(lua_State *L, int index){
     if (lua_istable(L, index)) {
         lua_pushvalue(L,index);
         b2Shape* result = NULL;
@@ -131,18 +103,37 @@ b2Shape* b2Shape_from_table(lua_State *L, int index){
             result = b2ChainShape_from_table(L);
         }
 
-
-
-       // b2CircleShape* circle = new ;
-       // circle.m_p.Set(2.0f, 3.0f);
-       // circle.m_radius = 0.5f;
-
        lua_pop(L,1);
        return result;
+    }else if(lua_isuserdata(L, index)){
+        if(utils::test_userdata(L, index, "Box2d::CircleShapeClass")){
+            CircleShape* shape = CircleShape_get_userdata(L,index);
+            b2CircleShape* clone = new b2CircleShape();
+            *clone = *&shape->shape;
+            return clone;
+        }else if(utils::test_userdata(L, index, "Box2d::PolygonShapeClass")){
+            PolygonShape* shape = PolygonShape_get_userdata(L,index);
+            b2PolygonShape* clone = new b2PolygonShape();
+            *clone = *&shape->shape;
+            return clone;
+        }else if(utils::test_userdata(L, index, "Box2d::EdgeShapeClass")){
+            EdgeShape* shape = EdgeShape_get_userdata(L,index);
+            b2EdgeShape* clone = new b2EdgeShape();
+            *clone = *&shape->shape;
+            return clone;
+        }else if(utils::test_userdata(L, index, "Box2d::ChainShapeClass")){
+            ChainShape* shape = ChainShape_get_userdata(L,index);
+            b2ChainShape* clone = new b2ChainShape();
+            clone->CreateChain(shape->shape.m_vertices, shape->shape.m_count, shape->shape.m_prevVertex, shape->shape.m_nextVertex);
+            return clone;
+        }else {
+              utils::error(L,"b2Shape unknown userdata");
+        }
     }else{
-        utils::error(L,"b2Shape should be table");
+        utils::error(L,"b2Shape should be table or userdata");
     }
-
 }
+
+
 
 }

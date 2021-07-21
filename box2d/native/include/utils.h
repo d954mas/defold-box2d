@@ -81,6 +81,8 @@ namespace utils {
 	void unref(lua_State *L, int ref);
 
 	void error(lua_State *L,const char *error);
+
+	bool test_userdata(lua_State *L,int idx, const char* meta);
 }
 
 #endif

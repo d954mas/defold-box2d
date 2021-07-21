@@ -148,7 +148,7 @@ static int CreateBody(lua_State *L){ //b2Body * CreateBody (const b2BodyDef *def
 
     Body* lua_body = new Body(body);
     //Set user data
-    if(bodyDef.userData.pointer != NULL){
+    if(bodyDef.userData.pointer != 0){
         lua_rawgeti(L,LUA_REGISTRYINDEX,bodyDef.userData.pointer);
         int ref = luaL_ref(L,LUA_REGISTRYINDEX);
         utils::unref(L, bodyDef.userData.pointer);

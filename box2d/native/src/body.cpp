@@ -66,7 +66,7 @@ static int CreateFixture(lua_State *L){
         }
         delete def.shape;
     }else{
-        b2Shape* shape = b2Shape_from_table(L,2);
+        b2Shape* shape = b2Shape_from_lua(L,2);
         double density = lua_tonumber(L,3);
         b2Fixture* fixture = body->body->CreateFixture(shape,density);
         lua_fixture = new Fixture(fixture);
@@ -274,46 +274,7 @@ static int GetMassData(lua_State *L) { //void GetMassData (b2MassData *data) con
 static int SetMassData(lua_State *L) { //void SetMassData (const b2MassData *data)
 	utils::check_arg_count(L, 2);
 	Body *lua_body = Body_get_userdata_safe(L,1);
-    b2MassData massData;
-    utils::get_table(L, 2);
-    lua_getfield(L, -1, "mass");
-    if (lua_isnumber(L, -1)) {
-        massData.mass = lua_tonumber(L, -1);
-        lua_pop(L, 1);
-    }else{
-        utils::error(L,"mass not number");
-    }
-
-    lua_getfield(L, -1, "I");
-    if (lua_isnumber(L, -1)) {
-        massData.I = lua_tonumber(L, -1);
-        lua_pop(L, 1);
-    }else{
-        utils::error(L,"I not number");
-    }
-
-
-    lua_getfield(L, -1, "center");
-    if (lua_istable(L, -1)) {
-        lua_getfield(L, -1, "x");
-        if (lua_isnumber(L, -1)) {
-            massData.center.x = lua_tonumber(L, -1);
-            lua_pop(L, 1);
-        }else{
-            utils::error(L,"x not number");
-        }
-
-        lua_getfield(L, -1, "y");
-        if (lua_isnumber(L, -1)) {
-            massData.center.y = lua_tonumber(L, -1);
-            lua_pop(L, 1);
-        }else{
-             utils::error(L,"y not number");
-        }
-        lua_pop(L, 1);
-    }else{
-        utils::error(L,"center not table");
-    }
+    b2MassData massData = extra_utils::get_b2MassData_safe(L,2,"not massData");
 
 
     lua_body->body->SetMassData(&massData);

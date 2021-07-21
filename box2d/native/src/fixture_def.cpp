@@ -19,7 +19,7 @@ b2FixtureDef b2FixtureDef_from_table(lua_State *L, int index){
             const char* key = lua_tostring(L, -2);
             switch (hash_string(key)) {
                     case HASH_shape:
-                    def.shape = b2Shape_from_table(L,-1);
+                    def.shape = b2Shape_from_lua(L,-1);
                     break;
                 case HASH_friction:
                     def.friction = lua_tonumber(L, -1);

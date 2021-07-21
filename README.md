@@ -70,32 +70,30 @@ Box2d version: 2.4.1
 
 __1)__ No binding for b2Vec2. Use defold vector(vmath.vector3)
 
-__2)__ No binding for b2Shape. Use tables for shapes when creating fixtures.
+__2)__ b2Assert. #define b2Assert(A) assert(A) . Engine will crashed if b2Assert happened.
 
-__3)__ b2Assert. #define b2Assert(A) assert(A) . Engine will crashed if b2Assert happened.
-
-__4)__ No binding for some b2World functions.
+__3)__ No binding for some b2World functions.
 
 	void SetDestructionListener(b2DestructionListener* listener);
 	void SetContactFilter(b2ContactFilter* filter);
 	b2Contact* GetContactList();
 	const b2ContactManager& GetContactManager() const;
 
-__5)__ No binding for some b2Fixture functions.
+__4)__ No binding for some b2Fixture functions.
 
 	b2Shape* GetShape();
 	bool RayCast(b2RayCastOutput* output, const b2RayCastInput& input, int32 childIndex) const;
 	const b2AABB& GetAABB(int32 childIndex) const;
 
-__6)__ No binding for some b2Body functions.
+__5)__ No binding for some b2Body functions.
 
 	b2JointEdge* GetJointList () Get the list of all joints attached to this body
 	b2ContactEdge* GetContactList();
 
-__7)__ No binding for some b2Joint functions.
+__6)__ No binding for some b2Joint functions.
 
 	virtual void Draw(b2Draw* draw) const;
 
-__8)__ No binding some b2Contact functions.
+__7)__ No binding some b2Contact functions.
 
 	b2Contact* GetNext();
