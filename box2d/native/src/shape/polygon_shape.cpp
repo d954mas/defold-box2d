@@ -1,6 +1,7 @@
 #include "shape/polygon_shape.h"
 #include "utils.h"
 #include "extra_utils.h"
+#include "allocators.h"
 
 #define META_NAME_POLYGON_SHAPE "Box2d::PolygonShapeClass"
 
@@ -24,21 +25,21 @@ static int PolygonShape_destroy(lua_State* L){
 static int GetType(lua_State* L){
     utils::check_arg_count(L, 1);
     PolygonShape *shape =  PolygonShape_get_userdata(L,1);
-    lua_pushnumber(L, shape->shape.GetType());
+    lua_pushnumber(L, shape->shape->GetType());
     return 1;
 }
 
 static int GetRadius(lua_State* L){
     utils::check_arg_count(L, 1);
     PolygonShape *shape =  PolygonShape_get_userdata(L,1);
-    lua_pushnumber(L, shape->shape.m_radius);
+    lua_pushnumber(L, shape->shape->m_radius);
     return 1;
 }
 
 static int SetRadius(lua_State* L){
     utils::check_arg_count(L, 2);
     PolygonShape *shape =  PolygonShape_get_userdata(L,1);
-    shape->shape.m_radius = luaL_checknumber(L,2);
+    shape->shape->m_radius = luaL_checknumber(L,2);
     return 0;
 }
 
@@ -52,7 +53,7 @@ static int Clone(lua_State* L){
 static int GetChildCount(lua_State* L){
     utils::check_arg_count(L, 1);
     PolygonShape *shape =  PolygonShape_get_userdata(L,1);
-    lua_pushnumber(L, shape->shape.GetChildCount());
+    lua_pushnumber(L, shape->shape->GetChildCount());
     return 1;
 }
 
@@ -61,7 +62,7 @@ static int TestPoint(lua_State* L){
     PolygonShape *shape =  PolygonShape_get_userdata(L,1);
     b2Transform transform = extra_utils::get_b2Transform_safe(L,2,"not transform");
     b2Vec2 point = extra_utils::get_b2vec_safe(L,3,"point not vector3");
-    lua_pushboolean(L, shape->shape.TestPoint(transform, point));
+    lua_pushboolean(L, shape->shape->TestPoint(transform, point));
     return 1;
 }
 
@@ -74,7 +75,7 @@ static int RayCast(lua_State* L){
     output.fraction = -1;
     output.normal.x = 0;
     output.normal.y = 0;
-    bool result = shape->shape.RayCast(&output,input,transform,0);
+    bool result = shape->shape->RayCast(&output,input,transform,0);
     if(result){
         extra_utils::b2RayCastOutput_push(L,output);
     }else{
@@ -88,7 +89,7 @@ static int ComputeAABB(lua_State* L){
     PolygonShape *shape =  PolygonShape_get_userdata(L,1);
     b2Transform transform = extra_utils::get_b2Transform_safe(L,2,"not transform");
     b2AABB aabb;
-    shape->shape.ComputeAABB(&aabb,transform,0);
+    shape->shape->ComputeAABB(&aabb,transform,0);
     extra_utils::b2AABB_push(L,aabb);
     return 1;
 }
@@ -98,7 +99,7 @@ static int ComputeMass(lua_State* L){
     PolygonShape *shape =  PolygonShape_get_userdata(L,1);
     float density =  luaL_checknumber(L,2);
     b2MassData massData;
-    shape->shape.ComputeMass(&massData,density);
+    shape->shape->ComputeMass(&massData,density);
     extra_utils::massData_to_table(L,massData);
     return 1;
 }
@@ -110,7 +111,7 @@ static int Set(lua_State* L){
     PolygonShape *shape =  PolygonShape_get_userdata(L,1);
     int verticesSize = 0;
     b2Vec2* vertices = extra_utils::parse_vertices(L,2,&verticesSize);
-    shape->shape.Set(vertices,verticesSize);
+    shape->shape->Set(vertices,verticesSize);
     delete[] vertices;
     return 0;
 }
@@ -126,11 +127,11 @@ static int SetAsBox(lua_State* L){
     float hx = luaL_checknumber(L,2);
     float hy = luaL_checknumber(L,3);
     if(count == 3){
-        shape->shape.SetAsBox(hx,hy);
+        shape->shape->SetAsBox(hx,hy);
     }else{
         b2Vec2 center = extra_utils::get_b2vec_safe(L,4,"center not vector3");
         float angle = luaL_checknumber(L,5);
-        shape->shape.SetAsBox(hx,hy,center,angle);
+        shape->shape->SetAsBox(hx,hy,center,angle);
     }
     return 0;
 }
@@ -138,14 +139,14 @@ static int SetAsBox(lua_State* L){
 static int Validate(lua_State* L){
     utils::check_arg_count(L, 1);
     PolygonShape *shape =  PolygonShape_get_userdata(L,1);
-    lua_pushboolean(L,shape->shape.Validate());
+    lua_pushboolean(L,shape->shape->Validate());
     return 1;
 }
 
 static int GetCentroid(lua_State* L){
     utils::check_arg_count(L, 1);
     PolygonShape *shape =  PolygonShape_get_userdata(L,1);
-    b2Vec2 centroid = shape->shape.m_centroid;
+    b2Vec2 centroid = shape->shape->m_centroid;
     utils::push_vector(L, centroid.x, centroid.y, 0);
     return 1;
 }
@@ -154,8 +155,8 @@ static int GetVertices(lua_State* L){
     utils::check_arg_count(L, 1);
     PolygonShape *shape =  PolygonShape_get_userdata(L,1);
     lua_newtable(L);
-    for (int32 i = 0; i < shape->shape.m_count; ++i){
-        b2Vec2 vertex = shape->shape.m_vertices[i];
+    for (int32 i = 0; i < shape->shape->m_count; ++i){
+        b2Vec2 vertex = shape->shape->m_vertices[i];
         utils::push_vector(L, vertex.x, vertex.y, 0);
         lua_rawseti(L, -2, i+1);
     }
@@ -166,8 +167,8 @@ static int GetNormals(lua_State* L){
     utils::check_arg_count(L, 1);
     PolygonShape *shape =  PolygonShape_get_userdata(L,1);
     lua_newtable(L);
-    for (int32 i = 0; i < shape->shape.m_count; ++i){
-        b2Vec2 normal = shape->shape.m_normals[i];
+    for (int32 i = 0; i < shape->shape->m_count; ++i){
+        b2Vec2 normal = shape->shape->m_normals[i];
         utils::push_vector(L, normal.x, normal.y, 0);
         lua_rawseti(L, -2, i+1);
     }
@@ -177,14 +178,14 @@ static int GetNormals(lua_State* L){
 static int GetCount(lua_State* L){
     utils::check_arg_count(L, 1);
     PolygonShape *shape =  PolygonShape_get_userdata(L,1);
-    lua_pushnumber(L,shape->shape.m_count);
+    lua_pushnumber(L,shape->shape->m_count);
     return 1;
 }
 
 
 //endregion
 
-PolygonShape* b2PolygonShape_push(lua_State *L, b2PolygonShape b2Shape){
+PolygonShape* b2PolygonShape_push(lua_State *L, b2PolygonShape* b2Shape){
     PolygonShape *shape = new PolygonShape(b2Shape);
     *static_cast<PolygonShape**>(lua_newuserdata(L, sizeof(PolygonShape*))) = shape;
     if(luaL_newmetatable(L, META_NAME_POLYGON_SHAPE)){
@@ -217,11 +218,12 @@ PolygonShape* b2PolygonShape_push(lua_State *L, b2PolygonShape b2Shape){
     return shape;
 }
 
-PolygonShape::PolygonShape(b2PolygonShape shape){
-    this->shape = shape;
+PolygonShape::PolygonShape(b2PolygonShape* shape){
+    this->shape = (b2PolygonShape*) b2Shape_clone(shape);
 }
 
-PolygonShape::~PolygonShape() {
+PolygonShape::~PolygonShape(){
+    b2Shape_free(this->shape);
 }
 
 

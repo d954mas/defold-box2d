@@ -1,6 +1,7 @@
 #include "shape/circle_shape.h"
 #include "utils.h"
 #include "extra_utils.h"
+#include "allocators.h"
 
 #define META_NAME_CIRCLE_SHAPE "Box2d::CircleShapeClass"
 
@@ -24,21 +25,21 @@ static int CircleShape_destroy(lua_State* L){
 static int GetType(lua_State* L){
     utils::check_arg_count(L, 1);
     CircleShape *shape =  CircleShape_get_userdata(L,1);
-    lua_pushnumber(L, shape->shape.GetType());
+    lua_pushnumber(L, shape->shape->GetType());
     return 1;
 }
 
 static int GetRadius(lua_State* L){
     utils::check_arg_count(L, 1);
     CircleShape *shape =  CircleShape_get_userdata(L,1);
-    lua_pushnumber(L, shape->shape.m_radius);
+    lua_pushnumber(L, shape->shape->m_radius);
     return 1;
 }
 
 static int SetRadius(lua_State* L){
     utils::check_arg_count(L, 2);
     CircleShape *shape =  CircleShape_get_userdata(L,1);
-    shape->shape.m_radius = luaL_checknumber(L,2);
+    shape->shape->m_radius = luaL_checknumber(L,2);
     return 0;
 }
 
@@ -53,7 +54,7 @@ static int Clone(lua_State* L){
 static int GetChildCount(lua_State* L){
     utils::check_arg_count(L, 1);
     CircleShape *shape =  CircleShape_get_userdata(L,1);
-    lua_pushnumber(L, shape->shape.GetChildCount());
+    lua_pushnumber(L, shape->shape->GetChildCount());
     return 1;
 }
 
@@ -62,7 +63,7 @@ static int TestPoint(lua_State* L){
     CircleShape *shape =  CircleShape_get_userdata(L,1);
     b2Transform transform = extra_utils::get_b2Transform_safe(L,2,"not transform");
     b2Vec2 point = extra_utils::get_b2vec_safe(L,3,"point not vector3");
-    lua_pushboolean(L, shape->shape.TestPoint(transform, point));
+    lua_pushboolean(L, shape->shape->TestPoint(transform, point));
     return 1;
 }
 
@@ -75,7 +76,7 @@ static int RayCast(lua_State* L){
     output.fraction = -1;
     output.normal.x = 0;
     output.normal.y = 0;
-    bool result = shape->shape.RayCast(&output,input,transform,0);
+    bool result = shape->shape->RayCast(&output,input,transform,0);
     if(result){
         extra_utils::b2RayCastOutput_push(L,output);
     }else{
@@ -89,7 +90,7 @@ static int ComputeAABB(lua_State* L){
     CircleShape *shape =  CircleShape_get_userdata(L,1);
     b2Transform transform = extra_utils::get_b2Transform_safe(L,2,"not transform");
     b2AABB aabb;
-    shape->shape.ComputeAABB(&aabb,transform,0);
+    shape->shape->ComputeAABB(&aabb,transform,0);
     extra_utils::b2AABB_push(L,aabb);
     return 1;
 }
@@ -99,7 +100,7 @@ static int ComputeMass(lua_State* L){
     CircleShape *shape =  CircleShape_get_userdata(L,1);
     float density =  luaL_checknumber(L,2);
     b2MassData massData;
-    shape->shape.ComputeMass(&massData,density);
+    shape->shape->ComputeMass(&massData,density);
     extra_utils::massData_to_table(L,massData);
     return 1;
 }
@@ -109,21 +110,21 @@ static int ComputeMass(lua_State* L){
 static int SetPosition(lua_State* L){
     utils::check_arg_count(L, 2);
     CircleShape *shape = CircleShape_get_userdata(L,1);
-    shape->shape.m_p = extra_utils::get_b2vec_safe(L,2, "position not vector");
+    shape->shape->m_p = extra_utils::get_b2vec_safe(L,2, "position not vector");
     return 0;
 }
 
 static int GetPosition(lua_State* L){
     utils::check_arg_count(L, 1);
     CircleShape *shape = CircleShape_get_userdata(L,1);
-    b2Vec2 position = shape->shape.m_p;
+    b2Vec2 position = shape->shape->m_p;
     utils::push_vector(L, position.x, position.y, 0);
     return 1;
 }
 
 //endregion
 
-CircleShape* b2CircleShape_push(lua_State *L, b2CircleShape b2Shape){
+CircleShape* b2CircleShape_push(lua_State *L, b2CircleShape* b2Shape){
     CircleShape *shape = new CircleShape(b2Shape);
     *static_cast<CircleShape**>(lua_newuserdata(L, sizeof(CircleShape*))) = shape;
     if(luaL_newmetatable(L, META_NAME_CIRCLE_SHAPE)){
@@ -151,11 +152,12 @@ CircleShape* b2CircleShape_push(lua_State *L, b2CircleShape b2Shape){
     return shape;
 }
 
-CircleShape::CircleShape(b2CircleShape shape){
-    this->shape = shape;
+CircleShape::CircleShape(b2CircleShape* shape){
+    this->shape = (b2CircleShape*) b2Shape_clone(shape);
 }
 
 CircleShape::~CircleShape() {
+    b2Shape_free(this->shape);
 }
 
 

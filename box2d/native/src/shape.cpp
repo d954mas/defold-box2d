@@ -1,6 +1,7 @@
 #include "shape.h"
 #include "utils.h"
 #include "extra_utils.h"
+#include "allocators.h"
 
 namespace box2dDefoldNE {
 
@@ -18,7 +19,7 @@ b2Vec2* parse_vertices(lua_State *L, const char* key,const char* error,int* b2ve
 
 
 b2CircleShape* b2CircleShape_from_table(lua_State *L){
-    b2CircleShape* shape = new b2CircleShape();
+    b2CircleShape* shape = b2CircleShape_new();
     shape->m_radius = utils::table_get_double_safe(L,"circle_radius","no circle_radius");
     if(utils::table_is_not_nil(L,"circle_position")){
         b2Vec2 position = extra_utils::table_get_b2vec_safe(L,"circle_position","circle_position not vector3");
@@ -28,7 +29,7 @@ b2CircleShape* b2CircleShape_from_table(lua_State *L){
 }
 
 b2EdgeShape* b2EdgeShape_from_table(lua_State *L){
-    b2EdgeShape* shape = new b2EdgeShape();
+    b2EdgeShape* shape = b2EdgeShape_new();
     b2Vec2 v1 = extra_utils::table_get_b2vec_safe(L,"edge_v1","edge_v1 not vector3");
     b2Vec2 v2 = extra_utils::table_get_b2vec_safe(L,"edge_v2","edge_v2 not vector3");
     if(utils::table_get_boolean(L,"edge_two_sided",false)){
@@ -43,7 +44,7 @@ b2EdgeShape* b2EdgeShape_from_table(lua_State *L){
 }
 
 b2PolygonShape* b2PolygonShape_from_table(lua_State *L){
-    b2PolygonShape* shape = new b2PolygonShape();
+    b2PolygonShape* shape = b2PolygonShape_new();
     if(utils::table_get_boolean(L,"box",false)){
         double box_hx = utils::table_get_double_safe(L,"box_hx","no box_hx");
         double box_hy = utils::table_get_double_safe(L,"box_hy","no box_hy");
@@ -72,7 +73,7 @@ b2PolygonShape* b2PolygonShape_from_table(lua_State *L){
 }
 
 b2ChainShape* b2ChainShape_from_table(lua_State *L){
-    b2ChainShape* shape = new b2ChainShape();
+    b2ChainShape* shape = b2ChainShape_new();
     int verticesSize = 0;
     b2Vec2* vertices = parse_vertices(L,"chain_vertices","no chain_vertices",&verticesSize);
     if(utils::table_get_boolean(L,"chain_loop",false)){
@@ -86,6 +87,7 @@ b2ChainShape* b2ChainShape_from_table(lua_State *L){
     return shape;
 }
 
+//free b2Shape after use
 b2Shape* b2Shape_from_lua(lua_State *L, int index){
     if (lua_istable(L, index)) {
         lua_pushvalue(L,index);
@@ -108,24 +110,16 @@ b2Shape* b2Shape_from_lua(lua_State *L, int index){
     }else if(lua_isuserdata(L, index)){
         if(utils::test_userdata(L, index, "Box2d::CircleShapeClass")){
             CircleShape* shape = CircleShape_get_userdata(L,index);
-            b2CircleShape* clone = new b2CircleShape();
-            *clone = *&shape->shape;
-            return clone;
+            return b2Shape_clone(shape->shape);
         }else if(utils::test_userdata(L, index, "Box2d::PolygonShapeClass")){
             PolygonShape* shape = PolygonShape_get_userdata(L,index);
-            b2PolygonShape* clone = new b2PolygonShape();
-            *clone = *&shape->shape;
-            return clone;
+            return b2Shape_clone(shape->shape);
         }else if(utils::test_userdata(L, index, "Box2d::EdgeShapeClass")){
             EdgeShape* shape = EdgeShape_get_userdata(L,index);
-            b2EdgeShape* clone = new b2EdgeShape();
-            *clone = *&shape->shape;
-            return clone;
+           return b2Shape_clone(shape->shape);
         }else if(utils::test_userdata(L, index, "Box2d::ChainShapeClass")){
             ChainShape* shape = ChainShape_get_userdata(L,index);
-            b2ChainShape* clone = new b2ChainShape();
-            clone->CreateChain(shape->shape.m_vertices, shape->shape.m_count, shape->shape.m_prevVertex, shape->shape.m_nextVertex);
-            return clone;
+            return b2Shape_clone(shape->shape);
         }else {
               utils::error(L,"b2Shape unknown userdata");
         }
@@ -133,7 +127,6 @@ b2Shape* b2Shape_from_lua(lua_State *L, int index){
         utils::error(L,"b2Shape should be table or userdata");
     }
 }
-
 
 
 }

@@ -2,6 +2,7 @@
 #include "utils.h"
 #include "body.h"
 #include "filter.h"
+#include "shape.h"
 
 #define META_NAME "Box2d::FixtureClass"
 #define USERDATA_NAME "__userdata_fixture"
@@ -55,6 +56,13 @@ static int GetType(lua_State *L){ //b2Shape::Type GetType() const
 }
 //NOT IMPL
 //const b2Shape * GetShape() const
+
+static int GetShape(lua_State *L){ //b2Shape::Type GetType() const
+    utils::check_arg_count(L, 1);
+    Fixture *fixture = Fixture_get_userdata_safe(L, 1);
+    b2Shape* shape = fixture->fixture->GetShape();
+    return 1;
+}
 
 static int SetSensor(lua_State *L){ //void SetSensor(bool sensor)Set if this fixture is a sensor.
     utils::check_arg_count(L, 2);
