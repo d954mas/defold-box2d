@@ -57,6 +57,14 @@ namespace extra_utils {
     	return transform;
     }
 
+    void b2Transform_push(lua_State *L,b2Transform transform){
+        lua_newtable(L);
+        utils::push_vector(L, transform.p.x, transform.p.y, 0);
+        lua_setfield(L, -2, "p");
+        lua_pushnumber(L, transform.q.GetAngle());
+        lua_setfield(L, -2, "q");
+    }
+
     b2AABB get_b2AABB_safe(lua_State *L,int index, const char *error){
         b2AABB aabb;
         if (lua_istable(L, index)) {

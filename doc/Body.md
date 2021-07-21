@@ -129,8 +129,8 @@ Note: contacts are updated on the next call to b2World::Step.
 Get the body transform for the body's origin.
 
 **RETURN**
-* (vector3) - Position
-* (number) - Angle
+* [(Box2dTransform)](Box2dTransform.md) - A struct containing the p(position) and q(angle)
+
 
 ---
 ### Box2dBody:GetPosition()

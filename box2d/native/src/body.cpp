@@ -111,10 +111,8 @@ static int GetTransform(lua_State *L){ //const b2Transform& GetTransform () cons
     utils::check_arg_count(L, 1);
     Body *body = Body_get_userdata_safe(L, 1);
     const b2Transform& transform = body->body->GetTransform();
-    b2Vec2 position = transform.p;
-    utils::push_vector(L, position.x, position.y, 0);
-    lua_pushnumber(L, transform.q.GetAngle());
-    return 2;
+    extra_utils::b2Transform_push(L, transform);
+    return 1;
 };
 
 static int GetPosition(lua_State *L){ //const b2Vec2& GetPosition () const
