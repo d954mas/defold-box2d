@@ -87,7 +87,9 @@ b2Shape* b2ChainShape::Clone(b2BlockAllocator* allocator) const
 {
 	void* mem = allocator->Allocate(sizeof(b2ChainShape));
 	b2ChainShape* clone = new (mem) b2ChainShape;
-	clone->CreateChain(m_vertices, m_count, m_prevVertex, m_nextVertex);
+	if(m_count>=2){
+	    clone->CreateChain(m_vertices, m_count, m_prevVertex, m_nextVertex);
+	}
 	return clone;
 }
 
