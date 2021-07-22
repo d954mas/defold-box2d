@@ -54,13 +54,11 @@ static int GetType(lua_State *L){ //b2Shape::Type GetType() const
     lua_pushnumber(L, fixture->fixture->GetType());
     return 1;
 }
-//NOT IMPL
-//const b2Shape * GetShape() const
 
 static int GetShape(lua_State *L){ //b2Shape::Type GetType() const
     utils::check_arg_count(L, 1);
     Fixture *fixture = Fixture_get_userdata_safe(L, 1);
-    b2Shape* shape = fixture->fixture->GetShape();
+    b2Shape_push(L,fixture->fixture->GetShape());
     return 1;
 }
 
@@ -252,6 +250,7 @@ void FixtureInitMetaTable(lua_State *L){
 
     luaL_Reg functions[] = {
         {"GetType",GetType},
+        {"GetShape",GetShape},
         {"SetSensor",SetSensor},
         {"IsSensor",IsSensor},
         {"SetFilterData",SetFilterData},

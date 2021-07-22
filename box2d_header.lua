@@ -162,6 +162,10 @@ local Box2dFixture = {}
 ---@return number box2d.b2Shape
 function Box2dFixture:GetType() end
 
+--- Get the copy of shape. You can modify it but fixture shape not changed.
+---@return Box2dShape
+function Box2dFixture:GetShape() end
+
 --- Set if this fixture is a sensor.
 ---@param sensor boolean
 function Box2dFixture:SetSensor(sensor) end

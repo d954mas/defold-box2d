@@ -35,6 +35,7 @@ _Warning:_ This function is locked during callbacks.
 ## Methods
 
 * Box2dFixture:[GetType](#box2dfixturegettype) ()
+* Box2dFixture:[GetShape](#box2dfixturegetshape) ()
 * Box2dFixture:[SetSensor](#box2dfixturesetsensorsensor) (sensor)
 * Box2dFixture:[IsSensor](#box2dfixtureissensor) ()
 * Box2dFixture:[SetFilterData](#box2dfixturesetfilterdatafilter) (filter)
@@ -61,6 +62,12 @@ _Warning:_ This function is locked during callbacks.
 
 **RETURN**
 * (number(box2d.b2Shape)) -
+
+---
+### Box2dFixture:GetShape()
+
+**RETURN**
+* [(Box2dShape)](Shape.md)
 
 ---
 ### Box2dFixture:SetSensor(sensor)

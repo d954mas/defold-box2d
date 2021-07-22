@@ -461,11 +461,11 @@ namespace utils {
 
 	bool test_userdata(lua_State *L,int idx, const char* tname){
         if(!lua_isuserdata(L,idx)){return false;}
-        luaL_getmetatable(L,tname);
         if(!lua_getmetatable(L, idx)){
-            lua_pop(L,1);
             return false;
         }
+        luaL_getmetatable(L,tname);
+
         bool equals = lua_equal(L,-1,-2);
         lua_pop(L,2);
         return equals;

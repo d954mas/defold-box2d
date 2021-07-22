@@ -94,19 +94,26 @@ b2Shape* b2Shape_from_lua(lua_State *L, int index){
         b2Shape* result = NULL;
 
         b2Shape::Type shapeType = static_cast<b2Shape::Type>(utils::table_get_integer_safe(L,"shape","no shape"));
-
-        if(shapeType == b2Shape::e_circle){
-            result = b2CircleShape_from_table(L);
-        }else if(shapeType == b2Shape::e_edge){
-            result = b2EdgeShape_from_table(L);
-        }else if(shapeType == b2Shape::e_polygon){
-            result = b2PolygonShape_from_table(L);
-        }else if(shapeType == b2Shape::e_chain){
-            result = b2ChainShape_from_table(L);
+        switch(shapeType){
+            case b2Shape::e_circle:{
+                result = b2CircleShape_from_table(L);
+                break;
+            }
+            case b2Shape::e_polygon:{
+                result = b2PolygonShape_from_table(L);
+                break;
+            }
+            case b2Shape::e_edge:{
+                result = b2EdgeShape_from_table(L);
+                break;
+            }
+            case b2Shape::e_chain:{
+                result = b2ChainShape_from_table(L);
+                break;
+            }
         }
-
-       lua_pop(L,1);
-       return result;
+        lua_pop(L,1);
+        return result;
     }else if(lua_isuserdata(L, index)){
         if(utils::test_userdata(L, index, "Box2d::CircleShapeClass")){
             CircleShape* shape = CircleShape_get_userdata(L,index);
@@ -121,12 +128,32 @@ b2Shape* b2Shape_from_lua(lua_State *L, int index){
             ChainShape* shape = ChainShape_get_userdata(L,index);
             return b2Shape_clone(shape->shape);
         }else {
-              utils::error(L,"b2Shape unknown userdata");
+            utils::error(L,"b2Shape unknown userdata");
         }
     }else{
         utils::error(L,"b2Shape should be table or userdata");
     }
 }
 
+void b2Shape_push(lua_State *L, b2Shape* shape){
+    switch(shape->GetType()){
+        case b2Shape::e_circle:{
+            b2CircleShape_push(L,(b2CircleShape*)shape);
+            break;
+        }
+        case b2Shape::e_polygon:{
+            b2PolygonShape_push(L,(b2PolygonShape*)shape);
+            break;
+        }
+        case b2Shape::e_edge:{
+            b2EdgeShape_push(L,(b2EdgeShape*)shape);
+            break;
+        }
+        case b2Shape::e_chain:{
+            b2ChainShape_push(L,(b2ChainShape*)shape);
+            break;
+        }
+    }
+}
 
 }

@@ -23,6 +23,8 @@ return function()
             createFixture(w, {
                 shape = shape
             })
+            local shape_userdata = box2d.NewCircleShape()
+            createFixture(w,{shape = shape_userdata})
             w:Destroy()
         end)
 
@@ -30,6 +32,10 @@ return function()
             local w = box2d.NewWorld()
             local body = w:CreateBody()
             local f1 = body:CreateFixture({ shape = box2d.b2Shape.e_circle, circle_radius = 1, circle_position = vmath.vector3(0) }, 1)
+            assert_not_nil(f1)
+
+            local shape_userdata = box2d.NewCircleShape()
+            f1 = body:CreateFixture( shape_userdata , 1)
             assert_not_nil(f1)
             w:Destroy()
         end)
@@ -119,6 +125,24 @@ return function()
             w:Destroy()
         end)
 
+        test("GetShape()", function()
+            local w = box2d.NewWorld()
+            local circle_shape = box2d.NewCircleShape()
+            circle_shape:SetRadius(1)
+
+            local body = w:CreateBody({ type = box2d.b2BodyType.b2_dynamicBody })
+            local f = body:CreateFixture({shape = circle_shape})
+            assert_equal(f:GetType(), box2d.b2Shape.e_circle)
+            local shape_fixture = f:GetShape()
+            assert_equal(f:GetType(), shape_fixture:GetType())
+
+            assert_equal(circle_shape:GetRadius(), shape_fixture:GetRadius())
+            shape_fixture:SetRadius(2)
+            assert_not_equal(shape_fixture:GetRadius(), circle_shape:GetRadius())
+
+            w:Destroy()
+        end)
+
         test("Set/Is Sensor()", function()
             local w = box2d.NewWorld()
             local f = createFixture(w, { shape = shape })
@@ -143,7 +167,7 @@ return function()
             assert_equal(filter.groupIndex, 10)
             w:Destroy()
 
-            local status, error = pcall(f.SetFilterData,f,{})
+            local status, error = pcall(f.SetFilterData, f, {})
             assert_false(status)
         end)
 
