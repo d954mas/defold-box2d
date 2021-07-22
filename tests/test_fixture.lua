@@ -24,7 +24,7 @@ return function()
                 shape = shape
             })
             local shape_userdata = box2d.NewCircleShape()
-            createFixture(w,{shape = shape_userdata})
+            createFixture(w, { shape = shape_userdata })
             w:Destroy()
         end)
 
@@ -35,7 +35,7 @@ return function()
             assert_not_nil(f1)
 
             local shape_userdata = box2d.NewCircleShape()
-            f1 = body:CreateFixture( shape_userdata , 1)
+            f1 = body:CreateFixture(shape_userdata, 1)
             assert_not_nil(f1)
             w:Destroy()
         end)
@@ -131,7 +131,7 @@ return function()
             circle_shape:SetRadius(1)
 
             local body = w:CreateBody({ type = box2d.b2BodyType.b2_dynamicBody })
-            local f = body:CreateFixture({shape = circle_shape})
+            local f = body:CreateFixture({ shape = circle_shape })
             assert_equal(f:GetType(), box2d.b2Shape.e_circle)
             local shape_fixture = f:GetShape()
             assert_equal(f:GetType(), shape_fixture:GetType())
@@ -213,6 +213,24 @@ return function()
             local fixture = createFixture(w, { shape = shape })
             assert_true(fixture:TestPoint(vmath.vector3(0, 0, 0)))
             assert_false(fixture:TestPoint(vmath.vector3(1.1, 0, 0)))
+
+            w:Destroy()
+        end)
+
+        test("RayCast()", function()
+            local w = box2d.NewWorld()
+            local shape_userdata = box2d.NewCircleShape()
+            shape_userdata:SetRadius(1)
+            local fixture = createFixture(w, { shape = shape_userdata })
+
+            local raycast = fixture:RayCast({ p1 = vmath.vector3(-2, 2, 0), p2 = vmath.vector3(2, 2, 0), maxFraction = 1 }, 0)
+            assert_nil(raycast)
+
+            raycast = fixture:RayCast({ p1 = vmath.vector3(-2, 0, 0), p2 = vmath.vector3(2, 0, 0), maxFraction = 1 }, 0)
+
+            assert_not_nil(raycast)
+            assert_not_nil(raycast.normal)
+            assert_not_nil(raycast.fraction)
 
             w:Destroy()
         end)

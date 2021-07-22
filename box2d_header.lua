@@ -209,6 +209,12 @@ function Box2dFixture:SetUserData(userdata) end
 ---@param point vector3 a point in world coordinates.
 function Box2dFixture:TestPoint(point) end
 
+--- Cast a ray against this shape.
+--- @param input Box2dRayCastInput the ray-cast input parameters.
+--- @param childIndex number|nil the child shape index (e.g. edge index)
+---@return Box2dRayCastOutput|nil
+function Box2dFixture:RayCast(input, childIndex) end
+
 --- Get the mass data for this fixture. The mass data is based on the density and
 --- the shape. The rotational inertia is about the shape's origin. This operation
 --- may be expensive.

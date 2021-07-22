@@ -153,10 +153,23 @@ static int TestPoint(lua_State *L){ //bool TestPoint (const b2Vec2 &p) const
     return 1;
 }
 
-
-
-//bool RayCast (b2RayCastOutput *output, const b2RayCastInput &input, int32 childIndex) const
-
+static int RayCast(lua_State* L){
+    utils::check_arg_count(L, 3);
+    Fixture *fixture=  Fixture_get_userdata(L,1);
+    b2RayCastInput  input = extra_utils::get_b2RayCastInput_safe(L,2);
+    int childIndex = luaL_checknumber(L,3);
+    b2RayCastOutput output;
+    output.fraction = -1;
+    output.normal.x = 0;
+    output.normal.y = 0;
+    bool result = fixture->fixture->RayCast(&output,input,childIndex);
+    if(result){
+        extra_utils::b2RayCastOutput_push(L,output);
+    }else{
+        lua_pushnil(L);
+    }
+    return 1;
+}
 
 //copy paste in body
 static int GetMassData(lua_State *L) { //void GetMassData (b2MassData *data) const
@@ -261,6 +274,7 @@ void FixtureInitMetaTable(lua_State *L){
         {"GetUserData",GetUserData},
         {"SetUserData",SetUserData},
         {"TestPoint",TestPoint},
+        {"RayCast",RayCast},
         {"GetMassData",GetMassData},
         {"GetDensity",GetDensity},
         {"SetDensity",SetDensity},

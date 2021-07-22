@@ -140,6 +140,17 @@ Test a point for containment in this fixture.
 * `point` (vector3) - A point in world coordinates.
 
 ---
+### Box2dFixture:RayCast(input, childIndex)
+Test a point for containment in this fixture.
+
+**PARAMETERS**
+* `input` (Box2dRayCastInput) - Athe ray-cast input parameters.
+* `childIndex` (number) - The child shape index (e.g. edge index).
+
+**RETURN**
+* (Box2dRayCastInput | nil)
+
+---
 ### Box2dFixture:GetMassData()
 Get the mass data for this fixture. The mass data is based on the density and
 the shape. The rotational inertia is about the shape's origin. This operation
