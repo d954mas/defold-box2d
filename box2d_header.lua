@@ -257,6 +257,13 @@ function Box2dFixture:GetRestitutionThreshold() end
 ---@param threshold number
 function Box2dFixture:SetRestitutionThreshold(threshold) end
 
+--- Get the fixture's AABB. This AABB may be enlarge and/or stale.
+--- If you need a more accurate AABB, compute it using the shape and
+--- the body transform.
+---@param childIndex number|nil the child shape index
+---@return Box2dAABB
+function Box2dFixture:GetAABB(childIndex) end
+
 --- Dump this fixture to the log file.
 ---@param bodyIndex number
 function Box2dFixture:Dump(bodyIndex) end

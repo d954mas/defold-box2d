@@ -220,6 +220,17 @@ existing contacts.
 * `threshold` (number) -
 
 ---
+### Box2dFixture:GetAABB(childIndex)
+Get the fixture's AABB. This AABB may be enlarge and/or stale.
+If you need a more accurate AABB, compute it using the shape and the body transform.
+
+**PARAMETERS**
+* `childIndex` (number) - The child shape index (e.g. edge index).
+
+**RETURN**
+* (Box2dAABB)
+
+---
 ### Box2dFixture:Dump(bodyIndex)
 Dump this fixture to the log file.
 

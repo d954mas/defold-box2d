@@ -238,7 +238,15 @@ static int SetRestitutionThreshold(lua_State *L){//void SetRestitutionThreshold 
     return 0;
 }
 
-//const b2AABB & 	GetAABB (int32 childIndex) const
+static int GetAABB(lua_State* L){
+    utils::check_arg_count(L, 2);
+    Fixture *fixture =  Fixture_get_userdata_safe(L, 1);
+    int childIndex = luaL_checknumber(L,2);
+    b2AABB aabb = fixture->fixture->GetAABB(childIndex);
+    extra_utils::b2AABB_push(L,aabb);
+    return 1;
+}
+
 
 static int Dump(lua_State *L){//void Dump (int32 bodyIndex)Dump this fixture to the log file.
     utils::check_arg_count(L, 2);
@@ -246,8 +254,6 @@ static int Dump(lua_State *L){//void Dump (int32 bodyIndex)Dump this fixture to 
     fixture->fixture->Dump(lua_tointeger(L, 2));
     return 0;
 }
-
-
 
 
 static int ToString(lua_State *L){
@@ -284,6 +290,7 @@ void FixtureInitMetaTable(lua_State *L){
         {"SetRestitution",SetRestitution},
         {"GetRestitutionThreshold",GetRestitutionThreshold},
         {"SetRestitutionThreshold",SetRestitutionThreshold},
+        {"GetAABB",GetAABB},
         {"Dump",Dump},
         {"__tostring",ToString},
         { 0, 0 }

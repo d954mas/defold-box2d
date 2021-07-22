@@ -286,6 +286,15 @@ return function()
             w:Destroy()
         end)
 
+        test("GetAABB()", function()
+            local w = box2d.NewWorld()
+            local f = createFixture(w, { shape = shape })
+            local aabb = f:GetAABB(0);
+            assert_not_nil(aabb.lowerBound)
+            assert_not_nil(aabb.upperBound)
+            w:Destroy()
+        end)
+
         test("Dump()", function()
             local w = box2d.NewWorld()
             local f = createFixture(w, { shape = shape })
