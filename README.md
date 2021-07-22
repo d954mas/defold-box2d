@@ -79,21 +79,15 @@ __3)__ No binding for some b2World functions.
 	b2Contact* GetContactList();
 	const b2ContactManager& GetContactManager() const;
 
-__4)__ No binding for some b2Fixture functions.
-
-	b2Shape* GetShape();
-	bool RayCast(b2RayCastOutput* output, const b2RayCastInput& input, int32 childIndex) const;
-	const b2AABB& GetAABB(int32 childIndex) const;
-
-__5)__ No binding for some b2Body functions.
+__4)__ No binding for some b2Body functions.
 
 	b2JointEdge* GetJointList () Get the list of all joints attached to this body
 	b2ContactEdge* GetContactList();
 
-__6)__ No binding for some b2Joint functions.
+__5)__ No binding for some b2Joint functions.
 
 	virtual void Draw(b2Draw* draw) const;
 
-__7)__ No binding some b2Contact functions.
+__6)__ No binding some b2Contact functions.
 
 	b2Contact* GetNext();
