@@ -1,6 +1,7 @@
 name: Build with bob
 
 on:
+  workflow_dispatch:
   push:
   pull_request_target:
   schedule:
