@@ -46,7 +46,7 @@ return function()
             local f = function() w.data = {} end
             local status, value = pcall(f)
             assert_false(status)
-            assert_equal(value, "world can't set new fields")
+            UTILS.test_error(value, "world can't set new fields")
             w:Destroy()
         end)
 

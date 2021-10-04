@@ -62,7 +62,7 @@ return function()
             end
             local status, error = pcall(f)
             assert_false(status)
-            assert_equal(error, "Fixture already destroyed")
+            UTILS.test_error(error, "Fixture already destroyed")
             w:Destroy()
         end)
 

@@ -32,7 +32,7 @@ return function()
             local w = box2d.NewWorld()
             local status,error = pcall(createFixture,w,{})
             assert_false(status)
-            assert_equal(error,"fixture def must have shape")
+            UTILS.test_error(error,"fixture def must have shape")
             w:Destroy()
         end)
 
