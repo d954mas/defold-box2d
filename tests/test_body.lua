@@ -58,7 +58,7 @@ return function()
             local f = function() return b:GetLinearVelocity() end
             local status, value = pcall(f)
             assert_false(status)
-            assert_equal(value, "Body already destroyed")
+            UTILS.test_error(value, "Body already destroyed")
 
             w:Destroy()
         end)
@@ -71,7 +71,7 @@ return function()
             local f = function() return body:GetLinearVelocity() end
             local status, value = pcall(f)
             assert_false(status)
-            assert_equal(value, "Body already destroyed")
+            UTILS.test_error(value, "Body already destroyed")
         end)
 
 

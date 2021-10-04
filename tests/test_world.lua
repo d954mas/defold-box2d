@@ -20,7 +20,7 @@ return function()
             local f = function() return w:GetProfile() end
             local status, value = pcall(f)
             assert_false(status)
-            assert_equal(value, "World already destroyed")
+            UTILS.test_error(value, "World already destroyed")
         end)
 
         test("destroy all refs", function()
@@ -34,11 +34,11 @@ return function()
 
             local status, value = pcall(f)
             assert_false(status)
-            assert_equal(value, "World already destroyed")
+            UTILS.test_error(value, "World already destroyed")
 
             status, value = pcall(f2)
             assert_false(status)
-            assert_equal(value, "World already destroyed")
+            UTILS.test_error(value, "World already destroyed")
         end)
 
         test("newIndex", function()

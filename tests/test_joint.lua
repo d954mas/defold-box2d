@@ -317,11 +317,11 @@ local function test_function(f)
                 local status, result
                 status, result = pcall(getter, joint)
                 assert_false(status)
-                assert_equal("function not supported", result)
+                UTILS.test_error(result,"function not supported")
 
                 status, result = pcall(setter, joint, f.test_method_get_set.config.values[1])
                 assert_false(status)
-                assert_equal("function not supported", result)
+                UTILS.test_error(result, "function not supported")
             else
                 assert(joint[f.name], "no function:" .. f.name)
                 local status, result
@@ -331,7 +331,7 @@ local function test_function(f)
                     status, result = pcall(joint[f.name], joint)
                 end
                 assert_false(status)
-                assert_equal("function not supported", result)
+                UTILS.test_error(result,"function not supported")
             end
         end
         w:Destroy()
@@ -357,7 +357,7 @@ return function()
 
             local status, value = pcall(joint.GetType,joint)
             assert_false(status)
-            assert_equal(value, "Joint already destroyed")
+            UTILS.test_error(value, "Joint already destroyed")
         end)
 
         test("destroy joint after body destroyed", function()
@@ -371,7 +371,7 @@ return function()
 
             local status, value = pcall(joint.GetType,joint)
             assert_false(status)
-            assert_equal(value, "Joint already destroyed")
+            UTILS.test_error(value, "Joint already destroyed")
         end)
 
         test("destroy joint after world destroyed", function()
@@ -385,7 +385,7 @@ return function()
 
             local status, value = pcall(joint.GetType,joint)
             assert_false(status)
-            assert_equal(value, "Joint already destroyed")
+            UTILS.test_error(value, "Joint already destroyed")
         end)
 
         test("GetType()", function() test_function(FUNCTIONS.GetType) end)
@@ -443,15 +443,15 @@ return function()
                 else
                     local status, result = pcall(joint.GetUpperLimit, joint)
                     assert_false(status)
-                    assert_equal("function not supported", result)
+                    UTILS.test_error(result,"function not supported")
 
                     status, result = pcall(joint.GetLowerLimit, joint)
                     assert_false(status)
-                    assert_equal("function not supported", result)
+                    UTILS.test_error(result,"function not supported")
 
                     status, result = pcall(joint.SetLimits, joint, 1, 2)
                     assert_false(status)
-                    assert_equal("function not supported", result)
+                    UTILS.test_error(result,"function not supported")
                 end
             end
         end)
@@ -497,11 +497,11 @@ return function()
                 else
                     local status, result = pcall(joint.GetJoint1, joint)
                     assert_false(status)
-                    assert_equal("function not supported", result)
+                    UTILS.test_error(result,"function not supported")
 
                     status, result = pcall(joint.GetJoint2, joint)
                     assert_false(status)
-                    assert_equal("function not supported", result)
+                    UTILS.test_error(result,"function not supported")
                 end
             end
         end)

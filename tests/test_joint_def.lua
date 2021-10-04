@@ -82,17 +82,13 @@ local function testJoint(w, config)
         assert(prev, "no key:" .. k)
         joint_def[k] = nil
         local status, value = pcall(w.CreateJoint, w, joint_def)
-        if(status) then
-            print("error")
-            print(k)
-        end
         assert_false(status)
         if(value ~= string.format("no %s", k))then
             print("error")
             print(value)
             print(string.format("no %s", k))
         end
-        assert_equal(value, string.format("no %s", k))
+        UTILS.test_error(value, string.format("no %s", k))
         joint_def[k] = prev
     end
 
@@ -138,7 +134,7 @@ return function()
             local w = box2d.NewWorld()
             local status, value = pcall(w.CreateJoint,w,{type = box2d.b2JointType.e_unknownJoint})
             assert_false(status);
-            assert_equal(value,"e_unknownJoint not supported")
+            UTILS.test_error(value,"e_unknownJoint not supported")
         end)
 
         test("Create e_revoluteJoint", function()
@@ -383,7 +379,7 @@ return function()
             local w = box2d.NewWorld()
             local status, value = pcall(w.CreateJoint,w,{type = box2d.b2JointType.e_ropeJoint})
             assert_false(status);
-            assert_equal(value,"e_ropeJoint not supported")
+            UTILS.test_error(value,"e_ropeJoint not supported")
             w:Destroy()
         end)
 
@@ -391,7 +387,7 @@ return function()
             local w = box2d.NewWorld()
             local status, value = pcall(w.CreateJoint,w,{type = 128})
             assert_false(status);
-            assert_equal(value,"bad joint type")
+            UTILS.test_error(value,"bad joint type")
             w:Destroy()
         end)
 
