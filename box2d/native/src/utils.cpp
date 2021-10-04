@@ -455,7 +455,7 @@ namespace utils {
 	}
 
 	void error(lua_State *L,const char *error){
-	    luaL_error(L,error);
+	    luaL_error(L,"%s",error);
 	//	lua_pushstring(L, error);
 	//	lua_error(L);
 
