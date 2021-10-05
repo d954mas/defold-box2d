@@ -18,7 +18,8 @@ return function()
             local w = box2d.NewWorld()
             local body = create_body(w)
             assert_not_nil(body)
-            assert_not_nil(body.__userdata_body)
+            assert_not_nil(body.__userdata_box2d)
+            assert_equal(body.__userdata_type_box2d,"body")
             w:Destroy()
         end)
 
@@ -26,7 +27,8 @@ return function()
             local w = box2d.NewWorld()
             local body = create_body(w)
             assert_not_nil(body)
-            assert_not_nil(body.__userdata_body)
+            assert_not_nil(body.__userdata_box2d)
+            assert_equal(body.__userdata_type_box2d,"body")
             w:Destroy()
         end)
 
@@ -58,7 +60,7 @@ return function()
             local f = function() return b:GetLinearVelocity() end
             local status, value = pcall(f)
             assert_false(status)
-            UTILS.test_error(value, "Body already destroyed")
+            UTILS.test_error(value, "body was destroyed")
 
             w:Destroy()
         end)
@@ -71,7 +73,7 @@ return function()
             local f = function() return body:GetLinearVelocity() end
             local status, value = pcall(f)
             assert_false(status)
-            UTILS.test_error(value, "Body already destroyed")
+            UTILS.test_error(value, "body was destroyed")
         end)
 
 
