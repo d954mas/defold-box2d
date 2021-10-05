@@ -49,7 +49,7 @@ BaseUserData* BaseUserData_get_userdata(lua_State *L, int index, char *userdata_
             obj = (BaseUserData *)lua_touserdata(L, -1);
             //check cpp box2d object not null
             if(obj->box2dObj == NULL){
-                luaL_error(L, "%s box2d object is NULL");
+                luaL_error(L, "%s box2d object is NULL", userdata_type);
             }
         }else if(lua_isnil(L,-1)){
              luaL_error(L, "%s was destroyed",userdata_type);
