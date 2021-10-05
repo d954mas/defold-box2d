@@ -49,16 +49,16 @@ BaseUserData* BaseUserData_get_userdata(lua_State *L, int index, char *userdata_
             obj = (BaseUserData *)lua_touserdata(L, -1);
             //check cpp box2d object not null
             if(obj->box2dObj == NULL){
-                luaL_error(L, "userdata box2d object is NULL");
+                luaL_error(L, "%s box2d object is NULL");
             }
         }else if(lua_isnil(L,-1)){
              luaL_error(L, "%s was destroyed",userdata_type);
         }else{
-              luaL_error(L, "userdata in not lightuserdata or nil");
+              luaL_error(L, "userdata:%s is not lightuserdata or nil");
         }
         lua_pop(L, 1);
     }else{
-        luaL_error(L, "can't get userdata.Need table");
+        luaL_error(L, "can't get %s. Need table get:%s",userdata_type, lua_typename(L, lua_type(L, index)));
     }
 
     assert(top == lua_gettop(L));
