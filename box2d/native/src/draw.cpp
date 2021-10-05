@@ -7,7 +7,6 @@
 
 namespace box2dDefoldNE {
 Draw::Draw(): BaseUserData(USERDATA_TYPE){
-    table_ref  = LUA_REFNIL;
     DrawPolygon_ref = LUA_REFNIL;
     DrawSolidPolygon_ref = LUA_REFNIL;
     DrawCircle_ref = LUA_REFNIL;
