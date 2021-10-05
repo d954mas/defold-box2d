@@ -51,8 +51,10 @@ BaseUserData* BaseUserData_get_userdata(lua_State *L, int index, char *userdata_
             if(obj->box2dObj == NULL){
                 luaL_error(L, "userdata box2d object is NULL");
             }
+        }else if(lua_isnil(L,-1)){
+             luaL_error(L, "%s was destroyed",userdata_type);
         }else{
-              luaL_error(L, "userdata in not lightuserdata");
+              luaL_error(L, "userdata in not lightuserdata or nil");
         }
         lua_pop(L, 1);
     }else{
@@ -98,8 +100,9 @@ void BaseUserData::Destroy(lua_State *L) {
         lua_pushnil(L);
         lua_setfield(L, -2, USERDATA_NAME);
 
-        lua_pushnil(L);
-        lua_setfield(L, -2, USERDATA_TYPE);
+        //do not delete type. Use type for error message when call deleted object
+      //  lua_pushnil(L);
+      //  lua_setfield(L, -2, USERDATA_TYPE);
 
         lua_pop(L,1);
 

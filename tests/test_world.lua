@@ -10,7 +10,8 @@ return function()
         test("create", function()
             local w = box2d.NewWorld()
             assert_not_nil(w)
-            assert_not_nil(w.__userdata_world)
+            assert_not_nil(w.__userdata_box2d)
+            assert_equal(w.__userdata_type_box2d, "world")
             w:Destroy()
         end)
 
@@ -20,7 +21,7 @@ return function()
             local f = function() return w:GetProfile() end
             local status, value = pcall(f)
             assert_false(status)
-            UTILS.test_error(value, "World already destroyed")
+            UTILS.test_error(value, "world was destroyed")
         end)
 
         test("destroy all refs", function()
@@ -34,11 +35,11 @@ return function()
 
             local status, value = pcall(f)
             assert_false(status)
-            UTILS.test_error(value, "World already destroyed")
+            UTILS.test_error(value, "world was destroyed")
 
             status, value = pcall(f2)
             assert_false(status)
-            UTILS.test_error(value, "World already destroyed")
+            UTILS.test_error(value, "world was destroyed")
         end)
 
         test("newIndex", function()
