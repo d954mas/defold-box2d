@@ -7,45 +7,28 @@
 #include "allocators.h"
 
 #define META_NAME "Box2d::BodyClass"
-#define USERDATA_NAME "__userdata_body"
+#define USERDATA_TYPE "body"
 
 namespace box2dDefoldNE {
 
-Body::Body(b2Body *b){
+Body::Body(b2Body *b):  BaseUserData(USERDATA_TYPE){
+    this->box2dObj = b;
+    this->metatable_name = META_NAME;
+
     user_data_ref = LUA_REFNIL;
 	body = b;
 	b2BodyUserData& userdata = body->GetUserData();
 	userdata.pointer = (uintptr_t)(void*) this;
-    table_ref = LUA_REFNIL;
 }
 
 Body::~Body() {
 
 }
 
-Body* Body_get_userdata(lua_State *L, int index) {
-    int top = lua_gettop(L);
-
-	Body *lua_body = NULL;
-	lua_getfield(L, index, USERDATA_NAME);
-	if (lua_islightuserdata(L, -1)) {
-		lua_body = (Body *)lua_touserdata(L, -1);
-		if(lua_body->body == NULL){
-		    lua_body = NULL;
-		}
-	}
-	lua_pop(L, 1);
-
-    assert(top == lua_gettop(L));
-	return lua_body;
-}
 
 Body* Body_get_userdata_safe(lua_State *L, int index) {
-    Body *lua_body = Body_get_userdata(L, index);
-    if (lua_body == NULL) {
-        utils::error(L,"Body already destroyed");
-    }
-	return lua_body;
+    Body *lua_body = (Body*) BaseUserData_get_userdata(L, index, USERDATA_TYPE);
+    return lua_body;
 }
 
 static int CreateFixture(lua_State *L){
@@ -621,34 +604,10 @@ void BodyInitMetaTable(lua_State *L){
     assert(top == lua_gettop(L));
 }
 
-void Body::Push(lua_State *L) {
-     DM_LUA_STACK_CHECK(L, 1);
-
-    if(table_ref == LUA_REFNIL){
-        // body
-        lua_createtable(L, 0, 1);
-        // body.__userdata
-        lua_pushlightuserdata(L, this);
-        lua_setfield(L, -2, USERDATA_NAME);
-
-        luaL_getmetatable(L, META_NAME);
-        lua_setmetatable(L, -2);
-
-        lua_pushvalue(L, -1);
-        table_ref = luaL_ref(L,LUA_REGISTRYINDEX);
-     }else{
-        lua_rawgeti(L,LUA_REGISTRYINDEX,table_ref);
-     }
-}
-
 void Body::Destroy(lua_State *L) {
-    if(body != NULL){
-        body = NULL;
-        utils::unref(L, user_data_ref);
-        user_data_ref = LUA_REFNIL;
-        utils::unref(L, table_ref);
-        table_ref = LUA_REFNIL;
-    }
+    utils::unref(L, user_data_ref);
+    user_data_ref = LUA_REFNIL;
+    BaseUserData::Destroy(L);
 }
 
 void Body::DestroyFixtures(lua_State *L) {

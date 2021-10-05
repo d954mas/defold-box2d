@@ -116,7 +116,7 @@ return function()
             local f = function () world:CreateBody({userData = 222}) end
             local status, error = pcall(f)
             assert_false(status)
-            assert_equal(error, "userdata can be only table or nil")
+            UTILS.test_error(error, "userdata can be only table or nil")
 
             local user_data = {}
             local body = world:CreateBody({userData = user_data})

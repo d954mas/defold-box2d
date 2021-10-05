@@ -75,8 +75,11 @@ function M.test_error(error, result)
     --    local idx_2 = string.find(error, ":")
      --   error = string.sub(error,idx_2+2)
    -- end
+    local start_error = error
     error = string.sub(error,#error-#result+1)
-
+    if(error ~= result)then
+        print("test error. Need:" .. result .. " Get:" .. start_error)
+    end
     return assert_equal(error,result)
 end
 

@@ -1,12 +1,12 @@
 #include "utils.h"
 #include "draw.h"
 #include <static_hash.h>
+
 #define META_NAME "Box2d::DrawClass"
-#define USERDATA_NAME "__userdata_draw"
+#define USERDATA_TYPE "draw"
 
 namespace box2dDefoldNE {
-Draw::Draw(){
-    table_ref  = LUA_REFNIL;
+Draw::Draw(): BaseUserData(USERDATA_TYPE){
     DrawPolygon_ref = LUA_REFNIL;
     DrawSolidPolygon_ref = LUA_REFNIL;
     DrawCircle_ref = LUA_REFNIL;
@@ -16,6 +16,9 @@ Draw::Draw(){
     DrawPoint_ref = LUA_REFNIL;
     defold_script_instance = LUA_REFNIL;
     L = NULL;
+
+    this->box2dObj = this;
+    this->metatable_name = META_NAME;
 }
 
 Draw::~Draw() {
@@ -80,30 +83,10 @@ Draw* Draw_from_table(lua_State *L){
     }
 }
 
-Draw* Draw_get_userdata(lua_State *L, int index) {
-    int top = lua_gettop(L);
-
-	Draw *lua_draw = NULL;
-	lua_getfield(L, index, USERDATA_NAME);
-	if (lua_islightuserdata(L, -1)) {
-		lua_draw = (Draw *)lua_touserdata(L, -1);
-		if(lua_draw->table_ref == LUA_REFNIL){
-		    lua_draw = NULL;
-		}
-	}
-	lua_pop(L, 1);
-
-    assert(top == lua_gettop(L));
-    return lua_draw;
-}
 
 Draw* Draw_get_userdata_safe(lua_State *L, int index) {
-    Draw *draw = Draw_get_userdata(L, index);
-    if (draw == NULL) {
-        utils::error(L,"Draw already destroyed");
-    }
-	return draw;
-
+    Draw *lua_draw = (Draw*) BaseUserData_get_userdata(L, index, USERDATA_TYPE);
+    return lua_draw;
 }
 
 static int SetFlags(lua_State *L){//void SetFlags(uint32 flags);
@@ -354,28 +337,8 @@ void Draw::DrawTransform(const b2Transform& xf) {
 }
 void Draw::DrawPoint(const b2Vec2& p, float size, const b2Color& color){}
 
-void Draw::Push(lua_State *L) {
-     DM_LUA_STACK_CHECK(L, 1);
-
-    if(table_ref == LUA_REFNIL){
-        // body
-        lua_createtable(L, 0, 1);
-        // body.__userdata
-        lua_pushlightuserdata(L, this);
-        lua_setfield(L, -2, USERDATA_NAME);
-
-        luaL_getmetatable(L, META_NAME);
-        lua_setmetatable(L, -2);
-
-        lua_pushvalue(L, -1);
-        table_ref = luaL_ref(L,LUA_REGISTRYINDEX);
-     }else{
-        lua_rawgeti(L,LUA_REGISTRYINDEX,table_ref);
-     }
-}
 
 void Draw::Destroy(lua_State *L) {
-    utils::unref(L, table_ref);
     utils::unref(L, DrawPolygon_ref);
     utils::unref(L, DrawSolidPolygon_ref);
     utils::unref(L, DrawCircle_ref);
@@ -385,7 +348,6 @@ void Draw::Destroy(lua_State *L) {
     utils::unref(L, DrawPoint_ref);
     utils::unref(L, defold_script_instance);
 
-    table_ref = LUA_REFNIL;
     DrawPolygon_ref = LUA_REFNIL;
     DrawSolidPolygon_ref = LUA_REFNIL;
     DrawCircle_ref = LUA_REFNIL;
@@ -394,5 +356,7 @@ void Draw::Destroy(lua_State *L) {
     DrawTransform_ref = LUA_REFNIL;
     DrawPoint_ref = LUA_REFNIL;
     defold_script_instance = LUA_REFNIL;
+
+    BaseUserData::Destroy(L);
 }
 }

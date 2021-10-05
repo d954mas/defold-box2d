@@ -1,4 +1,5 @@
 local DEFTEST = require "deftest.deftest"
+local TEST_BASE_USERDATA = require "tests.test_base_userdata"
 local TEST_EXTENSION = require "tests.test_extension"
 local TEST_WORLD = require "tests.test_world"
 local TEST_BODY_DEF = require "tests.test_body_def"
@@ -44,6 +45,7 @@ function M.run()
             end
     )
 
+    DEFTEST.add(TEST_BASE_USERDATA)
     DEFTEST.add(TEST_EXTENSION)
     DEFTEST.add(TEST_DRAW)
     DEFTEST.add(TEST_WORLD)

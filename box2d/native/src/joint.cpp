@@ -3,46 +3,27 @@
 #include "body.h"
 
 #define META_NAME "Box2d::JointClass"
-#define USERDATA_NAME "__userdata_joint"
+#define USERDATA_TYPE "joint"
 
 namespace box2dDefoldNE {
 
-Joint::Joint(b2Joint *j){
+Joint::Joint(b2Joint *j): BaseUserData(USERDATA_TYPE){
     user_data_ref = LUA_REFNIL;
     joint = j;
     b2JointUserData& userdata = joint->GetUserData();
     userdata.pointer = (uintptr_t)(void*) this;
-    table_ref = LUA_REFNIL;
+
+    this->box2dObj = j;
+    this->metatable_name = META_NAME;
 }
 
 Joint::~Joint() {
 
 }
 
-Joint* Joint_get_userdata(lua_State *L, int index) {
-    int top = lua_gettop(L);
-
-	Joint *lua_joint = NULL;
-	lua_getfield(L, index, USERDATA_NAME);
-	if (lua_islightuserdata(L, -1)) {
-		lua_joint = (Joint *)lua_touserdata(L, -1);
-		if(lua_joint->joint == NULL){
-            lua_joint = NULL;
-        }
-	}
-	lua_pop(L, 1);
-
-    assert(top == lua_gettop(L));
-    return lua_joint;
-}
-
 Joint* Joint_get_userdata_safe(lua_State *L, int index) {
-    Joint *joint = Joint_get_userdata(L, index);
-    if (joint == NULL) {
-        utils::error(L,"Joint already destroyed");
-    }
-	return joint;
-
+    Joint *lua_joint = (Joint*) BaseUserData_get_userdata(L, index, USERDATA_TYPE);
+	return lua_joint;
 }
 
 /// Get the type of the concrete joint.
@@ -1314,7 +1295,7 @@ static int GetCorrectionFactor(lua_State *L){ //float GetCorrectionFactor()
 
 static int ToString(lua_State *L){
     utils::check_arg_count(L, 1);
-    Joint *joint = Joint_get_userdata(L, 1);
+    Joint *joint = Joint_get_userdata_safe(L, 1);
     lua_pushfstring( L, "b2Joint[%p]",(void *) joint->joint);
 	return 1;
 }
@@ -1409,36 +1390,11 @@ void JointInitMetaTable(lua_State *L){
 }
 
 
-
-
-void Joint::Push(lua_State *L) {
-     DM_LUA_STACK_CHECK(L, 1);
-    if(table_ref == LUA_REFNIL){
-        // joint
-        lua_createtable(L, 0, 1);
-        // world.__userdata
-        lua_pushlightuserdata(L, this);
-        lua_setfield(L, -2, USERDATA_NAME);
-
-        luaL_getmetatable(L, META_NAME);
-        lua_setmetatable(L, -2);
-
-        lua_pushvalue(L, -1);
-        table_ref = luaL_ref(L,LUA_REGISTRYINDEX);
-     }else{
-        lua_rawgeti(L,LUA_REGISTRYINDEX,table_ref);
-     }
-
-}
-
 void Joint::Destroy(lua_State *L) {
-    if(joint != NULL){
-        joint = NULL;
-        utils::unref(L, user_data_ref);
-        user_data_ref = LUA_REFNIL;
-        utils::unref(L, table_ref);
-        table_ref = LUA_REFNIL;
-    }
+    utils::unref(L, user_data_ref);
+    user_data_ref = LUA_REFNIL;
+
+    BaseUserData::Destroy(L);
 }
 
 }

@@ -455,8 +455,10 @@ namespace utils {
 	}
 
 	void error(lua_State *L,const char *error){
-		lua_pushstring(L, error);
-		lua_error(L);
+	    luaL_error(L,"%s",error);
+	//	lua_pushstring(L, error);
+	//	lua_error(L);
+
 	}
 
 	bool test_userdata(lua_State *L,int idx, const char* tname){

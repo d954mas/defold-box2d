@@ -5,42 +5,26 @@
 #include "shape.h"
 
 #define META_NAME "Box2d::FixtureClass"
-#define USERDATA_NAME "__userdata_fixture"
+#define USERDATA_TYPE "fixture"
+
 namespace box2dDefoldNE {
-Fixture::Fixture(b2Fixture *f){
+Fixture::Fixture(b2Fixture *f) :BaseUserData(USERDATA_TYPE){
     user_data_ref = LUA_REFNIL;
     fixture = f;
     b2FixtureUserData& userdata = fixture->GetUserData();
     userdata.pointer = (uintptr_t)(void*) this;
-    table_ref = LUA_REFNIL;
+
+    this->box2dObj = f;
+    this->metatable_name = META_NAME;
 }
 
 Fixture::~Fixture() {
 
 }
 
-Fixture* Fixture_get_userdata(lua_State *L, int index) {
-    int top = lua_gettop(L);
-
-	Fixture *lua_fixture = NULL;
-	lua_getfield(L, index, USERDATA_NAME);
-	if (lua_islightuserdata(L, -1)) {
-		lua_fixture = (Fixture *)lua_touserdata(L, -1);
-		if(lua_fixture->fixture == NULL){
-            lua_fixture = NULL;
-        }
-	}
-	lua_pop(L, 1);
-
-    assert(top == lua_gettop(L));
-	return lua_fixture;
-}
 
 Fixture* Fixture_get_userdata_safe(lua_State *L, int index) {
-    Fixture *lua_fixture = Fixture_get_userdata(L, index);
-    if (lua_fixture == NULL) {
-        utils::error(L,"Fixture already destroyed");
-    }
+    Fixture *lua_fixture = (Fixture*) BaseUserData_get_userdata(L, index, USERDATA_TYPE);
 	return lua_fixture;
 }
 
@@ -155,7 +139,7 @@ static int TestPoint(lua_State *L){ //bool TestPoint (const b2Vec2 &p) const
 
 static int RayCast(lua_State* L){
     utils::check_arg_count(L, 3);
-    Fixture *fixture=  Fixture_get_userdata(L,1);
+    Fixture *fixture = Fixture_get_userdata_safe(L,1);
     b2RayCastInput  input = extra_utils::get_b2RayCastInput_safe(L,2);
     int childIndex = luaL_checknumber(L,3);
     b2RayCastOutput output;
@@ -306,35 +290,10 @@ void FixtureInitMetaTable(lua_State *L){
 }
 
 
-
-void Fixture::Push(lua_State *L) {
-     DM_LUA_STACK_CHECK(L, 1);
-    if(table_ref == LUA_REFNIL){
-        // fixture
-        lua_createtable(L, 0, 1);
-        // world.__userdata
-        lua_pushlightuserdata(L, this);
-        lua_setfield(L, -2, USERDATA_NAME);
-
-        luaL_getmetatable(L, META_NAME);
-        lua_setmetatable(L, -2);
-
-        lua_pushvalue(L, -1);
-        table_ref = luaL_ref(L,LUA_REGISTRYINDEX);
-     }else{
-        lua_rawgeti(L,LUA_REGISTRYINDEX,table_ref);
-     }
-
-}
-
 void Fixture::Destroy(lua_State *L) {
-    if(fixture != NULL){
-        fixture = NULL;
-        utils::unref(L, user_data_ref);
-        user_data_ref = LUA_REFNIL;
-        utils::unref(L, table_ref);
-        table_ref = LUA_REFNIL;
-    }
+    utils::unref(L, user_data_ref);
+    user_data_ref = LUA_REFNIL;
+    BaseUserData::Destroy(L);
 }
 
 }

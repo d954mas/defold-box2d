@@ -1,6 +1,10 @@
+local UTILS = require "tests.test_utils"
+
 return function()
     describe("Draw", function()
-        before(function() end)
+        before(function()
+            UTILS.set_env(getfenv(1))
+        end)
         after(function() end)
 
         test("create debug draw", function()
@@ -16,13 +20,14 @@ return function()
             }
             local draw = box2d.NewDebugDraw(cfg)
             assert_not_nil(draw)
-            assert_not_nil(draw.__userdata_draw)
+            assert_not_nil(draw.__userdata_box2d)
+            assert_equal(draw.__userdata_type_box2d,"draw")
 
             cfg.DrawBad = function() end
 
             local status, error = pcall(box2d.NewDebugDraw, cfg)
             assert_false(status)
-            assert_equal(error, "unknown key:DrawBad")
+            UTILS.test_error(error, "unknown key:DrawBad")
             draw:Destroy()
         end)
 
@@ -31,9 +36,13 @@ return function()
 
             draw:GetFlags()
             draw:Destroy()
+
+            assert_nil(draw.__userdata_box2d)
+            assert_equal(draw.__userdata_type_box2d,"draw")
+
             local status, error = pcall(draw.GetFlags, draw)
             assert_false(status)
-            assert_equal(error, "Draw already destroyed")
+            UTILS.test_error(error, "draw was destroyed")
         end)
 
         test("world:DrawDebug()", function()

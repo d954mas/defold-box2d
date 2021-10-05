@@ -13,7 +13,6 @@ local create_prismaticJoint = function(w)
     local bodyA = w:CreateBody({ position = vmath.vector3(0, 0, 0), type = box2d.b2BodyType.b2_dynamicBody })
     local bodyB = w:CreateBody({ position = vmath.vector3(1, 1, 0), type = box2d.b2BodyType.b2_dynamicBody })
     local joint = w:CreateJoint(box2d.InitializePrismaticJointDef(bodyA,bodyB,vmath.vector3(1, 0, 0),vmath.vector3(1, 0, 0)))
-
     return joint, bodyA, bodyB
 end
 
@@ -250,6 +249,8 @@ local function test_function(f)
     for _, joint_type in ipairs(all) do
         local w = box2d.NewWorld()
         local joint, b1, b2 = JOINTS[joint_type].creator(w)
+        assert_not_nil(joint.__userdata_box2d)
+        assert_equal(joint.__userdata_type_box2d,"joint")
         if (LUME.findi(f.joints, joint_type)) then
             local status, result
             if (f.test_method_get_set) then
@@ -317,11 +318,11 @@ local function test_function(f)
                 local status, result
                 status, result = pcall(getter, joint)
                 assert_false(status)
-                assert_equal("function not supported", result)
+                UTILS.test_error(result,"function not supported")
 
                 status, result = pcall(setter, joint, f.test_method_get_set.config.values[1])
                 assert_false(status)
-                assert_equal("function not supported", result)
+                UTILS.test_error(result, "function not supported")
             else
                 assert(joint[f.name], "no function:" .. f.name)
                 local status, result
@@ -331,7 +332,7 @@ local function test_function(f)
                     status, result = pcall(joint[f.name], joint)
                 end
                 assert_false(status)
-                assert_equal("function not supported", result)
+                UTILS.test_error(result,"function not supported")
             end
         end
         w:Destroy()
@@ -351,13 +352,18 @@ return function()
             local b = w:CreateBody()
             local b2 = w:CreateBody()
             local joint = w:CreateJoint({type = box2d.b2JointType.e_revoluteJoint, bodyA = b, bodyB = b2})
+            assert_not_nil(joint.__userdata_box2d)
+            assert_equal(joint.__userdata_type_box2d,"joint")
 
             joint:GetType()
             w:DestroyJoint(joint)
 
+            assert_nil(joint.__userdata_box2d)
+            assert_equal(joint.__userdata_type_box2d,"joint")
+
             local status, value = pcall(joint.GetType,joint)
             assert_false(status)
-            assert_equal(value, "Joint already destroyed")
+            UTILS.test_error(value, "joint was destroyed")
         end)
 
         test("destroy joint after body destroyed", function()
@@ -369,9 +375,12 @@ return function()
             joint:GetType()
             w:DestroyBody(b)
 
+            assert_nil(joint.__userdata_box2d)
+            assert_equal(joint.__userdata_type_box2d,"joint")
+
             local status, value = pcall(joint.GetType,joint)
             assert_false(status)
-            assert_equal(value, "Joint already destroyed")
+            UTILS.test_error(value, "joint was destroyed")
         end)
 
         test("destroy joint after world destroyed", function()
@@ -383,9 +392,12 @@ return function()
             joint:GetType()
             w:Destroy()
 
+            assert_nil(joint.__userdata_box2d)
+            assert_equal(joint.__userdata_type_box2d,"joint")
+
             local status, value = pcall(joint.GetType,joint)
             assert_false(status)
-            assert_equal(value, "Joint already destroyed")
+            UTILS.test_error(value, "joint was destroyed")
         end)
 
         test("GetType()", function() test_function(FUNCTIONS.GetType) end)
@@ -443,15 +455,15 @@ return function()
                 else
                     local status, result = pcall(joint.GetUpperLimit, joint)
                     assert_false(status)
-                    assert_equal("function not supported", result)
+                    UTILS.test_error(result,"function not supported")
 
                     status, result = pcall(joint.GetLowerLimit, joint)
                     assert_false(status)
-                    assert_equal("function not supported", result)
+                    UTILS.test_error(result,"function not supported")
 
                     status, result = pcall(joint.SetLimits, joint, 1, 2)
                     assert_false(status)
-                    assert_equal("function not supported", result)
+                    UTILS.test_error(result,"function not supported")
                 end
             end
         end)
@@ -497,11 +509,11 @@ return function()
                 else
                     local status, result = pcall(joint.GetJoint1, joint)
                     assert_false(status)
-                    assert_equal("function not supported", result)
+                    UTILS.test_error(result,"function not supported")
 
                     status, result = pcall(joint.GetJoint2, joint)
                     assert_false(status)
-                    assert_equal("function not supported", result)
+                    UTILS.test_error(result,"function not supported")
                 end
             end
         end)

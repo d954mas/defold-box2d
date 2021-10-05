@@ -48,7 +48,15 @@ return function()
             end
             local status, error = pcall(f)
             assert_false(status)
-            assert_true(error == "unknown key:circle_position" or error == "unknown key:shape" or error == "unknown key:circle_radius")
+            local error_1 = "unknown key:circle_position"
+            local error_2 = "b2Shape should be table or userdata"
+            local error_3 = "unknown key:circle_radius"
+
+            local error_1_2 =  string.sub(error,#error-#error_1+1)
+            local error_2_2 =  string.sub(error,#error-#error_2+1)
+            local error_3_2 =  string.sub(error,#error-#error_3+1)
+
+            assert_true(error_1 == error_1_2 or error_2 == error_2_2 or error_3 == error_3_2)
             w:Destroy()
         end)
 
@@ -62,7 +70,7 @@ return function()
             end
             local status, error = pcall(f)
             assert_false(status)
-            assert_equal(error, "Fixture already destroyed")
+            UTILS.test_error(error, "fixture was destroyed")
             w:Destroy()
         end)
 
@@ -95,7 +103,7 @@ return function()
 
             local status, value = pcall(fixture.GetDensity, fixture)
             assert_false(status)
-            assert_equal(value, "Fixture already destroyed")
+            UTILS.test_error(value, "fixture was destroyed")
 
             w:Destroy()
         end)
@@ -108,7 +116,7 @@ return function()
             w:Destroy()
             local status, value = pcall(fixture.GetDensity, fixture)
             assert_false(status)
-            assert_equal(value, "Fixture already destroyed")
+            UTILS.test_error(value, "fixture was destroyed")
         end)
 
         test("GetType()", function()

@@ -5,15 +5,14 @@
 #include <box2d/b2_draw.h>
 #include <dmsdk/sdk.h>
 #include <extra_utils.h>
-
+#include "base_userdata.h"
 
 namespace box2dDefoldNE {
 
-class Draw : public b2Draw{
+class Draw: public BaseUserData , public b2Draw{
 private:
 
 public:
-    int table_ref;
     int DrawPolygon_ref;
     int DrawSolidPolygon_ref;
     int DrawCircle_ref;
@@ -26,8 +25,8 @@ public:
 
     Draw();
     ~Draw();
-	void Push(lua_State *L);
-    void Destroy(lua_State *L);
+
+	virtual void Destroy(lua_State *L);
 
     void DrawPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color) override;
     void DrawSolidPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color) override;
@@ -40,7 +39,6 @@ public:
 
 void DrawInitMetaTable(lua_State *L);
 Draw* Draw_from_table(lua_State *L);
-Draw* Draw_get_userdata(lua_State *L, int index);
 Draw* Draw_get_userdata_safe(lua_State *L, int index);
 
 }
