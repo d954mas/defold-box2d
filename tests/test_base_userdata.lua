@@ -33,11 +33,19 @@ return function()
 
         test("call userdata obj with nil", function()
             local w = box2d.NewWorld()
-            local f = w.IsLocked
 
             local status, error = pcall(w.IsLocked, nil)
             assert_false(status)
             UTILS.test_error(error, "can't get world. Need table get:nil")
+            w:Destroy()
+        end)
+
+        test("call userdata obj with empty table", function()
+            local w = box2d.NewWorld()
+
+            local status, error = pcall(w.IsLocked, {})
+            assert_false(status)
+            UTILS.test_error(error, "unknown userdata type. Need world. Get (null)")
             w:Destroy()
         end)
 
