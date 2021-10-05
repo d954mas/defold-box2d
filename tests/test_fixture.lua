@@ -70,7 +70,7 @@ return function()
             end
             local status, error = pcall(f)
             assert_false(status)
-            UTILS.test_error(error, "Fixture already destroyed")
+            UTILS.test_error(error, "fixture was destroyed")
             w:Destroy()
         end)
 
@@ -103,7 +103,7 @@ return function()
 
             local status, value = pcall(fixture.GetDensity, fixture)
             assert_false(status)
-            UTILS.test_error(value, "Fixture already destroyed")
+            UTILS.test_error(value, "fixture was destroyed")
 
             w:Destroy()
         end)
@@ -116,7 +116,7 @@ return function()
             w:Destroy()
             local status, value = pcall(fixture.GetDensity, fixture)
             assert_false(status)
-            UTILS.test_error(value, "Fixture already destroyed")
+            UTILS.test_error(value, "fixture was destroyed")
         end)
 
         test("GetType()", function()
