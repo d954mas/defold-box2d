@@ -20,7 +20,8 @@ return function()
             }
             local draw = box2d.NewDebugDraw(cfg)
             assert_not_nil(draw)
-            assert_not_nil(draw.__userdata_draw)
+            assert_not_nil(draw.__userdata_box2d)
+            assert_equal(draw.__userdata_type_box2d,"draw")
 
             cfg.DrawBad = function() end
 
@@ -35,9 +36,13 @@ return function()
 
             draw:GetFlags()
             draw:Destroy()
+
+            assert_nil(draw.__userdata_box2d)
+            assert_equal(draw.__userdata_type_box2d,"draw")
+
             local status, error = pcall(draw.GetFlags, draw)
             assert_false(status)
-            UTILS.test_error(error, "Draw already destroyed")
+            UTILS.test_error(error, "draw was destroyed")
         end)
 
         test("world:DrawDebug()", function()
