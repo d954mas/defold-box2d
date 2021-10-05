@@ -49,6 +49,16 @@ return function()
             w:Destroy()
         end)
 
+        test("call userdata obj with another userdata type", function()
+            local w = box2d.NewWorld()
+            local b = w:CreateBody()
+
+            local status, error = pcall(w.IsLocked, b)
+            assert_false(status)
+            UTILS.test_error(error, "Need world. Get body.")
+            w:Destroy()
+        end)
+
 
     end)
 end
