@@ -54,7 +54,7 @@ BaseUserData* BaseUserData_get_userdata(lua_State *L, int index, char *userdata_
         }else if(lua_isnil(L,-1)){
              luaL_error(L, "%s was destroyed",userdata_type);
         }else{
-              luaL_error(L, "userdata:%s is not lightuserdata or nil");
+              luaL_error(L, "userdata:%s is not lightuserdata or nil",userdata_type);
         }
         lua_pop(L, 1);
     }else{
