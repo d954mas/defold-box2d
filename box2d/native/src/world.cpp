@@ -11,20 +11,25 @@
 #include <map>
 
 #define META_NAME "Box2d::WorldClass"
-#define USERDATA_NAME "__userdata_world"
+#define USERDATA_TYPE "world"
+
 
 namespace box2dDefoldNE {
 
+//TODO add userdata field to b2world
 std::map<b2World*, World*> WORLD_BY_POINTER; //to get world from body:GetWorld().
 
-World::World(b2Vec2 gravity) :
-	world(NULL) {
+World::World(b2Vec2 gravity): BaseUserData(USERDATA_TYPE)
+{
 	world = new b2World(gravity);
-	world->SetContactListener(this);
-    WORLD_BY_POINTER[world] = this;
-    table_ref = LUA_REFNIL;
-    draw = NULL;
+	this->box2dObj = world;
+	this->metatable_name = META_NAME;
+	draw = NULL;
     contactListener = NULL;
+
+    WORLD_BY_POINTER[world] = this;
+
+    world->SetContactListener(this);
 }
 
 
@@ -36,26 +41,9 @@ World::~World() {
 	}
 }
 
-World* World_get_userdata(lua_State *L, int index) {
-    int top = lua_gettop(L);
-
-	World *lua_world = NULL;
-	lua_getfield(L, index, USERDATA_NAME);
-	if (lua_islightuserdata(L, -1)) {
-		lua_world = (World *)lua_touserdata(L, -1);
-	}
-	lua_pop(L, 1);
-
-    assert(top == lua_gettop(L));
-	return lua_world;
-}
 
 World* World_get_userdata_safe(lua_State *L, int index) {
-    World *lua_world = World_get_userdata(L, index);
-    if (lua_world == NULL) {
-        //printf("lua_world NULL");
-        utils::error(L,"World already destroyed");
-    }
+    World *lua_world = (World*) BaseUserData_get_userdata(L, index, USERDATA_TYPE);
 	return lua_world;
 }
 
@@ -598,7 +586,6 @@ static int Dump(lua_State *L){//void Dump()
 
 int Destroy(lua_State *L) {
 	utils::check_arg_count(L, 1);
-
 	World *lua_world = World_get_userdata_safe(L, 1);
 
 	for (b2Body *body = lua_world->world->GetBodyList(); body; body = body->GetNext()) {
@@ -609,9 +596,7 @@ int Destroy(lua_State *L) {
 	}
     lua_world->Destroy(L);
 	delete lua_world;
-    lua_pushnil(L);
-	lua_setfield(L, -2, USERDATA_NAME);
-
+    
 	return 0;
 }
 
@@ -688,33 +673,13 @@ void WorldInitMetaTable(lua_State *L){
 }
 
 void World::Destroy(lua_State *L){
-    utils::unref(L, table_ref);
-    table_ref = LUA_REFNIL;
     if(contactListener != NULL){
         contactListener->Destroy(L);
         delete contactListener;
         contactListener = NULL;
     }
-}
 
-void World::Push(lua_State *L) {
-     DM_LUA_STACK_CHECK(L, 1);
-    if(table_ref == LUA_REFNIL){
-        // world
-        lua_createtable(L, 0, 1);
-        // world.__userdata
-        lua_pushlightuserdata(L, this);
-        lua_setfield(L, -2, USERDATA_NAME);
-
-        luaL_getmetatable(L, META_NAME);
-        lua_setmetatable(L, -2);
-
-        lua_pushvalue(L, -1);
-        table_ref = luaL_ref(L,LUA_REGISTRYINDEX);
-    }else{
-        lua_rawgeti(L,LUA_REGISTRYINDEX,table_ref);
-    }
-
+    BaseUserData::Destroy(L);
 }
 
 

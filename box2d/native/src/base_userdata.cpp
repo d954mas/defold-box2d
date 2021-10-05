@@ -1,18 +1,21 @@
 #include "base_userdata.h"
 #include "utils.h"
+
+#define USERDATA_NAME "__userdata_box2d"
+#define USERDATA_TYPE "__userdata_type_box2d"
+
 namespace box2dDefoldNE {
 
-BaseUserData::BaseUserData(const char* userdata_type, void* box2dObj){
-    user_data_ref = LUA_REFNIL;
+BaseUserData::BaseUserData(const char* userdata_type){
     table_ref = LUA_REFNIL;
     metatable_name = NULL;
+    box2dObj = NULL;
 
-    this->box2dObj = box2dObj;
     this->userdata_type = userdata_type;
 }
 
 BaseUserData::~BaseUserData() {
-    if(user_data_ref != LUA_REFNIL || table_ref != LUA_REFNIL){
+    if(table_ref != LUA_REFNIL){
         dmLogError("userdata:%s was not free",userdata_type);
     }
 
@@ -21,7 +24,7 @@ BaseUserData::~BaseUserData() {
     }
 }
 
-BaseUserData* BaseUserData_get_userdata(lua_State *L, int index, const char *userdata_type) {
+BaseUserData* BaseUserData_get_userdata(lua_State *L, int index, char *userdata_type) {
     int top = lua_gettop(L);
     BaseUserData *obj = NULL;
 
@@ -29,10 +32,15 @@ BaseUserData* BaseUserData_get_userdata(lua_State *L, int index, const char *use
         //1.Check userdata type
         if(userdata_type != NULL){
             lua_getfield(L, index, USERDATA_TYPE);
-            if (strcmp(lua_tostring(L, -1), userdata_type) != 0) {
-                luaL_error(L, "Need %s. Get %s.", userdata_type, lua_tostring(L, -1));
+            if(!lua_isstring(L,-1)){
+                 luaL_error(L, "unknown userdata type. Need %s. Get %s", userdata_type, lua_tostring(L, -1));
+            }else{
+                const char* str = lua_tostring(L, -1);
+                if (strcmp(lua_tostring(L, -1), userdata_type) != 0) {
+                    luaL_error(L, "Need %s. Get %s.", userdata_type, lua_tostring(L, -1));
+                }
             }
-            lua_pop(L,-1);
+            lua_pop(L,1);
         }
 
         //2.Check userdata
@@ -40,15 +48,15 @@ BaseUserData* BaseUserData_get_userdata(lua_State *L, int index, const char *use
         if (lua_islightuserdata(L, -1)) {
             obj = (BaseUserData *)lua_touserdata(L, -1);
             //check cpp box2d object not null
-            if(false){
-                luaL_error(L, "cpp box2d object in NULL");
+            if(obj->box2dObj == NULL){
+                luaL_error(L, "userdata box2d object is NULL");
             }
         }else{
               luaL_error(L, "userdata in not lightuserdata");
         }
         lua_pop(L, 1);
     }else{
-        luaL_error(L, "can't get userdata. variable not table");
+        luaL_error(L, "can't get userdata.Need table");
     }
 
     assert(top == lua_gettop(L));
@@ -63,6 +71,9 @@ void BaseUserData::Push(lua_State *L) {
         // table.__userdata_box2d = userdata
         lua_pushlightuserdata(L, this);
         lua_setfield(L, -2, USERDATA_NAME);
+
+        lua_pushstring(L, this->userdata_type);
+        lua_setfield(L, -2, USERDATA_TYPE);
 
         if(metatable_name != NULL){
             luaL_getmetatable(L, metatable_name);
@@ -79,11 +90,23 @@ void BaseUserData::Push(lua_State *L) {
 void BaseUserData::Destroy(lua_State *L) {
     if(box2dObj != NULL){
         box2dObj = NULL;
-        utils::unref(L, user_data_ref);
-        user_data_ref = LUA_REFNIL;
+    }
+
+    if(table_ref != LUA_REFNIL){
+        lua_rawgeti(L,LUA_REGISTRYINDEX,table_ref);
+
+        lua_pushnil(L);
+        lua_setfield(L, -2, USERDATA_NAME);
+
+        lua_pushnil(L);
+        lua_setfield(L, -2, USERDATA_TYPE);
+
+        lua_pop(L,1);
+
         utils::unref(L, table_ref);
         table_ref = LUA_REFNIL;
     }
+
 }
 
 }
