@@ -31,7 +31,6 @@ public:
 };
 
 void WorldInitMetaTable(lua_State *L);
-World* World_get_userdata(lua_State *L, int index);
 World* World_get_userdata_safe(lua_State *L, int index);
 
 World* World_find_by_pointer(b2World* world);
