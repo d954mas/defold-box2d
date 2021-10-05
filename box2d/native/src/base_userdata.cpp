@@ -30,7 +30,7 @@ BaseUserData* BaseUserData_get_userdata(lua_State *L, int index, const char *use
         if(userdata_type != NULL){
             lua_getfield(L, index, USERDATA_TYPE);
             if (strcmp(lua_tostring(L, -1), userdata_type) != 0) {
-                luaL_error(L, "Need %s. Get %d.", userdata_type, lua_tostring(L, -1));
+                luaL_error(L, "Need %s. Get %s.", userdata_type, lua_tostring(L, -1));
             }
             lua_pop(L,-1);
         }
