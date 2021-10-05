@@ -3,42 +3,27 @@
 #include "fixture.h"
 #include "manifold.h"
 
+#define USERDATA_NAME "__userdata_box2d"
+
 #define META_NAME "Box2d::ContactClass"
-#define USERDATA_NAME "__userdata_contact"
+#define USERDATA_TYPE "contact"
 
 namespace box2dDefoldNE {
-Contact::Contact(b2Contact *c){
+Contact::Contact(b2Contact *c): BaseUserData(USERDATA_TYPE){
     contact = c;
     reuse = false;
-    table_ref = LUA_REFNIL;
+
+    this->box2dObj = c;
+    this->metatable_name = META_NAME;
 }
 
 Contact::~Contact() {
 
 }
 
-Contact* Contact_get_userdata(lua_State *L, int index) {
-    int top = lua_gettop(L);
-
-	Contact *lua_contact = NULL;
-	lua_getfield(L, index, USERDATA_NAME);
-	if (lua_islightuserdata(L, -1)) {
-		lua_contact = (Contact *)lua_touserdata(L, -1);
-		if(lua_contact->contact == NULL){
-            lua_contact = NULL;
-        }
-	}
-	lua_pop(L, 1);
-
-    assert(top == lua_gettop(L));
-    return lua_contact;
-}
 
 Contact* Contact_get_userdata_safe(lua_State *L, int index) {
-    Contact *lua_contact = Contact_get_userdata(L, index);
-    if (lua_contact == NULL) {
-        utils::error(L,"Contact already destroyed");
-    }
+    Contact *lua_contact = (Contact*) BaseUserData_get_userdata(L, index, USERDATA_TYPE);
 	return lua_contact;
 }
 
@@ -254,34 +239,16 @@ void ContactInitMetaTable(lua_State *L){
 }
 
 
-
-void Contact::Push(lua_State *L) {
-    DM_LUA_STACK_CHECK(L, 1);
-    if(table_ref == LUA_REFNIL){
-        // contact
-        lua_createtable(L, 0, 1);
-        // contact.__userdata
-        lua_pushlightuserdata(L, this);
-        lua_setfield(L, -2, USERDATA_NAME);
-
-        luaL_getmetatable(L, META_NAME);
-        lua_setmetatable(L, -2);
-
-        lua_pushvalue(L, -1);
-        table_ref = luaL_ref(L,LUA_REGISTRYINDEX);
-     }else{
-        lua_rawgeti(L,LUA_REGISTRYINDEX,table_ref);
-     }
-}
-
 void Contact::Reuse(b2Contact* c) {
    contact = c;
+   box2dObj = c;
 }
 
 void Contact::Destroy(lua_State *L) {
     if(contact != NULL && !reuse){
         contact = NULL;
         DestroyTable(L);
+        BaseUserData::Destroy(L);
         delete this;
     }
 }
@@ -289,10 +256,15 @@ void Contact::Destroy(lua_State *L) {
 void Contact::DestroyTable(lua_State *L) {
     if(table_ref != LUA_REFNIL){
         lua_rawgeti(L,LUA_REGISTRYINDEX,table_ref);
+
         lua_pushnil(L);
         lua_setfield(L, -2, USERDATA_NAME);
-        lua_pop(L,1);
 
+        //do not delete type. Use type for error message when call deleted object
+      //  lua_pushnil(L);
+      //  lua_setfield(L, -2, USERDATA_TYPE);
+
+        lua_pop(L,1);
 
         utils::unref(L, table_ref);
         table_ref = LUA_REFNIL;
