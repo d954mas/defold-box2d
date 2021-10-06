@@ -11,7 +11,7 @@
 
 namespace box2dDefoldNE {
 
-class World : public BaseUserData, public b2ContactListener {
+class World : public BaseUserData, public b2ContactListener, public b2DestructionListener {
 private:
 
 public:
@@ -28,6 +28,15 @@ public:
 	void EndContact(b2Contact *contact);
 	void PreSolve(b2Contact *contact, const b2Manifold *old_manifold);
 	void PostSolve(b2Contact *contact, const b2ContactImpulse *impulse);
+
+	//b2DestructionListener
+    /// Called when any joint is about to be destroyed due
+    /// to the destruction of one of its attached bodies.
+    void SayGoodbye(b2Joint* joint);
+
+    /// Called when any fixture is about to be destroyed due
+    /// to the destruction of its parent body.
+    void SayGoodbye(b2Fixture* fixture);
 };
 
 void WorldInitMetaTable(lua_State *L);

@@ -716,4 +716,12 @@ void World::PostSolve(b2Contact* contact, const b2ContactImpulse *impulse) {
     }
 }
 
+void World::SayGoodbye(b2Joint* joint) {
+
+}
+
+void World::SayGoodbye(b2Fixture* fixture) {
+
+}
+
 }

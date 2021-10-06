@@ -265,10 +265,12 @@ dmExtension::Result APP_FINALIZE(dmExtension::AppParams *params) {
 	return dmExtension::RESULT_OK;
 }
 
+lua_State * GLOBAL_L = NULL;
 dmExtension::Result INITIALIZE(dmExtension::Params *params) {
 	dmLogInfo("Box2D NE version %d.%d.%d", b2_version.major, b2_version.minor, b2_version.revision);
 	
    	lua_State *L = params->m_L;
+   	GLOBAL_L = L;
 	luaL_register(L, EXTENSION_NAME_STRING, lua_functions);
 
 	lua_newtable(L);
