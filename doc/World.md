@@ -14,6 +14,7 @@ Destroy the world with world:Destroy() when you do not need it any more.
 
 ## Methods
 
+* Box2dWorld:[SetDestructionListener](#box2dworldsetdestructionlistenerlistener) (listener)
 * Box2dWorld:[SetContactListener](#box2dworldsetcontactlistenerlistener) (listener)
 * Box2dWorld:[SetDebugDraw](#box2dworldsetdebugdrawdraw) (draw)
 * Box2dWorld:[CreateBody](#box2dworldcreatebodybodydef) (bodyDef)
@@ -51,6 +52,20 @@ Destroy the world with world:Destroy() when you do not need it any more.
 * Box2dWorld:[GetProfile](#box2dworldgetprofile) ()
 * Box2dWorld:[Dump](#box2dworlddump) ()
 * Box2dWorld:[Destroy](#box2dworlddestroy) ()
+
+---
+### Box2dWorld:SetDestructionListener(listener)
+Register a destruction event listener.
+
+**PARAMETERS**
+* `listener` (table|nil)
+
+```lua
+listener = {
+   SayGoodbyeFixture = function (fixture) end,
+   SayGoodbyeJoint = function(joint) end,
+}
+```
 
 ---
 ### Box2dWorld:SetContactListener(listener)

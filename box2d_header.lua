@@ -871,6 +871,14 @@ local Box2dWorld = {}
 
 --- Register a contact event listener.
 --- listener = {
+---    SayGoodbyeFixture = function (fixture) end,
+---    SayGoodbyeJoint = function(joint) end,
+--- }
+---@param listener table|nil
+function Box2dWorld:SetDestructionListener(listener) end
+
+--- Register a contact event listener.
+--- listener = {
 ---    BeginContact = function (contact) end,
 ---    EndContact = function(contact) end,
 ---    PreSolve = function(contact, old_manifold) end,

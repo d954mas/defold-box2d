@@ -651,6 +651,7 @@ void WorldInitMetaTable(lua_State *L){
     luaL_Reg functions[] = {
         {"GetProfile",GetProfile},
         {"SetContactListener",SetContactListener},
+        {"SetDestructionListener",SetDestructionListener},
         {"SetDebugDraw",SetDebugDraw},
         {"CreateBody",CreateBody},
         {"DestroyBody",DestroyBody},
