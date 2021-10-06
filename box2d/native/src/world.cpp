@@ -16,6 +16,8 @@
 
 namespace box2dDefoldNE {
 
+extern lua_State * GLOBAL_L;
+
 //TODO add userdata field to b2world
 std::map<b2World*, World*> WORLD_BY_POINTER; //to get world from body:GetWorld().
 
@@ -26,10 +28,12 @@ World::World(b2Vec2 gravity): BaseUserData(USERDATA_TYPE)
 	this->metatable_name = META_NAME;
 	draw = NULL;
     contactListener = NULL;
+    destructionListener = NULL;
 
     WORLD_BY_POINTER[world] = this;
 
     world->SetContactListener(this);
+    world->SetDestructionListener(this);
 }
 
 
@@ -52,7 +56,30 @@ World* World_find_by_pointer(b2World* world){
 }
 
 //region box2d API
-  //void 	SetDestructionListener (b2DestructionListener *listener) NOT IMPL
+//void 	SetDestructionListener (b2DestructionListener *listener)
+static int SetDestructionListener(lua_State *L){
+    utils::check_arg_count(L, 2);
+    World *world = World_get_userdata_safe(L, 1);
+    if (!(lua_isnil(L, 2) || lua_istable(L, 2))) {
+         utils::error(L,"listener can be only table or nil");
+    }
+
+    if(world->destructionListener != NULL){
+        world->destructionListener->Destroy(L);
+        delete world->destructionListener;
+        world->destructionListener = NULL;
+    }
+
+
+    if(lua_istable(L, 2)){
+        world->destructionListener = new LuaDestructionListener();
+        world->destructionListener->InitFromTable(L,2);
+    }
+
+   return 0;
+}
+
+
     //const b2ContactManager &GetContactManager () const NOT IMPL
 
 static int GetProfile(lua_State *L){//const b2Profile &GetProfile () const
@@ -152,8 +179,6 @@ static int DestroyBody(lua_State *L){ //void DestroyBody (b2Body *body)
     World *lua_world = World_get_userdata_safe(L, 1);
     Body *body = Body_get_userdata_safe(L, 2);
 
-    body->DestroyJoints(L);
-    body->DestroyFixtures(L);
     lua_world->world->DestroyBody(body->body);
     body->Destroy(L);
 
@@ -627,6 +652,7 @@ void WorldInitMetaTable(lua_State *L){
     luaL_Reg functions[] = {
         {"GetProfile",GetProfile},
         {"SetContactListener",SetContactListener},
+        {"SetDestructionListener",SetDestructionListener},
         {"SetDebugDraw",SetDebugDraw},
         {"CreateBody",CreateBody},
         {"DestroyBody",DestroyBody},
@@ -714,6 +740,16 @@ void World::PostSolve(b2Contact* contact, const b2ContactImpulse *impulse) {
     if(contactListener != NULL){
         contactListener->PostSolve(contact, impulse);
     }
+}
+
+void World::SayGoodbye(b2Joint* joint) {
+    Joint* joint_lua = (Joint *)joint->GetUserData().pointer;
+    joint_lua->Destroy(GLOBAL_L);
+}
+
+void World::SayGoodbye(b2Fixture* fixture) {
+    Fixture* fixture_lua = (Fixture *)fixture->GetUserData().pointer;
+    fixture_lua->Destroy(GLOBAL_L);
 }
 
 }

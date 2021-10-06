@@ -19,7 +19,7 @@ return function()
             local body = create_body(w)
             assert_not_nil(body)
             assert_not_nil(body.__userdata_box2d)
-            assert_equal(body.__userdata_type_box2d,"body")
+            assert_equal(body.__userdata_type_box2d, "body")
             w:Destroy()
         end)
 
@@ -28,7 +28,7 @@ return function()
             local body = create_body(w)
             assert_not_nil(body)
             assert_not_nil(body.__userdata_box2d)
-            assert_equal(body.__userdata_type_box2d,"body")
+            assert_equal(body.__userdata_type_box2d, "body")
             w:Destroy()
         end)
 
@@ -65,6 +65,46 @@ return function()
             w:Destroy()
         end)
 
+        test("world:DestroyBody() Fixture destroyed", function()
+            local w = box2d.NewWorld()
+            local def = {}
+            local b = w:CreateBody(def)
+            local fixture = b:CreateFixture({ shape = box2d.b2Shape.e_polygon, box = true, box_hy = 1, box_hx = 1 }, 1)
+
+            w:DestroyBody(b)
+
+            local f = function() return b:GetLinearVelocity() end
+            local status, value = pcall(f)
+            assert_false(status)
+            UTILS.test_error(value, "body was destroyed")
+
+            assert_nil(fixture.__userdata_box2d)
+            assert_equal(fixture.__userdata_type_box2d, "fixture")
+
+            w:Destroy()
+        end)
+
+        test("world:DestroyBody() Joint destroyed", function()
+            local w = box2d.NewWorld()
+            local def = {}
+            local b = w:CreateBody(def)
+            local b2 = w:CreateBody(def)
+
+            local joint = w:CreateJoint(box2d.InitializeRevoluteJointDef(b, b2, vmath.vector3(7.5, 4.0, 0)));
+
+            w:DestroyBody(b)
+
+            local f = function() return b:GetLinearVelocity() end
+            local status, value = pcall(f)
+            assert_false(status)
+            UTILS.test_error(value, "body was destroyed")
+
+            assert_nil(joint.__userdata_box2d)
+            assert_equal(joint.__userdata_type_box2d, "joint")
+
+            w:Destroy()
+        end)
+
         test("destroy body after world destroyed", function()
             local w = box2d.NewWorld()
             local body = create_body(w)
@@ -75,9 +115,6 @@ return function()
             assert_false(status)
             UTILS.test_error(value, "body was destroyed")
         end)
-
-
-
 
         test("Set/Get Transform()", function()
             local w = box2d.NewWorld()
@@ -451,8 +488,6 @@ return function()
             assert_nil(body_1_next)
             assert_equal(body_2_next, body_1)
 
-
-
             world:Destroy()
         end)
 
@@ -460,10 +495,10 @@ return function()
             local world = box2d.NewWorld()
             local body = world:CreateBody({})
             assert_nil(body:GetFixtureList())
-            local fixture = body:CreateFixture({shape = {shape = box2d.b2Shape.e_circle,circle_position = vmath.vector3(0,0,0),circle_radius = 1}})
-            assert_equal(fixture,body:GetFixtureList())
-            local fixture2 = body:CreateFixture({shape = {shape = box2d.b2Shape.e_circle,circle_position = vmath.vector3(0,0,0),circle_radius = 1}})
-            assert_equal(fixture2,body:GetFixtureList())
+            local fixture = body:CreateFixture({ shape = { shape = box2d.b2Shape.e_circle, circle_position = vmath.vector3(0, 0, 0), circle_radius = 1 } })
+            assert_equal(fixture, body:GetFixtureList())
+            local fixture2 = body:CreateFixture({ shape = { shape = box2d.b2Shape.e_circle, circle_position = vmath.vector3(0, 0, 0), circle_radius = 1 } })
+            assert_equal(fixture2, body:GetFixtureList())
 
             world:Destroy()
         end)
@@ -473,7 +508,6 @@ return function()
             local body = world:CreateBody()
 
             assert_nil(body:GetUserData())
-
 
             local userdata = {}
             body:SetUserData(userdata)
@@ -487,7 +521,7 @@ return function()
             local body = world:CreateBody()
 
             local body_world = body:GetWorld()
-            assert_equal(body_world,world)
+            assert_equal(body_world, world)
 
             world:Destroy()
         end)
@@ -496,7 +530,7 @@ return function()
             local world = box2d.NewWorld()
             local body = world:CreateBody()
 
-            UTILS.test_method(body,"Dump",{})
+            UTILS.test_method(body, "Dump", {})
 
             world:Destroy()
         end)

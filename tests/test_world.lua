@@ -107,25 +107,25 @@ return function()
                 BeginContact = function(contact)
                     assert_not_nil(contact)
                     assert_not_nil(contact.__userdata_box2d)
-                    assert_equal(contact.__userdata_type_box2d,"contact")
+                    assert_equal(contact.__userdata_type_box2d, "contact")
                     table.insert(contacts.BeginContact, true)
                 end,
                 EndContact = function(contact)
                     assert_not_nil(contact)
                     assert_not_nil(contact.__userdata_box2d)
-                    assert_equal(contact.__userdata_type_box2d,"contact")
+                    assert_equal(contact.__userdata_type_box2d, "contact")
                     table.insert(contacts.EndContact, true)
                 end,
                 PreSolve = function(contact, old_manifold)
                     assert_not_nil(contact)
                     assert_not_nil(contact.__userdata_box2d)
-                    assert_equal(contact.__userdata_type_box2d,"contact")
+                    assert_equal(contact.__userdata_type_box2d, "contact")
                     table.insert(contacts.PreSolve, true)
                 end,
                 PostSolve = function(contact, impulse)
                     assert_not_nil(contact)
                     assert_not_nil(contact.__userdata_box2d)
-                    assert_equal(contact.__userdata_type_box2d,"contact")
+                    assert_equal(contact.__userdata_type_box2d, "contact")
                     table.insert(contacts.PostSolve, true)
                 end,
             })
@@ -135,13 +135,11 @@ return function()
             assert_equal(#contacts.PreSolve, 0)
             assert_equal(#contacts.PostSolve, 0)
 
-
             local b1 = w:CreateBody({ type = box2d.b2BodyType.b2_dynamicBody, position = vmath.vector3(0, 0, 0) })
             local b2 = w:CreateBody({ type = box2d.b2BodyType.b2_dynamicBody, position = vmath.vector3(1, 1, 0) })
 
             b1:CreateFixture({ shape = box2d.b2Shape.e_polygon, box = true, box_hy = 1, box_hx = 1 }, 1)
             b2:CreateFixture({ shape = box2d.b2Shape.e_polygon, box = true, box_hy = 1, box_hx = 1 }, 1)
-
 
             w:Step(1 / 60, 3, 5)
 
@@ -155,7 +153,7 @@ return function()
             end })
             local status, value = pcall(w.Step, w, 1 / 60, 3, 5)
             assert_false(status)
-            UTILS.test_error(value,"error")
+            UTILS.test_error(value, "error")
 
             w:SetContactListener({ PreSolve = function()
 
@@ -175,19 +173,23 @@ return function()
             w:SetContactListener({
                 BeginContact = function(contact)
                     c = c or contact
-                    assert_equal(c,contact)
+                    assert_equal(c, contact)
+                    assert_not_nil(c.__userdata_box2d)
                 end,
                 EndContact = function(contact)
                     c = c or contact
-                    assert_equal(c,contact)
+                    assert_equal(c, contact)
+                    assert_not_nil(c.__userdata_box2d)
                 end,
                 PreSolve = function(contact, old_manifold)
                     c = c or contact
-                    assert_equal(c,contact)
+                    assert_equal(c, contact)
+                    assert_not_nil(c.__userdata_box2d)
                 end,
                 PostSolve = function(contact, impulse)
                     c = c or contact
-                    assert_equal(c,contact)
+                    assert_equal(c, contact)
+                    assert_not_nil(c.__userdata_box2d)
                 end,
             })
 
@@ -203,14 +205,17 @@ return function()
 
             w:Step(1 / 60, 3, 5)
 
-
             assert_not_nil(c)
-            assert_nil(c.__userdata_contact)
-            local status,value = pcall(tostring,c)
+            assert_nil(c.__userdata_box2d)
+            local status, value = pcall(tostring, c)
             assert_false(status)
-            assert_equal(value,"contact was destroyed")
+            assert_equal(value, "contact was destroyed")
 
             w:Destroy()
+        end)
+
+        test("SetDestructionListener()", function()
+
         end)
 
         -- test("CreateBody()", function() end) -- body tests
@@ -310,18 +315,15 @@ return function()
             local status, error = pcall(w.RayCast, w, cb_error, p1, point_all)
             assert_false(status)
             --remove line number
-            UTILS.test_error(error,"error happened")
-
-
+            UTILS.test_error(error, "error happened")
 
             cb_error = function() w.aaaa() end
             status, error = pcall(w.RayCast, w, cb_error, p1, point_all)
             assert_false(status)
-            UTILS.test_error(error," attempt to call field 'aaaa' (a nil value)")
+            UTILS.test_error(error, " attempt to call field 'aaaa' (a nil value)")
 
             w:Destroy()
         end)
-
 
         test("QueryAABB()", function()
             local w = box2d.NewWorld()
@@ -378,7 +380,7 @@ return function()
             local status, error = pcall(w.QueryAABB, w, cb_error, aabb_all)
             assert_false(status)
             --remove line number
-            UTILS.test_error(error,"error happened")
+            UTILS.test_error(error, "error happened")
 
             w:Destroy()
         end)
