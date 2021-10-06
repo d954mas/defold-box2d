@@ -69,7 +69,7 @@ Draw* Draw_from_table(lua_State *L){
                     }else {utils::error(L,"DrawPoint should be function");}
                     break;
                 default:
-                    delete draw;
+                    draw->Destroy(L);
                     lua_pushfstring(L, "unknown key:%s", key);
                     lua_error(L);
                     break;
@@ -358,5 +358,7 @@ void Draw::Destroy(lua_State *L) {
     defold_script_instance = LUA_REFNIL;
 
     BaseUserData::Destroy(L);
+
+    delete this;
 }
 }
