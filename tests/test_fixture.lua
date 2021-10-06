@@ -65,6 +65,8 @@ return function()
             local body = w:CreateBody()
             local fixture = body:CreateFixture({ shape = box2d.b2Shape.e_circle, circle_radius = 1, circle_position = vmath.vector3(0) }, 1)
             body:DestroyFixture(fixture)
+            assert_nil(fixture.__userdata_box2d)
+            assert_equal(fixture.__userdata_type_box2d,"fixture")
             local f = function()
                 tostring(fixture)
             end

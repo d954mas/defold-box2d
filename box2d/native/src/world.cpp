@@ -16,6 +16,8 @@
 
 namespace box2dDefoldNE {
 
+extern lua_State * GLOBAL_L;
+
 //TODO add userdata field to b2world
 std::map<b2World*, World*> WORLD_BY_POINTER; //to get world from body:GetWorld().
 
@@ -31,6 +33,7 @@ World::World(b2Vec2 gravity): BaseUserData(USERDATA_TYPE)
     WORLD_BY_POINTER[world] = this;
 
     world->SetContactListener(this);
+    world->SetDestructionListener(this);
 }
 
 
@@ -176,8 +179,6 @@ static int DestroyBody(lua_State *L){ //void DestroyBody (b2Body *body)
     World *lua_world = World_get_userdata_safe(L, 1);
     Body *body = Body_get_userdata_safe(L, 2);
 
-    body->DestroyJoints(L);
-    body->DestroyFixtures(L);
     lua_world->world->DestroyBody(body->body);
     body->Destroy(L);
 
@@ -742,11 +743,13 @@ void World::PostSolve(b2Contact* contact, const b2ContactImpulse *impulse) {
 }
 
 void World::SayGoodbye(b2Joint* joint) {
-
+    Joint* joint_lua = (Joint *)joint->GetUserData().pointer;
+    joint_lua->Destroy(GLOBAL_L);
 }
 
 void World::SayGoodbye(b2Fixture* fixture) {
-
+    Fixture* fixture_lua = (Fixture *)fixture->GetUserData().pointer;
+    fixture_lua->Destroy(GLOBAL_L);
 }
 
 }
