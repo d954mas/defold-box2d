@@ -62,8 +62,7 @@ b2BodyDef b2BodyDef_from_table(lua_State *L, int index){
                     def.gravityScale =  lua_tonumber(L, -1);
                     break;
                 default:
-                    lua_pushfstring(L, "unknown key:%s", key);
-                	lua_error(L);
+                    luaL_error(L, "unknown key:%s", key);
                     break;
             }
            /* removes 'value'; keeps 'key' for next iteration */

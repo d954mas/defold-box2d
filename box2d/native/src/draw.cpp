@@ -70,8 +70,7 @@ Draw* Draw_from_table(lua_State *L){
                     break;
                 default:
                     draw->Destroy(L);
-                    lua_pushfstring(L, "unknown key:%s", key);
-                    lua_error(L);
+                    luaL_error(L, "unknown key:%s", key);
                     break;
             }
             /* removes 'value'; keeps 'key' for next iteration */

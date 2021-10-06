@@ -67,8 +67,7 @@ void LuaContactListener::InitFromTable(lua_State *L, int index){
                     break;
                 }
                 default:
-                    lua_pushfstring(L, "unknown key:%s", key);
-                    lua_error(L);
+                    luaL_error(L, "unknown key:%s", key);
                     break;
             }
            /* removes 'value'; keeps 'key' for next iteration */
