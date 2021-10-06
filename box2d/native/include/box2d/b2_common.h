@@ -34,7 +34,24 @@
 #endif
 
 #define B2_NOT_USED(x) ((void)(x))
-#define b2Assert(A) assert(A)
+//#define b2Assert(A) assert(A)
+
+#include <dmsdk/sdk.h>
+
+
+
+namespace box2dDefoldNE{
+extern lua_State * GLOBAL_L;
+}
+//#define b2Assert(expr) \
+ // ( (expr)? (void)0 : (void) luaL_error(box2dDefoldNE::GLOBAL_L,"[ERROR]b2Assert. Expr:%s\n",#expr) )
+
+
+//#define b2Assert(expr) \
+    //( (expr)? (void)0 : (void)dmLogError("[ERROR]b2Assert. Expr:%s\n",#expr) )
+
+#define b2Assert(expr) \
+  ( (expr)? (void)0 : (void)printf("[ERROR]b2Assert. Expr:%s\n",#expr) )
 
 #define	b2_maxFloat		FLT_MAX
 #define	b2_epsilon		FLT_EPSILON

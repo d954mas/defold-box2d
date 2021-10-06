@@ -69,6 +69,11 @@ return function()
             })
         end)
 
+        test("b2Assert", function()
+            local shape = box2d.NewPolygonShape()
+            shape:Set({ vmath.vector3(0, 0, 0), vmath.vector3(1, 0, 0) })
+        end)
+
 
     end)
 end
