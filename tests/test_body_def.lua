@@ -15,7 +15,7 @@ return function()
             end
             local status, value = pcall(f)
             assert_false(status)
-            assert_equal(value , "unknown key:unknown")
+            UTILS.test_error(value , "unknown key:unknown")
             world:Destroy()
         end)
 

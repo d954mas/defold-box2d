@@ -219,8 +219,7 @@ static int Step(lua_State *L){;//void Step (float timeStep, int32 velocityIterat
         }
 
         if(lua_world->contactListener->error){
-            lua_pushstring(L, lua_world->contactListener->error_message);
-            lua_error(L);
+            luaL_error(L,"%s", lua_world->contactListener->error_message);
         }
     }
     return 0;
@@ -263,10 +262,12 @@ class LuaQueryCallback : public b2QueryCallback {
     public:
         lua_State *L;
         bool error;
+        const char *error_message;
 
         LuaQueryCallback(lua_State *L){  // This is the constructor
             this->L = L;
             error = false;
+            error_message = NULL;
         }
 
         bool ReportFixture(b2Fixture* fixture) {
@@ -282,6 +283,8 @@ class LuaQueryCallback : public b2QueryCallback {
                 return result;
             }else{
                 error = true;
+                error_message = lua_tostring(L,-1);
+                lua_pop(L,1);
                 return false;
             }
         }
@@ -314,8 +317,9 @@ static int QueryAABB(lua_State *L){
     world->world->QueryAABB(cb, aabb);
 
     if(cb->error){
+        const char *error_message = cb->error_message;
         delete cb;
-        lua_error(L);
+        luaL_error(L,"%s",error_message);
     }else{
          delete cb;
     }
@@ -330,10 +334,12 @@ class LuaRayCastCallback : public b2RayCastCallback {
     public:
         lua_State *L;
         bool error;
+        const char *error_message;
 
         LuaRayCastCallback(lua_State *L){  // This is the constructor
             this->L = L;
             error = false;
+            error_message = NULL;
         }
     
         float ReportFixture(b2Fixture* fixture, const b2Vec2& point,const b2Vec2& normal, float fraction) {
@@ -351,6 +357,8 @@ class LuaRayCastCallback : public b2RayCastCallback {
                 return result;
             }else{
                 error = true;
+                error_message = lua_tostring(L,-1);
+                lua_pop(L,1);
                 return 0;
             }
         }
@@ -375,12 +383,12 @@ static int RayCast(lua_State *L){
     world->world->RayCast(cb, point1, point2);
 
     if(cb->error){
+        const char *error_message = cb->error_message;
         delete cb;
-        lua_error(L);
+        luaL_error(L,"%s",error_message);
     }else{
-         delete cb;
+        delete cb;
     }
-
 
     lua_pop(L,1);
 

@@ -312,8 +312,16 @@ return function()
             --remove line number
             UTILS.test_error(error,"error happened")
 
+
+
+            cb_error = function() w.aaaa() end
+            status, error = pcall(w.RayCast, w, cb_error, p1, point_all)
+            assert_false(status)
+            UTILS.test_error(error," attempt to call field 'aaaa' (a nil value)")
+
             w:Destroy()
         end)
+
 
         test("QueryAABB()", function()
             local w = box2d.NewWorld()

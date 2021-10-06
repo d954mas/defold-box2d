@@ -62,8 +62,7 @@ b2RevoluteJointDef* b2RevoluteJointDef_from_table(lua_State *L){
                     def->enableMotor = lua_toboolean(L,-1);
                     break;
                default:
-                    lua_pushfstring(L, "unknown key:%s", key);
-                    lua_error(L);
+                    luaL_error(L, "unknown key:%s", key);
                     break;
             }
             /* removes 'value'; keeps 'key' for next iteration */
@@ -134,8 +133,7 @@ b2PrismaticJointDef* b2PrismaticJointDef_from_table(lua_State *L){
                     def->maxMotorForce = luaL_checknumber(L,-1);
                     break;
                 default:
-                    lua_pushfstring(L, "unknown key:%s", key);
-                    lua_error(L);
+                    luaL_error(L, "unknown key:%s", key);
                     break;
             }
             /* removes 'value'; keeps 'key' for next iteration */
@@ -197,8 +195,7 @@ b2DistanceJointDef* b2DistanceJointDef_from_table(lua_State *L){
                     def->damping = luaL_checknumber(L,-1);
                     break;
                 default:
-                    lua_pushfstring(L, "unknown key:%s", key);
-                    lua_error(L);
+                    luaL_error(L, "unknown key:%s", key);
                     break;
             }
             /* removes 'value'; keeps 'key' for next iteration */
@@ -258,8 +255,7 @@ b2PulleyJointDef* b2PulleyJointDef_from_table(lua_State *L){
                     def->lengthB = luaL_checknumber(L,-1);
                     break;
                 default:
-                    lua_pushfstring(L, "unknown key:%s", key);
-                    lua_error(L);
+                    luaL_error(L, "unknown key:%s", key);
                     break;
             }
             /* removes 'value'; keeps 'key' for next iteration */
@@ -312,8 +308,7 @@ b2MouseJointDef* b2MouseJointDef_from_table(lua_State *L){
                     def->damping = luaL_checknumber(L,-1);
                     break;
                 default:
-                    lua_pushfstring(L, "unknown key:%s", key);
-                    lua_error(L);
+                    luaL_error(L, "unknown key:%s", key);
                     break;
             }
             /* removes 'value'; keeps 'key' for next iteration */
@@ -363,8 +358,7 @@ b2GearJointDef* b2GearJointDef_from_table(lua_State *L){
                     def->ratio = luaL_checknumber(L,-1);
                     break;
                 default:
-                    lua_pushfstring(L, "unknown key:%s", key);
-                    lua_error(L);
+                    luaL_error(L, "unknown key:%s", key);
                     break;
             }
             /* removes 'value'; keeps 'key' for next iteration */
@@ -440,8 +434,7 @@ b2WheelJointDef* b2WheelJointDef_from_table(lua_State *L){
                     def->damping = luaL_checknumber(L,-1);
                     break;
                 default:
-                    lua_pushfstring(L, "unknown key:%s", key);
-                    lua_error(L);
+                    luaL_error(L, "unknown key:%s", key);
                     break;
             }
             /* removes 'value'; keeps 'key' for next iteration */
@@ -497,8 +490,7 @@ b2WeldJointDef* b2WeldJointDef_from_table(lua_State *L){
                     def->damping = luaL_checknumber(L,-1);
                     break;
                 default:
-                    lua_pushfstring(L, "unknown key:%s", key);
-                    lua_error(L);
+                    luaL_error(L, "unknown key:%s", key);
                     break;
             }
             /* removes 'value'; keeps 'key' for next iteration */
@@ -551,8 +543,7 @@ b2FrictionJointDef* b2FrictionJointDef_from_table(lua_State *L){
                     def->maxTorque = luaL_checknumber(L,-1);
                     break;
                 default:
-                    lua_pushfstring(L, "unknown key:%s", key);
-                    lua_error(L);
+                    luaL_error(L, "unknown key:%s", key);
                     break;
             }
             /* removes 'value'; keeps 'key' for next iteration */
@@ -608,8 +599,7 @@ b2MotorJointDef* b2MotorJointDef_from_table(lua_State *L){
                     def->correctionFactor = luaL_checknumber(L,-1);
                     break;
                 default:
-                    lua_pushfstring(L, "unknown key:%s", key);
-                    lua_error(L);
+                    luaL_error(L, "unknown key:%s", key);
                     break;
             }
             /* removes 'value'; keeps 'key' for next iteration */
