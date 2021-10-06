@@ -79,7 +79,7 @@ void LuaDestructionListener::Destroy(lua_State *L) {
 extern lua_State * GLOBAL_L;
 
 void LuaDestructionListener::SayGoodbye(b2Joint* b2joint){
-    if(!error && fun_say_goodbye_joint != LUA_REFNIL){
+    if(fun_say_goodbye_joint != LUA_REFNIL){
         lua_rawgeti(GLOBAL_L,LUA_REGISTRYINDEX,fun_say_goodbye_joint);
         Joint *joint = (Joint *)b2joint->GetUserData().pointer;
         joint->Push(GLOBAL_L);
@@ -92,7 +92,7 @@ void LuaDestructionListener::SayGoodbye(b2Joint* b2joint){
 }
 
 void LuaDestructionListener::SayGoodbye(b2Fixture* b2fixture){
-    if(!error && fun_say_goodbye_fixture != LUA_REFNIL){
+    if(fun_say_goodbye_fixture != LUA_REFNIL){
         lua_rawgeti(GLOBAL_L,LUA_REGISTRYINDEX,fun_say_goodbye_fixture);
         Fixture *fixture = (Fixture *)b2fixture->GetUserData().pointer;
         fixture->Push(GLOBAL_L);

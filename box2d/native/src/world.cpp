@@ -744,11 +744,24 @@ void World::PostSolve(b2Contact* contact, const b2ContactImpulse *impulse) {
 
 void World::SayGoodbye(b2Joint* joint) {
     Joint* joint_lua = (Joint *)joint->GetUserData().pointer;
+    if(destructionListener != NULL){
+        destructionListener->SayGoodbye(joint);
+        if(destructionListener->error){
+            dmLogError("SayGoodbyeJoint error:%s",destructionListener->error_message);
+        }
+    }
     joint_lua->Destroy(GLOBAL_L);
 }
 
 void World::SayGoodbye(b2Fixture* fixture) {
     Fixture* fixture_lua = (Fixture *)fixture->GetUserData().pointer;
+    if(destructionListener != NULL){
+        destructionListener->SayGoodbye(fixture);
+        if(destructionListener->error){
+            dmLogError("SayGoodbyeFixture error:%s",destructionListener->error_message);
+        }
+    }
+
     fixture_lua->Destroy(GLOBAL_L);
 }
 

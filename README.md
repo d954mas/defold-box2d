@@ -74,7 +74,6 @@ __2)__ b2Assert. #define b2Assert(A) assert(A) . Engine will crashed if b2Assert
 
 __3)__ No binding for some b2World functions.
 
-	void SetDestructionListener(b2DestructionListener* listener);
 	void SetContactFilter(b2ContactFilter* filter);
 	b2Contact* GetContactList();
 	const b2ContactManager& GetContactManager() const;

@@ -89,6 +89,7 @@ return function()
             w:Destroy()
         end)
 
+
         test("SetContactListener()", function()
             local w = box2d.NewWorld()
             w:Step(1 / 60, 3, 5)
@@ -215,7 +216,94 @@ return function()
         end)
 
         test("SetDestructionListener()", function()
+            local w = box2d.NewWorld()
 
+
+            --NIL
+            local b1 = w:CreateBody()
+            local b2 = w:CreateBody()
+            local f1 = b1:CreateFixture({ shape = box2d.b2Shape.e_polygon, box = true, box_hy = 1, box_hx = 1 }, 1)
+            local joint = w:CreateJoint(box2d.InitializeRevoluteJointDef(b1,b2,vmath.vector3(0,0,0)))
+
+            w:SetDestructionListener(nil)
+            w:DestroyBody(b1)
+
+            --EMPTY
+            b1 = w:CreateBody()
+            b2 = w:CreateBody()
+            f1 = b1:CreateFixture({ shape = box2d.b2Shape.e_polygon, box = true, box_hy = 1, box_hx = 1 }, 1)
+            joint = w:CreateJoint(box2d.InitializeRevoluteJointDef(b1,b2,vmath.vector3(0,0,0)))
+
+            w:SetDestructionListener({ })
+            w:DestroyBody(b1)
+
+            --BASE
+
+            local callbacks = {
+                SayGoodbyeFixture = {},
+                SayGoodbyeJoint = {},
+            }
+
+            w:SetDestructionListener({
+                SayGoodbyeFixture = function(fixture)
+                    assert_not_nil(fixture)
+                    assert_not_nil(fixture.__userdata_box2d)
+                    assert_equal(fixture.__userdata_type_box2d, "fixture")
+                    table.insert(callbacks.SayGoodbyeFixture, fixture)
+                end,
+                SayGoodbyeJoint = function(joint)
+                    assert_not_nil(joint)
+                    assert_not_nil(joint.__userdata_box2d)
+                    assert_equal(joint.__userdata_type_box2d, "joint")
+                    table.insert(callbacks.SayGoodbyeJoint, joint)
+                end,
+            })
+
+            b1 = w:CreateBody()
+            b2 = w:CreateBody()
+            f1 = b1:CreateFixture({ shape = box2d.b2Shape.e_polygon, box = true, box_hy = 1, box_hx = 1 }, 1)
+            joint = w:CreateJoint(box2d.InitializeRevoluteJointDef(b1,b2,vmath.vector3(0,0,0)))
+
+            assert_not_nil(f1.__userdata_box2d)
+            assert_equal(f1.__userdata_type_box2d,"fixture")
+            
+            w:DestroyBody(b1)
+
+            assert_equal(#callbacks.SayGoodbyeFixture,1)
+            assert_equal(#callbacks.SayGoodbyeJoint,1)
+            assert_equal(callbacks.SayGoodbyeFixture[1],f1)
+            assert_equal(callbacks.SayGoodbyeJoint[1],joint)
+
+            assert_nil(f1.__userdata_box2d)
+            assert_equal(f1.__userdata_type_box2d,"fixture")
+            assert_nil(joint.__userdata_box2d)
+            assert_equal(joint.__userdata_type_box2d,"joint")
+
+            --ERROR
+            --ERROR WILL BE SHOW IN CONSOLE. IT WILL NOT CALL luaL_error
+            w:SetDestructionListener({
+                SayGoodbyeFixture = function(fixture)
+                    error("error happened fixture")
+                end,
+                SayGoodbyeJoint = function(joint)
+                    error("error happened joint")
+                end,
+            })
+
+            b1 = w:CreateBody()
+            b2 = w:CreateBody()
+            f1 = b1:CreateFixture({ shape = box2d.b2Shape.e_polygon, box = true, box_hy = 1, box_hx = 1 }, 1)
+            joint = w:CreateJoint(box2d.InitializeRevoluteJointDef(b1,b2,vmath.vector3(0,0,0)))
+
+            w:DestroyBody(b1)
+
+
+            assert_nil(f1.__userdata_box2d)
+            assert_equal(f1.__userdata_type_box2d,"fixture")
+            assert_nil(joint.__userdata_box2d)
+            assert_equal(joint.__userdata_type_box2d,"joint")
+
+            w:Destroy()
         end)
 
         -- test("CreateBody()", function() end) -- body tests
