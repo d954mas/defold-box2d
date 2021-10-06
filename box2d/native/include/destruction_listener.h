@@ -22,8 +22,8 @@ public:
     void InitFromTable(lua_State *L, int index);
     void Destroy(lua_State *L);
 
-    void SayGoodbye(b2Joint* joint) = 0;
-    void SayGoodbye(b2Fixture* fixture) = 0;
+    void SayGoodbye(b2Joint* joint);
+    void SayGoodbye(b2Fixture* fixture);
 };
 
 }

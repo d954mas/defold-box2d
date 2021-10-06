@@ -58,6 +58,9 @@ void LuaDestructionListener::InitFromTable(lua_State *L, int index){
              dmLogWarning("No functions in destructionListener");
         }
         lua_pop(L,1); //remove table
+        dmScript::GetInstance(L);
+        defold_script_instance_ref = dmScript::Ref(L, LUA_REGISTRYINDEX);
+
     }else{
         utils::error(L,"destructionListener should be table");
     }

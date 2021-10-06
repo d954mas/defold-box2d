@@ -8,6 +8,7 @@
 #include "draw.h"
 #include "base_userdata.h"
 #include "contact_listener.h"
+#include "destruction_listener.h"
 
 namespace box2dDefoldNE {
 
@@ -18,6 +19,7 @@ public:
 	b2World *world;
 	Draw* draw;
 	LuaContactListener* contactListener;
+	LuaDestructionListener* destructionListener;
 	World(b2Vec2 gravity);
 	~World();
 

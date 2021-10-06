@@ -26,6 +26,7 @@ World::World(b2Vec2 gravity): BaseUserData(USERDATA_TYPE)
 	this->metatable_name = META_NAME;
 	draw = NULL;
     contactListener = NULL;
+    destructionListener = NULL;
 
     WORLD_BY_POINTER[world] = this;
 
@@ -52,7 +53,30 @@ World* World_find_by_pointer(b2World* world){
 }
 
 //region box2d API
-  //void 	SetDestructionListener (b2DestructionListener *listener) NOT IMPL
+//void 	SetDestructionListener (b2DestructionListener *listener)
+static int SetDestructionListener(lua_State *L){
+    utils::check_arg_count(L, 2);
+    World *world = World_get_userdata_safe(L, 1);
+    if (!(lua_isnil(L, 2) || lua_istable(L, 2))) {
+         utils::error(L,"listener can be only table or nil");
+    }
+
+    if(world->destructionListener != NULL){
+        world->destructionListener->Destroy(L);
+        delete world->destructionListener;
+        world->destructionListener = NULL;
+    }
+
+
+    if(lua_istable(L, 2)){
+        world->destructionListener = new LuaDestructionListener();
+        world->destructionListener->InitFromTable(L,2);
+    }
+
+   return 0;
+}
+
+
     //const b2ContactManager &GetContactManager () const NOT IMPL
 
 static int GetProfile(lua_State *L){//const b2Profile &GetProfile () const
