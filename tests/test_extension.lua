@@ -1,6 +1,11 @@
+local UTILS = require "tests.test_utils"
+
+
 return function()
     describe("Extension", function()
-        before(function() end)
+        before(function()
+            UTILS.set_env(getfenv(1))
+        end)
         after(function() end)
 
         test("create world", function()
@@ -71,7 +76,10 @@ return function()
 
         test("b2Assert", function()
             local shape = box2d.NewPolygonShape()
-            shape:Set({ vmath.vector3(0, 0, 0), vmath.vector3(1, 0, 0) })
+            local status, value = pcall(shape.Set,shape,{ vmath.vector3(0, 0, 0), vmath.vector3(1, 0, 0) })
+            assert_false(status)
+            pprint(value)
+            UTILS.test_error(value,"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
         end)
 
 
