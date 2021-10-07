@@ -46,23 +46,12 @@ extern lua_State * GLOBAL_L;
 //#define b2Assert(expr) \
  // ( (expr)? (void)0 : (void) luaL_error(box2dDefoldNE::GLOBAL_L,"[ERROR]b2Assert. Expr:%s\n",#expr) )
 
-#if defined(NDEBUG)
-#define dmLogErrorFixed(format, args...) do {} while(0)
-#else
-
-#ifdef _MSC_VER
-#define dmLogErrorFixed(format, ... ) dmLogInternal(DM_LOG_SEVERITY_ERROR, DLIB_LOG_DOMAIN, format, __VA_ARGS__ )
-#else
-#define dmLogErrorFixed(format, args...) dmLogInternal(DM_LOG_SEVERITY_ERROR, DLIB_LOG_DOMAIN, format, ## args)
-#endif
-
-#endif
-
-
-
-
 #define b2Assert(expr) \
-    ( (expr)? (void)0 : (void)dmLogErrorFixed("[ERROR]b2Assert. Expr:%s",#expr) )
+{ \
+    if (!(expr)) { \
+        dmLogError("[ERROR]b2Assert. Expr:%s",#expr); \
+    } \
+}
 
 //#define b2Assert(expr) \
  // ( (expr)? (void)0 : (void)printf("[ERROR]b2Assert. Expr:%s\n",#expr) )
