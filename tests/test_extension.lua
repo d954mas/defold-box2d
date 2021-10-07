@@ -78,7 +78,6 @@ return function()
             local shape = box2d.NewPolygonShape()
             local status, value = pcall(shape.Set,shape,{ vmath.vector3(0, 0, 0), vmath.vector3(1, 0, 0) })
             assert_false(status)
-            pprint(value)
             UTILS.test_error(value,"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
         end)
 

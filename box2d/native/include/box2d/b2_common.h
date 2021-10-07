@@ -54,12 +54,12 @@ extern lua_State * GLOBAL_L;
 }
 
 // for some reason error not on top of stack and error message is wrong
+//on html error is not handled by pcall
 #define b2Assert(expr) \
 { \
     if (!(expr)) { \
         dmLogError("[ERROR]b2Assert. Expr:%s",#expr); \
-        lua_settop(box2dDefoldNE::GLOBAL_L,0);\
-        luaL_error(box2dDefoldNE::GLOBAL_L,"[ERROR]b2Assert. Expr:%s\n",#expr); \
+        luaL_error(box2dDefoldNE::GLOBAL_L,"[ERROR]b2Assert. Expr:%s",#expr); \
         dmLogError("After luaL_error"); \
     } \
 }
