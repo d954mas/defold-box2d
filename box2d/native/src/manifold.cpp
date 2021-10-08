@@ -5,7 +5,7 @@
 #include <manifold.h>
 
 namespace box2dDefoldNE {
-static void b2ManifoldPointToTable(lua_State *L, b2ManifoldPoint* point){
+static void b2ManifoldPointToTable(lua_State *L, const b2ManifoldPoint* point){
     lua_newtable(L);
 
     lua_pushnumber(L, point->normalImpulse);
@@ -35,7 +35,7 @@ static void b2ManifoldPointToTable(lua_State *L, b2ManifoldPoint* point){
 
 }
 
-void manifold_to_table(lua_State *L, b2Manifold* manifold){
+void manifold_to_table(lua_State *L, const b2Manifold* manifold){
     lua_newtable(L);
     utils::push_vector(L, manifold->localNormal.x, manifold->localNormal.y, 0);
     lua_setfield(L, -2, "localNormal");
@@ -77,4 +77,29 @@ void world_manifold_to_table(lua_State *L, b2WorldManifold* manifold, int32 poin
     lua_setfield(L, -2, "separations");
 }
 
+
+void contact_impulse_to_table(lua_State *L, const b2ContactImpulse *impulse){
+
+	float normalImpulses[b2_maxManifoldPoints];
+	float tangentImpulses[b2_maxManifoldPoints];
+
+    lua_newtable(L);
+
+    lua_pushnumber(L,impulse->count);
+    lua_setfield(L, -2, "count");
+
+    lua_newtable(L);
+        for (int32 i = 0; i < impulse->count; ++i){
+            lua_pushnumber(L, impulse->normalImpulses[i]);
+            lua_rawseti(L, -2, i+1);
+        }
+    lua_setfield(L, -2, "normalImpulses");
+
+    lua_newtable(L);
+        for (int32 i = 0; i < impulse->count; ++i){
+            lua_pushnumber(L, impulse->tangentImpulses[i]);
+            lua_rawseti(L, -2, i+1);
+        }
+    lua_setfield(L, -2, "tangentImpulses");
+}
 }

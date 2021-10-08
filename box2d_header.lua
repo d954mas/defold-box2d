@@ -2154,6 +2154,14 @@ function Box2dContact:GetTangentSpeed() end
 ---@field points vector3[] world contact point (point of intersection)
 ---@field separations number[] a negative value indicates overlap, in meters
 
+--- Contact impulses for reporting. Impulses are used instead of forces because
+--- sub-step forces may approach infinity for rigid body collisions. These
+--- match up one-to-one with the contact points in b2Manifold.
+---@class Box2dContactImpulse
+---@field normalImpulses number[]
+---@field tangentImpulses number[]
+---@field count number
+
 
 --- This holds contact filtering data.
 ---@class Box2dFilter

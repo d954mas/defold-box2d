@@ -89,7 +89,6 @@ return function()
             w:Destroy()
         end)
 
-
         test("SetContactListener()", function()
             local w = box2d.NewWorld()
             w:Step(1 / 60, 3, 5)
@@ -117,17 +116,25 @@ return function()
                     assert_equal(contact.__userdata_type_box2d, "contact")
                     table.insert(contacts.EndContact, true)
                 end,
+                ---@param old_manifold Box2dManifold
                 PreSolve = function(contact, old_manifold)
                     assert_not_nil(contact)
                     assert_not_nil(contact.__userdata_box2d)
                     assert_equal(contact.__userdata_type_box2d, "contact")
                     table.insert(contacts.PreSolve, true)
+                    assert_not_nil(old_manifold)
+                    assert_equal(#old_manifold.points, old_manifold.pointCount)
                 end,
+                ---@param impulse Box2dContactImpulse
                 PostSolve = function(contact, impulse)
                     assert_not_nil(contact)
                     assert_not_nil(contact.__userdata_box2d)
                     assert_equal(contact.__userdata_type_box2d, "contact")
                     table.insert(contacts.PostSolve, true)
+
+                    assert_not_nil(impulse)
+                    assert_equal(impulse.count, #impulse.normalImpulses)
+                    assert_equal(impulse.count, #impulse.tangentImpulses)
                 end,
             })
             w:Step(1 / 60, 3, 5)
@@ -176,22 +183,22 @@ return function()
                 BeginContact = function(contact)
                     c = c or contact
                     assert_not_nil(c.__userdata_box2d)
-                    assert_equal(c.__userdata_type_box2d,"contact")
+                    assert_equal(c.__userdata_type_box2d, "contact")
                 end,
                 EndContact = function(contact)
                     c = c or contact
                     assert_not_nil(c.__userdata_box2d)
-                    assert_equal(c.__userdata_type_box2d,"contact")
+                    assert_equal(c.__userdata_type_box2d, "contact")
                 end,
                 PreSolve = function(contact, old_manifold)
                     c = c or contact
                     assert_not_nil(c.__userdata_box2d)
-                    assert_equal(c.__userdata_type_box2d,"contact")
+                    assert_equal(c.__userdata_type_box2d, "contact")
                 end,
                 PostSolve = function(contact, impulse)
                     c = c or contact
                     assert_not_nil(c.__userdata_box2d)
-                    assert_equal(c.__userdata_type_box2d,"contact")
+                    assert_equal(c.__userdata_type_box2d, "contact")
                 end,
             })
 
@@ -219,8 +226,7 @@ return function()
 
             assert_not_nil(c)
             assert_nil(c.__userdata_box2d)
-            assert_not_nil(c.__userdata_type_box2d,"contact")
-
+            assert_not_nil(c.__userdata_type_box2d, "contact")
 
             b1 = w:CreateBody({ type = box2d.b2BodyType.b2_dynamicBody, position = vmath.vector3(0, 0, 0) })
             b2 = w:CreateBody({ type = box2d.b2BodyType.b2_dynamicBody, position = vmath.vector3(0, 1, 0) })
@@ -242,7 +248,7 @@ return function()
 
             assert_not_nil(c)
             assert_nil(c.__userdata_box2d)
-            assert_not_nil(c.__userdata_type_box2d,"contact")
+            assert_not_nil(c.__userdata_type_box2d, "contact")
         end)
 
         test("SetDestructionListener()", function()
@@ -253,7 +259,7 @@ return function()
             local b1 = w:CreateBody()
             local b2 = w:CreateBody()
             local f1 = b1:CreateFixture({ shape = box2d.b2Shape.e_polygon, box = true, box_hy = 1, box_hx = 1 }, 1)
-            local joint = w:CreateJoint(box2d.InitializeRevoluteJointDef(b1,b2,vmath.vector3(0,0,0)))
+            local joint = w:CreateJoint(box2d.InitializeRevoluteJointDef(b1, b2, vmath.vector3(0, 0, 0)))
 
             w:SetDestructionListener(nil)
             w:DestroyBody(b1)
@@ -262,7 +268,7 @@ return function()
             b1 = w:CreateBody()
             b2 = w:CreateBody()
             f1 = b1:CreateFixture({ shape = box2d.b2Shape.e_polygon, box = true, box_hy = 1, box_hx = 1 }, 1)
-            joint = w:CreateJoint(box2d.InitializeRevoluteJointDef(b1,b2,vmath.vector3(0,0,0)))
+            joint = w:CreateJoint(box2d.InitializeRevoluteJointDef(b1, b2, vmath.vector3(0, 0, 0)))
 
             w:SetDestructionListener({ })
             w:DestroyBody(b1)
@@ -292,22 +298,22 @@ return function()
             b1 = w:CreateBody()
             b2 = w:CreateBody()
             f1 = b1:CreateFixture({ shape = box2d.b2Shape.e_polygon, box = true, box_hy = 1, box_hx = 1 }, 1)
-            joint = w:CreateJoint(box2d.InitializeRevoluteJointDef(b1,b2,vmath.vector3(0,0,0)))
+            joint = w:CreateJoint(box2d.InitializeRevoluteJointDef(b1, b2, vmath.vector3(0, 0, 0)))
 
             assert_not_nil(f1.__userdata_box2d)
-            assert_equal(f1.__userdata_type_box2d,"fixture")
-            
+            assert_equal(f1.__userdata_type_box2d, "fixture")
+
             w:DestroyBody(b1)
 
-            assert_equal(#callbacks.SayGoodbyeFixture,1)
-            assert_equal(#callbacks.SayGoodbyeJoint,1)
-            assert_equal(callbacks.SayGoodbyeFixture[1],f1)
-            assert_equal(callbacks.SayGoodbyeJoint[1],joint)
+            assert_equal(#callbacks.SayGoodbyeFixture, 1)
+            assert_equal(#callbacks.SayGoodbyeJoint, 1)
+            assert_equal(callbacks.SayGoodbyeFixture[1], f1)
+            assert_equal(callbacks.SayGoodbyeJoint[1], joint)
 
             assert_nil(f1.__userdata_box2d)
-            assert_equal(f1.__userdata_type_box2d,"fixture")
+            assert_equal(f1.__userdata_type_box2d, "fixture")
             assert_nil(joint.__userdata_box2d)
-            assert_equal(joint.__userdata_type_box2d,"joint")
+            assert_equal(joint.__userdata_type_box2d, "joint")
 
             --ERROR
             --ERROR WILL BE SHOW IN CONSOLE. IT WILL NOT CALL luaL_error
@@ -323,15 +329,14 @@ return function()
             b1 = w:CreateBody()
             b2 = w:CreateBody()
             f1 = b1:CreateFixture({ shape = box2d.b2Shape.e_polygon, box = true, box_hy = 1, box_hx = 1 }, 1)
-            joint = w:CreateJoint(box2d.InitializeRevoluteJointDef(b1,b2,vmath.vector3(0,0,0)))
+            joint = w:CreateJoint(box2d.InitializeRevoluteJointDef(b1, b2, vmath.vector3(0, 0, 0)))
 
             w:DestroyBody(b1)
 
-
             assert_nil(f1.__userdata_box2d)
-            assert_equal(f1.__userdata_type_box2d,"fixture")
+            assert_equal(f1.__userdata_type_box2d, "fixture")
             assert_nil(joint.__userdata_box2d)
-            assert_equal(joint.__userdata_type_box2d,"joint")
+            assert_equal(joint.__userdata_type_box2d, "joint")
 
             w:Destroy()
         end)

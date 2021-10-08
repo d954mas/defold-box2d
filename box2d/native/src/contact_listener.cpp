@@ -2,6 +2,7 @@
 #include "utils.h"
 #include "static_hash.h"
 #include "contact.h"
+#include "manifold.h"
 namespace box2dDefoldNE {
 LuaContactListener::LuaContactListener(){
         error = false;
@@ -133,7 +134,7 @@ void LuaContactListener::PreSolve(b2Contact *contact, const b2Manifold *old_mani
     if(!error && fun_preSolve_contact_ref != LUA_REFNIL){
         lua_rawgeti(L,LUA_REGISTRYINDEX,fun_preSolve_contact_ref);
         Contact_from_b2Contact(contact)->Push(L);
-        lua_pushnil(L);
+        manifold_to_table(L, old_manifold);
         if (lua_pcall(L, 2, 0, 0) != 0){
              error = true;
              error_message = lua_tostring(L,-1);
@@ -146,7 +147,7 @@ void LuaContactListener::PostSolve(b2Contact *contact, const b2ContactImpulse *i
     if(!error && fun_postSolve_contact_ref != LUA_REFNIL){
         lua_rawgeti(L,LUA_REGISTRYINDEX,fun_postSolve_contact_ref);
         Contact_from_b2Contact(contact)->Push(L);
-        lua_pushnil(L);
+        contact_impulse_to_table(L, impulse);
         if (lua_pcall(L, 2, 0, 0) != 0){
              error = true;
              error_message = lua_tostring(L,-1);

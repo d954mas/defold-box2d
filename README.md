@@ -42,6 +42,7 @@ Try the demo: https://d954mas.github.io/defold-box2d/
       - [MotorJoint](doc/joints/MotorJoint.md)
     + [Box2dManifold](doc/Box2dManifold.md)
     + [Box2dWorldManifold](doc/Box2dWorldManifold.md)
+    + [Box2dContactImpulse](doc/Box2dContactImpulse.md)
     + [Box2dFilter](doc/Box2dFilter.md)
     + [Box2dProfile](doc/Box2dProfile.md)
     + [Box2dMassData](doc/Box2dMassData.md)
