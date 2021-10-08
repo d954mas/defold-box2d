@@ -74,7 +74,6 @@ __1)__ No binding for b2Vec2. Use defold vector(vmath.vector3)
 __2)__ No binding for some b2World functions.
 
 	void SetContactFilter(b2ContactFilter* filter);
-	b2Contact* GetContactList();
 	const b2ContactManager& GetContactManager() const;
 
 __3)__ No binding for some b2Body functions.

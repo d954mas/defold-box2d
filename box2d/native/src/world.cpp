@@ -418,6 +418,18 @@ static int RayCast(lua_State *L){
 
     return 0;
 };
+static int GetContactList(lua_State *L){//b2Contact* GetContactList();
+    utils::check_arg_count(L, 1);
+    World *world = World_get_userdata_safe(L, 1);
+    utils::check_arg_count(L, 1);
+    b2Contact *contact_top = world->world->GetContactList();
+    if(contact_top == NULL){
+        lua_pushnil(L);
+    }else{
+        Contact_from_b2Contact(contact_top )->Push(L);
+    }
+    return 1;
+}
 
 
 static int GetBodyList(lua_State *L){//const b2Body * GetBodyList () const Returns the head of the world body list.
@@ -446,7 +458,6 @@ static int GetJointList(lua_State *L){ //const b2Joint * GetJointList() const
     return 1;
 
 }
-// static int GetContactList(lua_State *L);//const b2Contact * GetContactList () const
 
 static int SetAllowSleeping(lua_State *L){//void SetAllowSleeping (bool flag)
     utils::check_arg_count(L, 2);
@@ -678,6 +689,7 @@ void WorldInitMetaTable(lua_State *L){
         {"RayCast",RayCast},
         {"QueryAABB",QueryAABB},
         {"GetBodyList",GetBodyList},
+        {"GetContactList",GetContactList},
         {"GetJointList",GetJointList},
         {"SetAllowSleeping",SetAllowSleeping},
         {"GetAllowSleeping",GetAllowSleeping},

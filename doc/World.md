@@ -166,6 +166,17 @@ A nil body indicates the end of the list.
 * [(Box2dBody)](Body.md)|(nil) - The head of the world body list.
 
 ---
+### Box2dWorld:GetContactList()
+Get the world contact list. With the returned contact, use b2Contact::GetNext to get
+the next contact in the world list. A nil contact indicates the end of the list.
+
+_Warning:_ contacts are created and destroyed in the middle of a time step.
+use b2ContactListener to avoid missing contacts.
+
+**RETURN**
+* [(Box2dContact)](Contact.md)|(nil) - The head of the world contact list.
+
+---
 ### Box2dWorld:RayCast(callback, point1, point2)
 Ray-cast the world for all fixtures in the path of the ray. Your callback
 controls whether you get the closest point, any point, or n-points.

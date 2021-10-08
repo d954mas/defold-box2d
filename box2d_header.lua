@@ -941,6 +941,13 @@ function Box2dWorld:DebugDraw() end
 ---@return Box2dBody|nil the head of the world body list.
 function Box2dWorld:GetBodyList() end
 
+--- Get the world contact list. With the returned contact, use b2Contact::GetNext to get
+--- the next contact in the world list. A nullptr contact indicates the end of the list.
+--- @warning contacts are created and destroyed in the middle of a time step.
+--- Use b2ContactListener to avoid missing contacts.
+---@return Box2dContact|nil the head of the world contact list.
+function Box2dWorld:GetContactList() end
+
 --- Ray-cast the world for all fixtures in the path of the ray. Your callback
 --- controls whether you get the closest point, any point, or n-points.
 --- The ray-cast ignores shapes that contain the starting point.
