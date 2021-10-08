@@ -19,7 +19,6 @@ LuaContactListener::~LuaContactListener() {
 
 void LuaContactListener::InitFromTable(lua_State *L, int index){
     if (lua_istable(L, index)) {
-        Destroy(L);//free refs
         lua_pushvalue(L,index);
         /* table is in the stack at index 't' */
         lua_pushnil(L);  /* first key */
@@ -97,6 +96,8 @@ void LuaContactListener::Destroy(lua_State *L) {
     fun_preSolve_contact_ref = LUA_REFNIL;
     fun_postSolve_contact_ref = LUA_REFNIL;
     defold_script_instance_ref = LUA_REFNIL;
+
+    delete this;
 }
 
 void LuaContactListener::EndListen(lua_State *L){

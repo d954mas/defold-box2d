@@ -294,6 +294,7 @@ void Fixture::Destroy(lua_State *L) {
     utils::unref(L, user_data_ref);
     user_data_ref = LUA_REFNIL;
     BaseUserData::Destroy(L);
+    delete this;
 }
 
 }

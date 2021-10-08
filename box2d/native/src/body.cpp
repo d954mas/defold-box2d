@@ -608,6 +608,7 @@ void Body::Destroy(lua_State *L) {
     utils::unref(L, user_data_ref);
     user_data_ref = LUA_REFNIL;
     BaseUserData::Destroy(L);
+    delete this;
 }
 
 void Body::DestroyFixtures(lua_State *L) {
@@ -620,7 +621,12 @@ void Body::DestroyFixtures(lua_State *L) {
 void Body::DestroyJoints(lua_State *L) {
     for (b2JointEdge *jointEdge = body->GetJointList(); jointEdge; jointEdge=jointEdge->next) {
         Joint* joint_lua = (Joint *)jointEdge->joint->GetUserData().pointer;
-        joint_lua->Destroy(L);
+        //do not delete it twice.
+        if(joint_lua!=0){
+            joint_lua->Destroy(L);
+            jointEdge->joint->GetUserData().pointer = 0;
+        }
+
     }
 }
 

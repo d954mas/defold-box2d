@@ -66,7 +66,6 @@ static int SetDestructionListener(lua_State *L){
 
     if(world->destructionListener != NULL){
         world->destructionListener->Destroy(L);
-        delete world->destructionListener;
         world->destructionListener = NULL;
     }
 
@@ -122,7 +121,6 @@ static int SetContactListener(lua_State *L){
 
     if(world->contactListener != NULL){
         world->contactListener->Destroy(L);
-        delete world->contactListener;
         world->contactListener = NULL;
     }
 
@@ -621,22 +619,30 @@ static int Dump(lua_State *L){//void Dump()
 int Destroy(lua_State *L) {
 	utils::check_arg_count(L, 1);
 	World *lua_world = World_get_userdata_safe(L, 1);
+
     //destroy b2objects wrappers
-	for (b2Body *body = lua_world->world->GetBodyList(); body; body = body->GetNext()) {
-		Body *lua_body = (Body *)body->GetUserData().pointer;
-        lua_body->DestroyJoints(L);
-        lua_body->DestroyFixtures(L);
-        lua_body->Destroy(L);
-	}
-	for (b2Contact *contact = lua_world->world->GetContactList(); contact; contact = contact->GetNext()) {
+    for (b2Contact *contact = lua_world->world->GetContactList(); contact; contact = contact->GetNext()) {
         b2BodyUserData& userdata = contact->GetUserData();
         if(userdata.pointer != 0){
             ((box2dDefoldNE::Contact *) userdata.pointer)->Destroy(L);
             userdata.pointer = 0;
         }
     }
+
+
+	for (b2Body *body = lua_world->world->GetBodyList(); body; body = body->GetNext()) {
+		Body *lua_body = (Body *)body->GetUserData().pointer;
+        lua_body->DestroyJoints(L);
+	}
+
+	for (b2Body *body = lua_world->world->GetBodyList(); body; body = body->GetNext()) {
+        Body *lua_body = (Body *)body->GetUserData().pointer;
+        lua_body->DestroyFixtures(L);
+        lua_body->Destroy(L);
+    }
+
+
     lua_world->Destroy(L);
-	delete lua_world;
     
 	return 0;
 }
@@ -717,11 +723,15 @@ void WorldInitMetaTable(lua_State *L){
 void World::Destroy(lua_State *L){
     if(contactListener != NULL){
         contactListener->Destroy(L);
-        delete contactListener;
         contactListener = NULL;
+    }
+    if(destructionListener != NULL){
+        destructionListener->Destroy(L);
+        destructionListener = NULL;
     }
 
     BaseUserData::Destroy(L);
+    delete this;
 }
 
 

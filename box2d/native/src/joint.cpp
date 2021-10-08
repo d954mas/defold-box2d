@@ -1395,6 +1395,7 @@ void Joint::Destroy(lua_State *L) {
     user_data_ref = LUA_REFNIL;
 
     BaseUserData::Destroy(L);
+    delete this;
 }
 
 }
