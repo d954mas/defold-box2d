@@ -50,7 +50,7 @@ Try the demo: https://d954mas.github.io/defold-box2d/
 ## Installation
 
 __1)__ Add defold-box2d in your own project as a Defold library dependency. Open your game.project file and in the dependencies field under project add:
-https://github.com/d954mas/defold-box2d/archive/refs/tags/0.9.1.zip
+https://github.com/d954mas/defold-box2d/archive/refs/tags/1.0.0.zip
 
 __2)__ Remove Defold engine box2d. If it's not removed there will be a conflict between this box2d and engine box2d.
 Open your game.project file and in the App Manifest field under Native Extension add manifest.
