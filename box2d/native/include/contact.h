@@ -12,17 +12,16 @@ class Contact : public BaseUserData {
 private:
 
 public:
-    bool reuse; //reuse Contact class in callbacks.
     b2Contact *contact;
     Contact(b2Contact *c);
     ~Contact();
-    void Reuse(b2Contact *c); //reuse Contact class in callbacks.
     virtual void Destroy(lua_State *L);
-    void DestroyTable(lua_State *L);
 };
 
 void ContactInitMetaTable(lua_State *L);
 Contact* Contact_get_userdata_safe(lua_State *L, int index);
+
+Contact* Contact_from_b2Contact(b2Contact* contact);
 
 }
 #endif

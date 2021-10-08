@@ -165,6 +165,9 @@ public:
 	/// Evaluate this contact with your own manifold and transforms.
 	virtual void Evaluate(b2Manifold* manifold, const b2Transform& xfA, const b2Transform& xfB) = 0;
 
+    /// Get the user data pointer that was provided in the body definition.
+    b2BodyUserData& GetUserData();
+
 protected:
 	friend class b2ContactManager;
 	friend class b2World;
@@ -239,6 +242,8 @@ protected:
 	float m_restitutionThreshold;
 
 	float m_tangentSpeed;
+
+	b2BodyUserData m_userData;
 };
 
 inline b2Manifold* b2Contact::GetManifold()
@@ -381,6 +386,11 @@ inline void b2Contact::SetTangentSpeed(float speed)
 inline float b2Contact::GetTangentSpeed() const
 {
 	return m_tangentSpeed;
+}
+
+inline b2BodyUserData& b2Contact::GetUserData()
+{
+	return m_userData;
 }
 
 #endif

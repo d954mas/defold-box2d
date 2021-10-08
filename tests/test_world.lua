@@ -170,27 +170,28 @@ return function()
 
         test("SetContactListener() REUSE", function()
             local w = box2d.NewWorld()
+            ---@type Box2dContact
             local c
             w:SetContactListener({
                 BeginContact = function(contact)
                     c = c or contact
-                    assert_equal(c, contact)
                     assert_not_nil(c.__userdata_box2d)
+                    assert_equal(c.__userdata_type_box2d,"contact")
                 end,
                 EndContact = function(contact)
                     c = c or contact
-                    assert_equal(c, contact)
                     assert_not_nil(c.__userdata_box2d)
+                    assert_equal(c.__userdata_type_box2d,"contact")
                 end,
                 PreSolve = function(contact, old_manifold)
                     c = c or contact
-                    assert_equal(c, contact)
                     assert_not_nil(c.__userdata_box2d)
+                    assert_equal(c.__userdata_type_box2d,"contact")
                 end,
                 PostSolve = function(contact, impulse)
                     c = c or contact
-                    assert_equal(c, contact)
                     assert_not_nil(c.__userdata_box2d)
+                    assert_equal(c.__userdata_type_box2d,"contact")
                 end,
             })
 
@@ -207,10 +208,19 @@ return function()
             w:Step(1 / 60, 3, 5)
 
             assert_not_nil(c)
+            assert_not_nil(c.__userdata_box2d)
+
+            c:GetRestitution()
+
+            w:DestroyBody(b1)
+            w:DestroyBody(b2)
+            w:DestroyBody(b3)
+            w:DestroyBody(b4)
+
+            assert_not_nil(c)
             assert_nil(c.__userdata_box2d)
-            local status, value = pcall(tostring, c)
-            assert_false(status)
-            assert_equal(value, "contact was destroyed")
+            assert_not_nil(c.__userdata_type_box2d,"contact")
+
 
             w:Destroy()
         end)
