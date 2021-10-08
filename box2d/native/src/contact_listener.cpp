@@ -11,8 +11,6 @@ LuaContactListener::LuaContactListener(){
         fun_preSolve_contact_ref = LUA_REFNIL;
         fun_postSolve_contact_ref = LUA_REFNIL;
         defold_script_instance_ref = LUA_REFNIL;
-        contact = new Contact(NULL);
-        contact->reuse = true;
 }
 
 LuaContactListener::~LuaContactListener() {
@@ -99,22 +97,17 @@ void LuaContactListener::Destroy(lua_State *L) {
     fun_preSolve_contact_ref = LUA_REFNIL;
     fun_postSolve_contact_ref = LUA_REFNIL;
     defold_script_instance_ref = LUA_REFNIL;
-
-    contact->reuse = false;
-    contact->Destroy(L);
 }
 
 void LuaContactListener::EndListen(lua_State *L){
-    contact->Reuse(NULL);
-    contact->DestroyTable(L);
+
 }
 
 
 void LuaContactListener::BeginContact(b2Contact *contact){
     if(!error && fun_begin_contact_ref != LUA_REFNIL){
-        this->contact->Reuse(contact);
         lua_rawgeti(L,LUA_REGISTRYINDEX,fun_begin_contact_ref);
-        this->contact->Push(L);
+        Contact_from_b2Contact(contact)->Push(L);
         if (lua_pcall(L, 1, 0, 0) != 0){
              error = true;
              error_message = lua_tostring(L,-1);
@@ -125,9 +118,8 @@ void LuaContactListener::BeginContact(b2Contact *contact){
 
 void LuaContactListener::EndContact(b2Contact *contact){
     if(!error && fun_end_contact_ref != LUA_REFNIL){
-        this->contact->Reuse(contact);
         lua_rawgeti(L,LUA_REGISTRYINDEX,fun_end_contact_ref);
-        this->contact->Push(L);
+        Contact_from_b2Contact(contact)->Push(L);
         if (lua_pcall(L, 1, 0, 0) != 0){
              error = true;
              error_message = lua_tostring(L,-1);
@@ -138,9 +130,8 @@ void LuaContactListener::EndContact(b2Contact *contact){
 
 void LuaContactListener::PreSolve(b2Contact *contact, const b2Manifold *old_manifold){
     if(!error && fun_preSolve_contact_ref != LUA_REFNIL){
-        this->contact->Reuse(contact);
         lua_rawgeti(L,LUA_REGISTRYINDEX,fun_preSolve_contact_ref);
-        this->contact->Push(L);
+        Contact_from_b2Contact(contact)->Push(L);
         lua_pushnil(L);
         if (lua_pcall(L, 2, 0, 0) != 0){
              error = true;
@@ -152,9 +143,8 @@ void LuaContactListener::PreSolve(b2Contact *contact, const b2Manifold *old_mani
 
 void LuaContactListener::PostSolve(b2Contact *contact, const b2ContactImpulse *impulse){
     if(!error && fun_postSolve_contact_ref != LUA_REFNIL){
-        this->contact->Reuse(contact);
         lua_rawgeti(L,LUA_REGISTRYINDEX,fun_postSolve_contact_ref);
-        this->contact->Push(L);
+        Contact_from_b2Contact(contact)->Push(L);
         lua_pushnil(L);
         if (lua_pcall(L, 2, 0, 0) != 0){
              error = true;

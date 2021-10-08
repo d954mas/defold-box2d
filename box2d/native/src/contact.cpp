@@ -11,8 +11,6 @@
 namespace box2dDefoldNE {
 Contact::Contact(b2Contact *c): BaseUserData(USERDATA_TYPE){
     contact = c;
-    reuse = false;
-
     this->box2dObj = c;
     this->metatable_name = META_NAME;
 }
@@ -25,6 +23,14 @@ Contact::~Contact() {
 Contact* Contact_get_userdata_safe(lua_State *L, int index) {
     Contact *lua_contact = (Contact*) BaseUserData_get_userdata(L, index, USERDATA_TYPE);
 	return lua_contact;
+}
+
+Contact* Contact_from_b2Contact(b2Contact* contact){
+    b2BodyUserData& userdata = contact->GetUserData();
+    if(userdata.pointer == 0){
+       userdata.pointer = (uintptr_t)(void*) new Contact(contact);
+    }
+    return (Contact *) userdata.pointer;
 }
 
 static int GetManifold(lua_State *L){///const b2Manifold* GetManifold() const;]
@@ -239,36 +245,10 @@ void ContactInitMetaTable(lua_State *L){
 }
 
 
-void Contact::Reuse(b2Contact* c) {
-   contact = c;
-   box2dObj = c;
-}
-
 void Contact::Destroy(lua_State *L) {
-    if(contact != NULL && !reuse){
-        contact = NULL;
-        DestroyTable(L);
-        BaseUserData::Destroy(L);
-        delete this;
-    }
+    BaseUserData::Destroy(L);
+    delete this;
 }
 
-void Contact::DestroyTable(lua_State *L) {
-    if(table_ref != LUA_REFNIL){
-        lua_rawgeti(L,LUA_REGISTRYINDEX,table_ref);
-
-        lua_pushnil(L);
-        lua_setfield(L, -2, USERDATA_NAME);
-
-        //do not delete type. Use type for error message when call deleted object
-      //  lua_pushnil(L);
-      //  lua_setfield(L, -2, USERDATA_TYPE);
-
-        lua_pop(L,1);
-
-        utils::unref(L, table_ref);
-        table_ref = LUA_REFNIL;
-    }
-}
 }
 

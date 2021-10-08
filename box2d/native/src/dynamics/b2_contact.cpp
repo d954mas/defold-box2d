@@ -38,6 +38,8 @@
 #include "box2d/b2_time_of_impact.h"
 #include "box2d/b2_world.h"
 
+#include "contact.h"
+
 b2ContactRegister b2Contact::s_registers[b2Shape::e_typeCount][b2Shape::e_typeCount];
 bool b2Contact::s_initialized = false;
 
@@ -123,8 +125,16 @@ void b2Contact::Destroy(b2Contact* contact, b2BlockAllocator* allocator)
 	b2Assert(0 <= typeA && typeA < b2Shape::e_typeCount);
 	b2Assert(0 <= typeB && typeB < b2Shape::e_typeCount);
 
+    b2BodyUserData& userdata = contact->GetUserData();
+    if(userdata.pointer != 0){
+		((box2dDefoldNE::Contact *) userdata.pointer)->Destroy(box2dDefoldNE::GLOBAL_L);
+		userdata.pointer = 0;
+    }
+
 	b2ContactDestroyFcn* destroyFcn = s_registers[typeA][typeB].destroyFcn;
 	destroyFcn(contact, allocator);
+
+
 }
 
 b2Contact::b2Contact(b2Fixture* fA, int32 indexA, b2Fixture* fB, int32 indexB)

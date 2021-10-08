@@ -220,6 +220,7 @@ static int Step(lua_State *L){;//void Step (float timeStep, int32 velocityIterat
     //set script instance
     if(lua_world->contactListener != NULL){
         lua_world->contactListener->error = false;
+        lua_world->contactListener->error_message = NULL;
         lua_world->contactListener->L = L;
         if(lua_world->contactListener->defold_script_instance_ref != LUA_REFNIL){
             //save current instance in stack
@@ -620,13 +621,20 @@ static int Dump(lua_State *L){//void Dump()
 int Destroy(lua_State *L) {
 	utils::check_arg_count(L, 1);
 	World *lua_world = World_get_userdata_safe(L, 1);
-
+    //destroy b2objects wrappers
 	for (b2Body *body = lua_world->world->GetBodyList(); body; body = body->GetNext()) {
 		Body *lua_body = (Body *)body->GetUserData().pointer;
         lua_body->DestroyJoints(L);
         lua_body->DestroyFixtures(L);
         lua_body->Destroy(L);
 	}
+	for (b2Contact *contact = lua_world->world->GetContactList(); contact; contact = contact->GetNext()) {
+        b2BodyUserData& userdata = contact->GetUserData();
+        if(userdata.pointer != 0){
+            ((box2dDefoldNE::Contact *) userdata.pointer)->Destroy(L);
+            userdata.pointer = 0;
+        }
+    }
     lua_world->Destroy(L);
 	delete lua_world;
     

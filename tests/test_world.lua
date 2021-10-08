@@ -168,29 +168,30 @@ return function()
             w:Destroy()
         end)
 
-        test("SetContactListener() REUSE", function()
+        test("SetContactListener() Destroy Contacts", function()
             local w = box2d.NewWorld()
+            ---@type Box2dContact
             local c
             w:SetContactListener({
                 BeginContact = function(contact)
                     c = c or contact
-                    assert_equal(c, contact)
                     assert_not_nil(c.__userdata_box2d)
+                    assert_equal(c.__userdata_type_box2d,"contact")
                 end,
                 EndContact = function(contact)
                     c = c or contact
-                    assert_equal(c, contact)
                     assert_not_nil(c.__userdata_box2d)
+                    assert_equal(c.__userdata_type_box2d,"contact")
                 end,
                 PreSolve = function(contact, old_manifold)
                     c = c or contact
-                    assert_equal(c, contact)
                     assert_not_nil(c.__userdata_box2d)
+                    assert_equal(c.__userdata_type_box2d,"contact")
                 end,
                 PostSolve = function(contact, impulse)
                     c = c or contact
-                    assert_equal(c, contact)
                     assert_not_nil(c.__userdata_box2d)
+                    assert_equal(c.__userdata_type_box2d,"contact")
                 end,
             })
 
@@ -207,12 +208,41 @@ return function()
             w:Step(1 / 60, 3, 5)
 
             assert_not_nil(c)
+            assert_not_nil(c.__userdata_box2d)
+
+            c:GetRestitution()
+
+            w:DestroyBody(b1)
+            w:DestroyBody(b2)
+            w:DestroyBody(b3)
+            w:DestroyBody(b4)
+
+            assert_not_nil(c)
             assert_nil(c.__userdata_box2d)
-            local status, value = pcall(tostring, c)
-            assert_false(status)
-            assert_equal(value, "contact was destroyed")
+            assert_not_nil(c.__userdata_type_box2d,"contact")
+
+
+            b1 = w:CreateBody({ type = box2d.b2BodyType.b2_dynamicBody, position = vmath.vector3(0, 0, 0) })
+            b2 = w:CreateBody({ type = box2d.b2BodyType.b2_dynamicBody, position = vmath.vector3(0, 1, 0) })
+            b3 = w:CreateBody({ type = box2d.b2BodyType.b2_dynamicBody, position = vmath.vector3(1, 0, 0) })
+            b4 = w:CreateBody({ type = box2d.b2BodyType.b2_dynamicBody, position = vmath.vector3(1, 1, 0) })
+
+            b1:CreateFixture({ shape = box2d.b2Shape.e_polygon, box = true, box_hy = 1, box_hx = 1 }, 1)
+            b2:CreateFixture({ shape = box2d.b2Shape.e_polygon, box = true, box_hy = 1, box_hx = 1 }, 1)
+            b3:CreateFixture({ shape = box2d.b2Shape.e_polygon, box = true, box_hy = 1, box_hx = 1 }, 1)
+            b4:CreateFixture({ shape = box2d.b2Shape.e_polygon, box = true, box_hy = 1, box_hx = 1 }, 1)
+
+            c = nil
+            w:Step(1 / 60, 3, 5)
+
+            assert_not_nil(c)
+            assert_not_nil(c.__userdata_box2d)
 
             w:Destroy()
+
+            assert_not_nil(c)
+            assert_nil(c.__userdata_box2d)
+            assert_not_nil(c.__userdata_type_box2d,"contact")
         end)
 
         test("SetDestructionListener()", function()
