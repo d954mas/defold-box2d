@@ -86,6 +86,3 @@ __4)__ No binding for some b2Joint functions.
 
 	virtual void Draw(b2Draw* draw) const;
 
-__5)__ No binding some b2Contact functions.
-
-	b2Contact* GetNext();

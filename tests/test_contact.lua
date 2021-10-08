@@ -217,6 +217,54 @@ return function()
             w:Destroy()
         end)
 
+        test("GetNext()", function()
+            local w = box2d.NewWorld()
+            local body = w:CreateBody({})
+
+            local contacts = {
+                BeginContact = {},
+                EndContact = {},
+                PreSolve = {},
+                ---@type Box2dContact[]
+                PostSolve = {},
+            }
+            w:SetContactListener({
+                ---@param impulse Box2dContactImpulse
+                PostSolve = function(contact, impulse)
+                    table.insert(contacts.PostSolve, contact)
+                end,
+            })
+            w:Step(1 / 60, 3, 5)
+
+            local b1 = w:CreateBody({ type = box2d.b2BodyType.b2_dynamicBody, position = vmath.vector3(0, 0, 0) })
+            local b2 = w:CreateBody({ type = box2d.b2BodyType.b2_dynamicBody, position = vmath.vector3(1, 1, 0) })
+            local b3 = w:CreateBody({ type = box2d.b2BodyType.b2_dynamicBody, position = vmath.vector3(0, 1, 0) })
+
+            b1:CreateFixture({ shape = box2d.b2Shape.e_polygon, box = true, box_hy = 1, box_hx = 1 }, 1)
+            b2:CreateFixture({ shape = box2d.b2Shape.e_polygon, box = true, box_hy = 1, box_hx = 1 }, 1)
+            b3:CreateFixture({ shape = box2d.b2Shape.e_polygon, box = true, box_hy = 1, box_hx = 1 }, 1)
+
+            w:Step(1 / 60, 3, 5)
+
+            assert_equal(#contacts.PostSolve,3)
+            local c = contacts.PostSolve[1]
+            local c2 = c:GetNext()
+            assert_equal(c2,c:GetNext())
+
+            local c3 = c2:GetNext()
+            local c_nil = c3:GetNext()
+
+
+
+            assert_not_nil(c)
+            assert_not_nil(c2)
+            assert_not_nil(c3)
+            assert_nil(c_nil)
+
+
+            w:Destroy()
+        end)
+
 
     end)
 end

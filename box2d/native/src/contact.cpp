@@ -3,6 +3,7 @@
 #include "fixture.h"
 #include "manifold.h"
 
+
 #define USERDATA_NAME "__userdata_box2d"
 
 #define META_NAME "Box2d::ContactClass"
@@ -31,6 +32,19 @@ Contact* Contact_from_b2Contact(b2Contact* contact){
        userdata.pointer = (uintptr_t)(void*) new Contact(contact);
     }
     return (Contact *) userdata.pointer;
+}
+
+/// Get the next contact in the world's contact list.
+static int GetNext(lua_State *L){///	b2Contact* GetNext();
+    utils::check_arg_count(L, 1);
+    Contact *contact = Contact_get_userdata_safe(L, 1);
+    b2Contact* contact_new = contact->contact->GetNext();
+    if(contact_new == NULL){
+        lua_pushnil(L);
+    }else{
+        Contact_from_b2Contact(contact_new)->Push(L);
+    }
+    return 1;
 }
 
 static int GetManifold(lua_State *L){///const b2Manifold* GetManifold() const;]
@@ -207,10 +221,13 @@ static int ToString(lua_State *L){
 	return 1;
 }
 
+
+
 void ContactInitMetaTable(lua_State *L){
     int top = lua_gettop(L);
 
     luaL_Reg functions[] = {
+        {"GetNext",GetNext},
         {"GetManifold",GetManifold},
         {"GetWorldManifold",GetWorldManifold},
         {"IsTouching",IsTouching},

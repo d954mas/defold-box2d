@@ -7,6 +7,7 @@ Never constructed. Sent as a parameter in the contact listener functions: BeginC
 ## Methods
 
 * Box2dContact:[GetManifold](#box2dcontactgetmanifold) ()
+* Box2dContact:[GetNext](#box2dcontactgetnext) ()
 * Box2dContact:[GetWorldManifold](#box2dcontactgetworldmanifold) ()
 * Box2dContact:[IsTouching](#box2dcontactistouching) ()
 * Box2dContact:[SetEnabled](#box2dcontactsetenabledflag) (flag)
@@ -26,6 +27,13 @@ Never constructed. Sent as a parameter in the contact listener functions: BeginC
 * Box2dContact:[ResetRestitutionThreshold](#box2dcontactresetrestitutionthreshold) ()
 * Box2dContact:[SetTangentSpeed](#box2dcontactsettangentspeedspeed) (speed)
 * Box2dContact:[GetTangentSpeed](#box2dcontactgettangentspeed) ()
+
+---
+### Box2dContact:GetNext()
+Get the next contact in the world's contact list.
+
+**RETURN**
+* [(Box2dConctact)](Contact.md)|(nil)
 
 ---
 ### Box2dContact:GetManifold()

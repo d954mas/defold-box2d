@@ -2006,6 +2006,10 @@ function Box2dDebugDraw:Destroy() end
 ---@class Box2dContact
 local Box2dContact = {}
 
+--- Get the next contact in the world's contact list.
+---@return Box2dContact|nil
+function Box2dContact:GetNext() end
+
 --- Get the local manifold.
 ---@return Box2dManifold
 function Box2dContact:GetManifold() end
