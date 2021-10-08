@@ -76,12 +76,7 @@ __2)__ No binding for some b2World functions.
 	void SetContactFilter(b2ContactFilter* filter);
 	const b2ContactManager& GetContactManager() const;
 
-__3)__ No binding for some b2Body functions.
-
-	b2JointEdge* GetJointList () Get the list of all joints attached to this body
-	b2ContactEdge* GetContactList();
-
-__4)__ No binding for some b2Joint functions.
+__3)__ No binding for some b2Joint functions.
 
 	virtual void Draw(b2Draw* draw) const;
 
