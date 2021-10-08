@@ -70,23 +70,21 @@ Box2d version: 2.4.1
 
 __1)__ No binding for b2Vec2. Use defold vector(vmath.vector3)
 
-__2)__ b2Assert. #define b2Assert(A) assert(A) . Engine will crashed if b2Assert happened.
-
-__3)__ No binding for some b2World functions.
+__2)__ No binding for some b2World functions.
 
 	void SetContactFilter(b2ContactFilter* filter);
 	b2Contact* GetContactList();
 	const b2ContactManager& GetContactManager() const;
 
-__4)__ No binding for some b2Body functions.
+__3)__ No binding for some b2Body functions.
 
 	b2JointEdge* GetJointList () Get the list of all joints attached to this body
 	b2ContactEdge* GetContactList();
 
-__5)__ No binding for some b2Joint functions.
+__4)__ No binding for some b2Joint functions.
 
 	virtual void Draw(b2Draw* draw) const;
 
-__6)__ No binding some b2Contact functions.
+__5)__ No binding some b2Contact functions.
 
 	b2Contact* GetNext();
