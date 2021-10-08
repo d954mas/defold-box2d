@@ -531,6 +531,17 @@ function Box2dBody:GetNext() end
 ---@return Box2dFixture|nil
 function Box2dBody:GetFixtureList() end
 
+--- Get the list of all joints attached to this body.
+---@return Box2dJoint[]
+function Box2dBody:GetJointList() end
+
+--- Get the list of all contacts attached to this body.
+--- @warning this list changes during the time step and you may
+--- miss some collisions if you don't use b2ContactListener.
+---@return Box2dContact[]|nil
+function Box2dBody:GetContactList() end
+
+
 --- Get the user data table. Use this to store your application specific data.
 ---@return table|nil
 function Box2dBody:GetUserData() end

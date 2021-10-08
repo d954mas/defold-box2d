@@ -484,8 +484,31 @@ static int GetFixtureList(lua_State *L){//const b2Fixture* GetFixtureList () con
     return 1;
 }
 
-//b2JointEdge* GetJointList () Get the list of all joints attached to this body.GF
-//const b2ContactEdge* GetContactList () const
+static int GetJointList(lua_State *L){//b2JointEdge* GetJointList () Get the list of all joints attached to this body.GF
+    utils::check_arg_count(L, 1);
+    Body *body = Body_get_userdata_safe(L, 1);
+    int i=0;
+    for (b2JointEdge *jointEdge = body->body->GetJointList(); jointEdge; jointEdge=jointEdge->next) {
+        Joint* joint_lua = (Joint *)jointEdge->joint->GetUserData().pointer;
+        joint_lua->Push(L);
+        lua_rawseti(L, -2, i+1);
+        i++;
+    }
+    return 1;
+}
+
+static int GetContactList(lua_State *L){//const b2ContactEdge* GetContactList () const
+    utils::check_arg_count(L, 1);
+    Body *body = Body_get_userdata_safe(L, 1);
+    int i=0;
+    for (b2ContactEdge *contactEdge = body->body->GetContactList(); contactEdge; contactEdge=contactEdge->next) {
+        Contact_from_b2Contact(contactEdge->contact)->Push(L);
+        lua_rawseti(L, -2, i+1);
+        i++;
+    }
+    return 1;
+}
+
 
 
 static int GetUserData(lua_State *L){//b2BodyUserData& GetUserData () Get the user data pointer that was provided in the body definition.
@@ -587,6 +610,8 @@ void BodyInitMetaTable(lua_State *L){
         {"IsFixedRotation",IsFixedRotation},
         {"GetNext",GetNext},
         {"GetFixtureList",GetFixtureList},
+        {"GetContactList",GetContactList},
+        {"GetJointList",GetJointList},
         {"GetUserData",GetUserData},
         {"SetUserData",SetUserData},
         {"GetWorld",GetWorld},

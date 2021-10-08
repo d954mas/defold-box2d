@@ -503,6 +503,49 @@ return function()
             world:Destroy()
         end)
 
+        test("GetJointList()", function()
+            local w = box2d.NewWorld()
+            local body = w:CreateBody({})
+            local body_2 = w:CreateBody({})
+
+            assert_equal(#body:GetJointList(),0)
+
+            local joint = w:CreateJoint(box2d.InitializeRevoluteJointDef(body,body_2,vmath.vector3(0,0,0)))
+            assert_equal(#body:GetJointList(),1)
+            assert_equal(joint,body:GetJointList()[1])
+
+            local joint_2 = w:CreateJoint(box2d.InitializeRevoluteJointDef(body,body_2,vmath.vector3(0,0,0)))
+            assert_equal(#body:GetJointList(),2)
+            assert_equal(joint,body:GetJointList()[2])
+            assert_equal(joint_2,body:GetJointList()[1])
+
+            w:Destroy()
+        end)
+
+        test("GetContactList()", function()
+            local w = box2d.NewWorld()
+
+            local b1 = w:CreateBody({ type = box2d.b2BodyType.b2_dynamicBody, position = vmath.vector3(0, 0, 0) })
+            local b2 = w:CreateBody({ type = box2d.b2BodyType.b2_dynamicBody, position = vmath.vector3(1, 1, 0) })
+            local b3 = w:CreateBody({ type = box2d.b2BodyType.b2_dynamicBody, position = vmath.vector3(0, 1, 0) })
+
+            assert_equal(#b1:GetContactList(),0)
+
+            b1:CreateFixture({ shape = box2d.b2Shape.e_polygon, box = true, box_hy = 1, box_hx = 1 }, 1)
+            b2:CreateFixture({ shape = box2d.b2Shape.e_polygon, box = true, box_hy = 1, box_hx = 1 }, 1)
+            b3:CreateFixture({ shape = box2d.b2Shape.e_polygon, box = true, box_hy = 1, box_hx = 1 }, 1)
+
+            w:Step(1 / 60, 3, 5)
+
+            assert_equal(#b1:GetContactList(),2)
+            assert_not_nil(b1:GetContactList()[1].__userdata_box2d)
+            assert_equal(b1:GetContactList()[1].__userdata_type_box2d,"contact")
+
+            w:Destroy()
+        end)
+
+
+
         test("Set/Get UserData()", function()
             local world = box2d.NewWorld()
             local body = world:CreateBody()

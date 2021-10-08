@@ -67,6 +67,8 @@ _Warning:_ This function is locked during callbacks.
 * Box2dBody:[IsFixedRotation](#box2dbodyisfixedrotation) ()
 * Box2dBody:[GetNext](#box2dbodygetnext) ()
 * Box2dBody:[GetFixtureList](#box2dbodygetfixturelist) ()
+* Box2dBody:[GetJointList](#box2dbodygetjointlist) ()
+* Box2dBody:[GetContactList](#box2dbodygetcontactlist) ()
 * Box2dBody:[GetUserData](#box2dbodygetuserdata) ()
 * Box2dBody:[SetUserData](#box2dbodysetuserdatadata) (data)
 * Box2dBody:[GetWorld](#box2dbodygetworld) ()
@@ -493,6 +495,23 @@ Get the first fixture in list of all fixtures attached to this body or nil
 
 **RETURN**
 * [(Box2dFixture)](Fixture.md)|(nil)
+
+---
+### Box2dBody:GetJointList()
+Get the list of all joints attached to this body.
+
+**RETURN**
+* [(Box2dJoint[])](Joint.md)
+
+---
+### Box2dBody:GetContactList()
+Get the list of all contacts attached to this body.
+
+_Warning:_ this list changes during the time step and you may
+miss some collisions if you don't use b2ContactListener.
+
+**RETURN**
+* [(Box2dContact[])](Contact.md)
 
 ---
 ### Box2dBody:GetUserData()
