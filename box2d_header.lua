@@ -1203,6 +1203,75 @@ local Box2dRevoluteJointDef = {
     --endregion
 }
 
+--- A revolute joint constrains two bodies to share a common point while they
+--- are free to rotate about the point. The relative rotation about the shared
+--- point is the joint angle. You can limit the relative rotation with
+--- a joint limit that specifies a lower and upper angle. You can use a motor
+--- to drive the relative rotation about the shared point. A maximum motor torque
+--- is provided so that infinite forces are not generated.
+---@class Box2dRevoluteJoint:Box2dJoint
+local Box2dRevoluteJoint = {}
+
+--- Get the reference angle.
+---@return float
+function Box2dRevoluteJoint:GetReferenceAngle() end
+
+--- Get the current joint angle in radians.
+---@return float
+function Box2dRevoluteJoint:GetJointAngle() end
+
+--- Get the current joint angle speed in radians per second.
+---@return float
+function Box2dRevoluteJoint:GetJointSpeed() end
+
+--- Is the joint limit enabled?
+---@return boolean
+function Box2dRevoluteJoint:IsLimitEnabled() end
+
+--- Enable/disable the joint limit.
+---@param flag boolean
+function Box2dRevoluteJoint:EnableLimit(flag) end
+
+--- Get the lower joint limit in radians.
+---@return float
+function Box2dRevoluteJoint:GetLowerLimit() end
+
+--- Get the upper joint limit in radians.
+---@return float
+function Box2dRevoluteJoint:GetUpperLimit() end
+
+--- Set the joint limits in radians.
+---@param lower number
+---@param upper number
+function Box2dRevoluteJoint:SetLimits(lower, upper) end
+
+--- Is the joint motor enabled?
+---@return boolean
+function Box2dRevoluteJoint:IsMotorEnabled() end
+
+--- Enable/disable the joint motor.
+---@param flag bool
+function Box2dRevoluteJoint:EnableMotor(flag) end
+
+--- Set the motor speed in radians per second.
+---@param speed number
+function Box2dRevoluteJoint:SetMotorSpeed(speed) end
+
+--- Get the motor speed in radians per second.
+---@return number
+function Box2dRevoluteJoint:GetMotorSpeed() end
+
+--- Set the maximum motor torque, usually in N-m.
+---@param torque number
+function Box2dRevoluteJoint:SetMaxMotorTorque(torque) end
+---@return number
+function Box2dRevoluteJoint:GetMaxMotorTorque() end
+
+--- Get the current motor torque given the inverse time step.
+--- Unit is N*m.
+---@param inv_dt number
+---@return number
+function Box2dRevoluteJoint:GetMotorTorque(inv_dt) end
 
 
 
