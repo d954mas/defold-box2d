@@ -23,6 +23,7 @@ _Warning:_ This function is locked during callbacks.
 * Box2dBody:[SetTransform](#box2dbodysettransformposition-angle) (position, angle)
 * Box2dBody:[GetTransform](#box2dbodygettransform) ()
 * Box2dBody:[GetPosition](#box2dbodygetposition) ()
+* Box2dBody:[GetPositionRaw](#box2dbodygetpositionraw) ()
 * Box2dBody:[GetAngle](#box2dbodygetangle) ()
 * Box2dBody:[GetWorldCenter](#box2dbodygetworldcenter) ()
 * Box2dBody:[GetLocalCenter](#box2dbodygetlocalcenter) ()
@@ -140,6 +141,14 @@ Get the world body origin position.
 
 **RETURN**
 * (vector3)
+
+---
+### Box2dBody:GetPositionRaw()
+Get the world body origin position.
+
+**RETURN**
+* x (number) 
+* y (number)
 
 ---
 ### Box2dBody:GetAngle()

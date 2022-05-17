@@ -318,6 +318,11 @@ function Box2dBody:GetTransform() end
 ---@return vector3
 function Box2dBody:GetPosition() end
 
+--- Get the world body origin position.
+---@return number x
+---@return number y
+function Box2dBody:GetPositionRaw() end
+
 --- Get the angle in radians.
 ---@return number
 function Box2dBody:GetAngle() end

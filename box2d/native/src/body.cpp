@@ -106,6 +106,15 @@ static int GetPosition(lua_State *L){ //const b2Vec2& GetPosition () const
     return 1;
 }
 
+static int GetPositionRaw(lua_State *L){
+    utils::check_arg_count(L, 1);
+    Body *body = Body_get_userdata_safe(L, 1);
+    b2Vec2 position = body->body->GetPosition();
+    lua_pushnumber(L, position.x);
+    lua_pushnumber(L, position.y);
+    return 2;
+}
+
 static int GetAngle(lua_State *L){//float GetAngle () const
     utils::check_arg_count(L, 1);
     Body *body = Body_get_userdata_safe(L, 1);
@@ -566,6 +575,7 @@ void BodyInitMetaTable(lua_State *L){
         {"SetTransform",SetTransform},
         {"GetTransform",GetTransform},
         {"GetPosition",GetPosition},
+        {"GetPositionRaw",GetPositionRaw},
         {"GetAngle",GetAngle},
         {"GetWorldCenter",GetWorldCenter},
         {"GetLocalCenter",GetLocalCenter},
