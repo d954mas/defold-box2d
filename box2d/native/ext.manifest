@@ -2,94 +2,97 @@ name: "box2d"
 
 platforms:
     armv7-ios:
-        context:
-            excludeLibs: [physiwcs, LinearMath, BulletDynamics, BulletCollision, Box2D]
-            excludeSymbols: []
-            symbols: []
-            libs: [physics_null]
-            frameworks: []
-            linkFlags: []
+    context:
+        excludeLibs: [physics, LinearMath, BulletDynamics, BulletCollision, Box2D]
+        excludeSymbols: []
+        symbols: []
+        libs: [physics_null]
+        frameworks: []
+        linkFlags: []
     arm64-ios:
-        context:
-            excludeLibs: [physics, LinearMath, BulletDynamics, BulletCollision, Box2D]
-            excludeSymbols: []
-            symbols: []
-            libs: [physics_null]
-            frameworks: []
-            linkFlags: []
+    context:
+        excludeLibs: [physics, LinearMath, BulletDynamics, BulletCollision, Box2D]
+        excludeSymbols: []
+        symbols: []
+        libs: [physics_null]
+        frameworks: []
+        linkFlags: []
     x86_64-ios:
-        context:
-            excludeLibs: [physics, LinearMath, BulletDynamics, BulletCollision, Box2D]
-            excludeSymbols: []
-            symbols: []
-            libs: [physics_null]
-            frameworks: []
-            linkFlags: []
+    context:
+        excludeLibs: [physics, LinearMath, BulletDynamics, BulletCollision, Box2D]
+        excludeSymbols: []
+        symbols: []
+        libs: [physics_null]
+        frameworks: []
+        linkFlags: []
     armv7-android:
-        context:
-            excludeLibs: [physics, LinearMath, BulletDynamics, BulletCollision, Box2D]
-            excludeJars: []
-            excludeSymbols: []
-            symbols: []
-            libs: [physics_null]
-            linkFlags: []
-            jetifier: true
+    context:
+        excludeLibs: [physics, LinearMath, BulletDynamics, BulletCollision, Box2D]
+        excludeJars: []
+        excludeSymbols: []
+        symbols: []
+        libs: [physics_null]
+        linkFlags: []
+        jetifier: true
     arm64-android:
-        context:
-            excludeLibs: [physics, LinearMath, BulletDynamics, BulletCollision, Box2D]
-            excludeJars: []
-            excludeSymbols: []
-            symbols: []
-            libs: [physics_null]
-            linkFlags: []
-            jetifier: true
+    context:
+        excludeLibs: [physics, LinearMath, BulletDynamics, BulletCollision, Box2D]
+        excludeJars: []
+        excludeSymbols: []
+        symbols: []
+        libs: [physics_null]
+        linkFlags: []
+        jetifier: true
     arm64-osx:
-        context:
-            excludeLibs: [physics, LinearMath, BulletDynamics, BulletCollision, Box2D]
-            excludeSymbols: []
-            libs: [physics_null]
+    context:
+        excludeLibs: [physics, LinearMath, BulletDynamics, BulletCollision, Box2D]
+        excludeSymbols: []
+        symbols: []
+        libs: [physics_null]
+        frameworks: []
+        linkFlags: []
     x86_64-osx:
-        context:
-            excludeLibs: [physics, LinearMath, BulletDynamics, BulletCollision, Box2D]
-            excludeSymbols: []
-            symbols: []
-            libs: [physics_null]
-            frameworks: []
-            linkFlags: []
+    context:
+        excludeLibs: [physics, LinearMath, BulletDynamics, BulletCollision, Box2D]
+        excludeSymbols: []
+        symbols: []
+        libs: [physics_null]
+        frameworks: []
+        linkFlags: []
     x86_64-linux:
-        context:
-            excludeLibs: [physics, LinearMath, BulletDynamics, BulletCollision, Box2D]
-            excludeSymbols: []
-            symbols: []
-            libs: [physics_null]
-            linkFlags: []
+    context:
+        excludeLibs: [physics, LinearMath, BulletDynamics, BulletCollision, Box2D]
+        excludeSymbols: []
+        symbols: []
+        libs: [physics_null]
+        linkFlags: []
     x86-win32:
-        context:
-            excludeLibs: [libphysics, libLinearMath, libBulletDynamics, libBulletCollision, libBox2D]
-            excludeSymbols: []
-            symbols: []
-            libs: [libphysics_null.lib]
-            linkFlags: []
+    context:
+        excludeLibs: [libphysics, libLinearMath, libBulletDynamics, libBulletCollision, libBox2D]
+        excludeSymbols: []
+        symbols: []
+        libs: [libphysics_null.lib]
+        linkFlags: []
     x86_64-win32:
-        context:
-            excludeLibs: [libphysics, libLinearMath, libBulletDynamics, libBulletCollision, libBox2D]
-            excludeSymbols: []
-            symbols: []
-            libs: [libphysics_null.lib]
-            linkFlags: []
+    context:
+        excludeLibs: [libphysics, libLinearMath, libBulletDynamics, libBulletCollision, libBox2D]
+        excludeSymbols: []
+        symbols: []
+        libs: [libphysics_null.lib]
+        linkFlags: []
     js-web:
-        context:
-            excludeLibs: [physics, LinearMath, BulletDynamics, BulletCollision, Box2D]
-            excludeJsLibs: []
-            excludeSymbols: []
-            symbols: []
-            libs: [physics_null]
-            linkFlags: []
+    context:
+        excludeLibs: [physics, LinearMath, BulletDynamics, BulletCollision, Box2D]
+        excludeJsLibs: []
+        excludeSymbols: []
+        symbols: []
+        libs: [physics_null]
+        linkFlags: []
     wasm-web:
-        context:
-            excludeLibs: [physics, LinearMath, BulletDynamics, BulletCollision, Box2D]
-            excludeJsLibs: []
-            excludeSymbols: []
-            symbols: []
-            libs: [physics_null]
-            linkFlags: []
+    context:
+        excludeLibs: [physics, LinearMath, BulletDynamics, BulletCollision, Box2D]
+        excludeJsLibs: []
+        excludeSymbols: []
+        symbols: []
+        libs: [physics_null]
+        linkFlags: []
