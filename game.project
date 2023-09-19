@@ -21,9 +21,6 @@ dependencies#1 = https://github.com/britzl/monarch/archive/refs/tags/3.4.0.zip
 dependencies#2 = https://github.com/britzl/gooey/archive/refs/tags/9.1.1.zip
 dependencies#3 = https://github.com/britzl/gooey-dirtylarry/archive/main.zip
 
-[native_extension]
-app_manifest = /box2d/manifest.appmanifest
-
 [library]
 include_dirs = box2d
 

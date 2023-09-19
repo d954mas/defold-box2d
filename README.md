@@ -54,11 +54,7 @@ Try the demo: https://d954mas.github.io/defold-box2d/
 __1)__ Add defold-box2d in your own project as a Defold library dependency. Open your game.project file and in the dependencies field under project add:
 https://github.com/d954mas/defold-box2d/archive/refs/tags/1.0.0.zip
 
-__2)__ Remove Defold engine box2d. If it's not removed there will be a conflict between this box2d and engine box2d.
-Open your game.project file and in the App Manifest field under Native Extension add manifest.
-
-1. Use /box2d/manifest.appmanifest, OR
-2. You can generate a manifest yourself https://britzl.github.io/manifestation/
+> :warning: This extension removes default box2d, that means you have to remove all the Collision Object components from your collections and Game Objects
 
 ## API
 Supports emmylua. box2d_header.lua
