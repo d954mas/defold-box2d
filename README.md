@@ -52,7 +52,7 @@ Try the demo: https://d954mas.github.io/defold-box2d/
 ## Installation
 
 __1)__ Add defold-box2d in your own project as a Defold library dependency. Open your game.project file and in the dependencies field under project add:
-https://github.com/d954mas/defold-box2d/archive/refs/tags/1.0.0.zip
+https://github.com/d954mas/defold-box2d/archive/refs/tags/1.0.1.zip
 
 > :warning: This extension removes default box2d, that means you have to remove all the Collision Object components from your collections and Game Objects
 
