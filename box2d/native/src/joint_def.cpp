@@ -236,8 +236,10 @@ b2PulleyJointDef* b2PulleyJointDef_from_table(lua_State *L){
                 case HASH_type:
                    break;
                 case HASH_groundAnchorA:
+                   def->groundAnchorA = extra_utils::get_b2vec_safe(L,-1,"groundAnchorA not v3");
                    break;
                 case HASH_groundAnchorB:
+                   def->groundAnchorB = extra_utils::get_b2vec_safe(L,-1,"groundAnchorB not v3");
                    break;
                 case HASH_ratio:
                     def->ratio = luaL_checknumber(L,-1);
