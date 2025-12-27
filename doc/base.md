@@ -61,7 +61,7 @@ box2d.b2Manifold_Type = {
 * `data` (table)
 
 **RETURN**
-* [(Box2dWorld)](DebugDraw.md)
+* [(Box2dDebugDraw)](DebugDraw.md)
 
 ---
 ### box2d.b2LinearStiffness(frequencyHertz, dampingRatio, bodyA, bodyB)
